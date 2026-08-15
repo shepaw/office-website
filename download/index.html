@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>下载 Shepaw — iOS、Android、macOS、Windows、Hub</title>
+  <meta name="description" content="下载 Shepaw 客户端，并在开发机上安装 Agent Hub。">
+  <link rel="icon" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="download">
+  <main>
+    <section class="dl-hero wrap">
+      <p class="kicker"><img src="/assets/img/logo.png" alt=""> Download</p>
+      <h1 class="display lang-zh">下载</h1>
+      <h1 class="display lang-en" hidden>Download</h1>
+      <p class="lede lang-zh" style="margin-left:0">客户端装在你随身的设备上；Agent Hub 装在跑代码的那台机器上。</p>
+      <p class="lede lang-en" hidden style="margin-left:0">Put the app on the device you carry. Put Agent Hub on the machine that runs the code.</p>
+    </section>
+
+    <section class="section" style="padding-top:12px">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="lang-zh">客户端</h2>
+          <h2 class="lang-en" hidden>App</h2>
+          <p class="lang-zh">iOS、Android、macOS、Windows。当前版本 1.0.19。安装包见 GitHub Releases；更新检查默认走 release.shepaw.com。</p>
+          <p class="lang-en" hidden>iOS, Android, macOS, Windows. Current version 1.0.19. Builds are on GitHub Releases; the app checks release.shepaw.com for updates.</p>
+        </div>
+        <div class="dl-grid">
+          <article class="dl-card">
+            <div class="tag">iOS / Android</div>
+            <h3 class="lang-zh">手机</h3>
+            <h3 class="lang-en" hidden>Mobile</h3>
+            <p class="lang-zh">扫码配对、流式对话、权限确认、群组编排。建议先装这个。</p>
+            <p class="lang-en" hidden>QR pairing, streaming chat, permission prompts, groups. Start here.</p>
+            <div class="dl-actions">
+              <a class="btn btn-primary" href="https://github.com/shepaw/shepaw/releases">GitHub Releases</a>
+              <a class="btn btn-ghost" href="/docs/">Docs</a>
+            </div>
+          </article>
+          <article class="dl-card">
+            <div class="tag">macOS / Windows</div>
+            <h3 class="lang-zh">桌面</h3>
+            <h3 class="lang-en" hidden>Desktop</h3>
+            <p class="lang-zh">多窗口、本地 LLM、和手机同一套身份。不替代 Hub —— 编码 Agent 仍跑在有 CLI 的那台机器上。</p>
+            <p class="lang-en" hidden>Multi-window, local LLMs, same identity as the phone. It does not replace Hub — coding agents still run where the CLI is installed.</p>
+            <div class="dl-actions">
+              <a class="btn btn-light" href="https://github.com/shepaw/shepaw/releases">.dmg / .exe</a>
+              <a class="btn btn-ghost" href="https://github.com/shepaw/shepaw">Source</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="lang-zh">本机 Hub / 网关</h2>
+          <h2 class="lang-en" hidden>Hub / gateway on the machine</h2>
+          <p class="lang-zh">需要 Node.js ≥ 18.17，以及你选的引擎 CLI（Claude Code、Gemini、Qwen Code、Copilot …）。</p>
+          <p class="lang-en" hidden>Needs Node.js ≥ 18.17 and the engine CLI you pick (Claude Code, Gemini, Qwen Code, Copilot, …).</p>
+        </div>
+        <div class="dl-grid">
+          <article class="dl-card">
+            <div class="tag">recommended</div>
+            <h3>Agent Hub</h3>
+            <p class="lang-zh">多项目：Web 仪表盘 + Peer 配对 + 可选 Channel。一条命令开干。</p>
+            <p class="lang-en" hidden>Many projects: web dashboard, Peer pairing, optional Channel. One command to start.</p>
+            <div class="cli">
+              <div class="cli-bar"><span>npm</span></div>
+              <pre>npm install -g shepaw-agent-hub
+shepaw-hub quickstart</pre>
+            </div>
+            <div class="dl-actions">
+              <a class="btn btn-ghost" href="/docs/hub.html">Hub docs</a>
+            </div>
+          </article>
+          <article class="dl-card">
+            <div class="tag">minimal</div>
+            <h3>ACP Proxy</h3>
+            <p class="lang-zh">单 Agent 网关。一个项目、一台机器、一张二维码。</p>
+            <p class="lang-en" hidden>Single-agent gateway. One project, one machine, one QR.</p>
+            <div class="cli">
+              <div class="cli-bar"><span>npm</span></div>
+              <pre>npm install -g shepaw-acp-proxy-gateway
+shepaw-acp-proxy serve --engine claude-code --cwd ~/project --host 0.0.0.0
+shepaw-acp-proxy pair</pre>
+            </div>
+          </article>
+        </div>
+        <div class="cli" style="margin-top:16px">
+          <div class="cli-bar"><span>install.sh</span></div>
+          <pre>curl -fsSL https://raw.githubusercontent.com/shepaw/agent-bridge/main/scripts/install.sh | bash</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="lang-zh">Channel（可选）</h2>
+          <h2 class="lang-en" hidden>Channel (optional)</h2>
+          <p class="lang-zh">只有离开局域网才需要。官方实例或 Docker 自托管均可。</p>
+          <p class="lang-en" hidden>Only needed off LAN. Use the hosted instance or run Docker yourself.</p>
+        </div>
+        <div class="cli">
+          <div class="cli-bar"><span>docker compose</span></div>
+          <pre>cp .env.example .env
+docker compose up -d
+# 健康检查：curl -fsS https://channel.example.com/health</pre>
+        </div>
+        <p style="margin-top:16px">
+          <a class="btn btn-ghost" href="/docs/self-host.html"><span class="lang-zh">自托管指南</span><span class="lang-en" hidden>Self-hosting guide</span></a>
+          <a class="btn btn-ghost" href="/docs/channel.html">Channel docs</a>
+        </p>
+      </div>
+    </section>
+  </main>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

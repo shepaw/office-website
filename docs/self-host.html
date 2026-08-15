@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>自托管 — Shepaw Docs</title>
+  <link rel="icon" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="docs" data-doc="selfhost">
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav"></nav>
+    <article class="prose">
+      <div class="lang-zh">
+        <h1>自托管</h1>
+        <p>三块可以分开部署：App 是客户端；Hub 建议跑在有 Agent CLI 的裸机 / VM；Channel 用 Docker，前面加 TLS。</p>
+      </div>
+      <div class="lang-en" hidden>
+        <h1>Self-hosting</h1>
+        <p>Three pieces, three homes: the app is a client; Hub belongs on a machine that already has agent CLIs; Channel is Docker behind TLS.</p>
+      </div>
+
+      <h2>Agent Hub</h2>
+      <p class="lang-zh">编码引擎依赖本机登录态，容器里复刻全家桶成本高。生产默认：裸机 + systemd。</p>
+      <p class="lang-en" hidden>Engine CLIs need host login state. Recreating that inside a container is painful. Production default: bare metal + systemd.</p>
+      <div class="cli">
+        <div class="cli-bar"><span>systemd</span></div>
+        <pre>npm install -g shepaw-agent-hub
+sudo cp deploy/systemd/*.service /etc/systemd/system/
+sudo systemctl enable --now shepaw-hub-web</pre>
+      </div>
+      <p class="lang-zh">备份 <code>~/.config/shepaw-hub/</code>（identity、peers、sessions）。Dashboard 不要裸奔公网。</p>
+      <p class="lang-en" hidden>Back up <code>~/.config/shepaw-hub/</code> (identity, peers, sessions). Do not put the dashboard on the public internet bare.</p>
+
+      <h2>Channel</h2>
+      <div class="cli">
+        <div class="cli-bar"><span>compose</span></div>
+        <pre>cp .env.example .env
+# PORT, BASE_URL, DATABASE_URL=postgres://..., REDIS_ADDR
+# 不要设置 DEV_SKIP_AUTH=1
+docker compose up -d
+curl -fsS https://channel.example.com/health</pre>
+      </div>
+      <ul class="lang-zh">
+        <li>TLS 终止：Caddy / Nginx / Cloudflare；<code>BASE_URL</code> 用 https</li>
+        <li>生产用 Postgres + Redis，不要多副本共用一个 SQLite 文件</li>
+        <li>配置 <code>ALLOWED_ORIGINS</code> / <code>ALLOWED_DOMAINS</code></li>
+        <li>给 <code>/proxy</code> 与 <code>/tunnel/connect</code> 做反向代理限流</li>
+      </ul>
+      <ul class="lang-en" hidden>
+        <li>Terminate TLS at Caddy / Nginx / Cloudflare; <code>BASE_URL</code> must be https</li>
+        <li>Postgres + Redis in production — do not share one SQLite file across replicas</li>
+        <li>Set <code>ALLOWED_ORIGINS</code> / <code>ALLOWED_DOMAINS</code></li>
+        <li>Rate-limit <code>/proxy</code> and <code>/tunnel/connect</code> at the reverse proxy</li>
+      </ul>
+
+      <h2 class="lang-zh">本站（官网）</h2>
+      <h2 class="lang-en" hidden>This website</h2>
+      <p class="lang-zh">纯静态文件，丢到任何静态托管即可：</p>
+      <p class="lang-en" hidden>Static files. Drop them on any static host:</p>
+      <div class="cli">
+        <div class="cli-bar"><span>website/</span></div>
+        <pre>python3 -m http.server 4173
+# 或 npx serve -p 4173</pre>
+      </div>
+    </article>
+  </div>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

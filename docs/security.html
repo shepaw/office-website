@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>安全模型 — Shepaw Docs</title>
+  <link rel="icon" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="docs" data-doc="security">
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav"></nav>
+    <article class="prose">
+      <div class="lang-zh">
+        <h1>安全模型</h1>
+        <p>ACP v2.1：WebSocket 上的 Noise <code>IK</code>，套件 <code>Noise_IK_25519_ChaChaPoly_BLAKE2b</code>。没有共享 token。Channel 只能看见握手字节和 AEAD 密文。</p>
+      </div>
+      <div class="lang-en" hidden>
+        <h1>Security</h1>
+        <p>ACP v2.1: Noise <code>IK</code> over WebSocket, suite <code>Noise_IK_25519_ChaChaPoly_BLAKE2b</code>. No shared token. Channel sees handshake bytes and AEAD ciphertext only.</p>
+      </div>
+
+      <h2 class="lang-zh">身份</h2>
+      <h2 class="lang-en" hidden>Identity</h2>
+      <ul class="lang-zh">
+        <li>App 首次启动生成长期 X25519 静态密钥，放进系统安全存储</li>
+        <li>指纹：<code>SHA-256(publicKey)</code> 前 8 字节的 hex（16 个字符）</li>
+        <li>Agent 把设备公钥写入 <code>authorized_peers.json</code>；不在名单里则握手后以 4405 关闭，不交换数据帧</li>
+        <li>App 用 URL 里的 <code>#fp=</code> 钉死 Agent 公钥，中继替换身份会 4403</li>
+      </ul>
+      <ul class="lang-en" hidden>
+        <li>The app generates a long-term X25519 static key on first launch and stores it in platform secure storage</li>
+        <li>Fingerprint: first 8 bytes of <code>SHA-256(publicKey)</code> as 16 hex chars</li>
+        <li>The agent allowlists the device in <code>authorized_peers.json</code>; unknown peers close with 4405 after handshake, no data frames</li>
+        <li>The app pins the agent key via <code>#fp=</code>; a swapped identity at the relay closes with 4403</li>
+      </ul>
+
+      <h2 class="lang-zh">能防什么</h2>
+      <h2 class="lang-en" hidden>Protected against</h2>
+      <ul class="lang-zh">
+        <li>路径上的被动窃听（含 Channel 运营者）</li>
+        <li>中继主动 MITM 换钥</li>
+        <li>重放 / 乱序（Noise 计数器）</li>
+        <li>协议降级（prologue 绑定 <code>shepaw-acp/2.1</code>，与 v2 / v1 硬切断）</li>
+        <li>前向保密：每次重连新的 ephemeral</li>
+        <li>共享 token 泄露：v2.1 里已经没有 token</li>
+      </ul>
+      <ul class="lang-en" hidden>
+        <li>Passive wiretaps on the path, including a Channel operator</li>
+        <li>Active MITM at the relay swapping keys</li>
+        <li>Replay / reordering (Noise counters)</li>
+        <li>Protocol downgrade (prologue binds <code>shepaw-acp/2.1</code>; hard cutover from v2 / v1)</li>
+        <li>Forward secrecy: fresh ephemerals on every reconnect</li>
+        <li>Shared-token leak: v2.1 has no token</li>
+      </ul>
+
+      <h2 class="lang-zh">故意不防什么</h2>
+      <h2 class="lang-en" hidden>Deliberately out of scope</h2>
+      <p class="lang-zh">能在你机器上跑 Agent CLI 的人，本来就能读那个仓库。Shepaw 不把「已授权设备上的恶意软件」当成威胁模型。OS Tools 的危险操作仍要你在 App 里点批准。</p>
+      <p class="lang-en" hidden>Anyone who can run the agent CLI on your machine can already read that repo. Shepaw does not treat malware on an authorized device as in-scope. Dangerous OS tools still require an in-app approval.</p>
+
+      <h2 class="lang-zh">App 本地</h2>
+      <h2 class="lang-en" hidden>On the app</h2>
+      <ul class="lang-zh">
+        <li>聊天与配置默认在本机 SQLite，无强制云账号</li>
+        <li>主密码 + 可选生物识别</li>
+        <li>API Key 走平台 Secure Storage</li>
+        <li>更新检查只发送平台、版本号、构建号</li>
+      </ul>
+      <ul class="lang-en" hidden>
+        <li>Chat and config stay in local SQLite; no mandatory cloud account</li>
+        <li>Master password + optional biometrics</li>
+        <li>API keys in platform secure storage</li>
+        <li>Update checks send platform, version, and build number only</li>
+      </ul>
+    </article>
+  </div>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

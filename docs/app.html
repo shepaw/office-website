@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>App 功能 — Shepaw Docs</title>
+  <link rel="icon" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="docs" data-doc="app">
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav"></nav>
+    <article class="prose">
+      <div class="lang-zh">
+        <h1>App 功能</h1>
+        <p>Shepaw 客户端（iOS / Android / macOS / Windows）是控制面：本地 LLM、远端编码 Agent、群组编排、储物袋，数据默认留在本机。</p>
+      </div>
+      <div class="lang-en" hidden>
+        <h1>App</h1>
+        <p>The Shepaw client (iOS / Android / macOS / Windows) is the control plane: local LLMs, remote coding agents, group orchestration, Store. Data stays on device by default.</p>
+      </div>
+
+      <h2 class="lang-zh">两种 Agent</h2>
+      <h2 class="lang-en" hidden>Two kinds of agent</h2>
+      <ul class="lang-zh">
+        <li><strong>本地 LLM</strong>：OpenAI、Claude、Gemini、DeepSeek、Qwen、GLM、Kimi、Ollama，或任意 OpenAI 兼容 API。密钥只存在本机。</li>
+        <li><strong>远端 Agent</strong>：经 ACP v2.1 连到 agent-bridge。扫码配对，见 <a href="/docs/pairing.html">配对</a>。</li>
+      </ul>
+      <ul class="lang-en" hidden>
+        <li><strong>Local LLM</strong>: OpenAI, Claude, Gemini, DeepSeek, Qwen, GLM, Kimi, Ollama, or any OpenAI-compatible API. Keys stay on device.</li>
+        <li><strong>Remote agent</strong>: ACP v2.1 to agent-bridge. QR pairing — see <a href="/docs/pairing.html">pairing</a>.</li>
+      </ul>
+
+      <h2 class="lang-zh">聊天</h2>
+      <h2 class="lang-en" hidden>Chat</h2>
+      <p class="lang-zh">Markdown、代码高亮、图片 / 文件 / 语音、流式输出、回复与搜索。远端 Agent 还可以弹出表单、确认按钮、权限请求。</p>
+      <p class="lang-en" hidden>Markdown, code highlight, images / files / voice, streaming, reply and search. Remote agents can also send forms, confirmations, and permission prompts.</p>
+
+      <h2 class="lang-zh">群组编排</h2>
+      <h2 class="lang-en" hidden>Group orchestration</h2>
+      <ul>
+        <li><strong>Standard</strong> — <span class="lang-zh">Admin 轮流协调，最多 50 轮</span><span class="lang-en" hidden>Admin coordinates round-robin, up to 50 rounds</span></li>
+        <li><strong>Planning</strong> — <span class="lang-zh">先出 JSON 计划，你逐条审批再执行</span><span class="lang-en" hidden>JSON plan first; you approve tasks one by one</span></li>
+        <li><strong>Flow</strong> — <span class="lang-zh">分阶段自动跑，可暂停 / 跳步 / 中止</span><span class="lang-en" hidden>Staged automatic run; pause / skip / abort</span></li>
+      </ul>
+
+      <h2 class="lang-zh">储物袋与技能</h2>
+      <h2 class="lang-en" hidden>Store and skills</h2>
+      <p class="lang-zh">工作区文件、备份快照在储物袋。技能包可从 ZIP 或 URL 导入。备份入口在「储物袋 → 备份与恢复」，加密快照，恢复是全量替换。</p>
+      <p class="lang-en" hidden>Workspace files and backup snapshots live in Store. Skills import from a ZIP or URL. Backups are under Store → Backup; snapshots are encrypted and restore replaces everything.</p>
+
+      <h2 class="lang-zh">权限</h2>
+      <h2 class="lang-en" hidden>Permissions</h2>
+      <p>SAFE / WARNING / DANGEROUS。<span class="lang-zh">危险操作必须你点头。推理日志可导出。</span><span class="lang-en" hidden>Dangerous ops require an explicit tap. Inference logs can be exported.</span></p>
+    </article>
+  </div>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

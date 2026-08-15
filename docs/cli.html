@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CLI 参考 — Shepaw Docs</title>
+  <link rel="icon" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="docs" data-doc="cli">
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav"></nav>
+    <article class="prose">
+      <div class="lang-zh">
+        <h1>CLI 参考</h1>
+        <p>两套命令：多项目用 <code>shepaw-hub</code>，单进程网关用 <code>shepaw-acp-proxy</code>。</p>
+      </div>
+      <div class="lang-en" hidden>
+        <h1>CLI reference</h1>
+        <p>Two CLIs: <code>shepaw-hub</code> for many projects, <code>shepaw-acp-proxy</code> for a single gateway process.</p>
+      </div>
+
+      <h2>shepaw-hub</h2>
+      <div class="cli">
+        <div class="cli-bar"><span>hub</span></div>
+        <pre>shepaw-hub init
+shepaw-hub doctor
+shepaw-hub quickstart
+shepaw-hub web [--host 127.0.0.1] [--port 4000] [--no-peer] [--no-gateway] [--no-open]
+shepaw-hub update [--check] [--yes]
+
+shepaw-hub engine list
+shepaw-hub engine install &lt;engine-id&gt;
+shepaw-hub engine add &lt;id&gt; --display NAME --command "cli acp"
+
+shepaw-hub instance add [--engine claude-code] [--cwd PATH] [--host 0.0.0.0]
+shepaw-hub instance-list
+shepaw-hub start &lt;id&gt;
+shepaw-hub logs &lt;id&gt; [-f]
+
+shepaw-hub peer-start | peer-stop | peer-status | peer-pair
+shepaw-hub gateway-set-channel --server URL --channel-id ID --secret SECRET
+shepaw-hub gateway-start | gateway-status
+shepaw-hub pair &lt;id&gt; [--label NAME]
+shepaw-hub test &lt;id&gt; [--rpc]</pre>
+      </div>
+
+      <h2>shepaw-acp-proxy</h2>
+      <div class="cli">
+        <div class="cli-bar"><span>proxy</span></div>
+        <pre>shepaw-acp-proxy serve --engine claude-code --cwd ~/project --host 0.0.0.0
+shepaw-acp-proxy pair
+shepaw-acp-proxy peers list
+shepaw-acp-proxy peers add &lt;pubkey&gt; --label "My iPhone"
+shepaw-acp-proxy peers remove &lt;fingerprint&gt;</pre>
+      </div>
+
+      <h2 class="lang-zh">从源码跑</h2>
+      <h2 class="lang-en" hidden>From a source checkout</h2>
+      <div class="cli">
+        <div class="cli-bar"><span>agent-bridge</span></div>
+        <pre>git clone https://github.com/shepaw/agent-bridge.git
+cd agent-bridge
+npm install && npm run build
+node implementations/acp-proxy-ts/dist/cli.js serve --engine claude-code --cwd ~/project
+node agent-hub/cli/dist/cli.js web</pre>
+      </div>
+    </article>
+  </div>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

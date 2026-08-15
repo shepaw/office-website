@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FAQ — Shepaw Docs</title>
+  <link rel="icon" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="docs" data-doc="faq">
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav"></nav>
+    <article class="prose">
+      <h1>FAQ</h1>
+      <div class="faq">
+        <details open>
+          <summary><span class="lang-zh">Shepaw 和 Paseo / 其他编排器有什么不同？</span><span class="lang-en" hidden>How is Shepaw different from other orchestrators?</span></summary>
+          <p class="lang-zh">同样是「手机调度本机编码 Agent」。Shepaw 多了：本地 LLM 与远端 Agent 同一套聊天；群组 Planning / Flow；Channel 密文收件箱（Agent 离线也能留言）；Noise 设备白名单而不是共享 token。</p>
+          <p class="lang-en" hidden>Same job: drive local coding agents from your phone. Shepaw also keeps local LLMs and remote agents in one chat, adds group Planning / Flow, a sealed inbox when the agent is offline, and a per-device Noise allowlist instead of a shared token.</p>
+        </details>
+        <details>
+          <summary><span class="lang-zh">Python SDK 能连现在的 App 吗？</span><span class="lang-en" hidden>Can the Python SDK talk to the current app?</span></summary>
+          <p class="lang-zh">还不能。TypeScript SDK 与 Flutter App 已切到 ACP v2.1（Noise IK）。Python SDK 仍是 v1 明文协议，移植完成前请用 TypeScript 网关 / Hub。</p>
+          <p class="lang-en" hidden>Not yet. The TypeScript SDK and Flutter app speak ACP v2.1 (Noise IK). The Python SDK is still v1 plaintext — use the TypeScript gateway / Hub until it is ported.</p>
+        </details>
+        <details>
+          <summary><span class="lang-zh">扫码失败、4405 unauthorized peer？</span><span class="lang-en" hidden>Pairing fails with 4405 unauthorized peer?</span></summary>
+          <p class="lang-zh">设备公钥没进白名单。重启 Peer：<code>shepaw-hub peer-stop && shepaw-hub peer-start</code>。Hub 启动 Peer 时会把 Peer 公钥写入各实例的 <code>authorized_peers.json</code>。</p>
+          <p class="lang-en" hidden>The device key is not on the allowlist. Restart Peer: <code>shepaw-hub peer-stop && shepaw-hub peer-start</code>. Starting Peer writes its public key into each instance’s <code>authorized_peers.json</code>.</p>
+        </details>
+        <details>
+          <summary><span class="lang-zh">外网连不上？</span><span class="lang-en" hidden>Off-site connection fails?</span></summary>
+          <p class="lang-zh">确认 Channel 已保存且隧道路由器在跑（<code>shepaw-hub gateway-status</code>），然后重新 <code>peer-pair</code> 让二维码带上 <code>channel=</code>。</p>
+          <p class="lang-en" hidden>Confirm Channel is saved and the tunnel router is up (<code>shepaw-hub gateway-status</code>), then <code>peer-pair</code> again so the QR includes <code>channel=</code>.</p>
+        </details>
+        <details>
+          <summary><span class="lang-zh">必须用 GitHub 吗？</span><span class="lang-en" hidden>Do I need git or GitHub?</span></summary>
+          <p class="lang-zh">不必。Hub 的 <code>cwd</code> 可以是任何目录。git worktree 是引擎自己的习惯，不是 Shepaw 的前提。</p>
+          <p class="lang-en" hidden>No. Hub <code>cwd</code> can be any directory. Git worktrees are an engine habit, not a Shepaw requirement.</p>
+        </details>
+        <details>
+          <summary><span class="lang-zh">数据在哪？</span><span class="lang-en" hidden>Where is my data?</span></summary>
+          <p class="lang-zh">App：设备上的 SQLite 与安全存储。Hub：<code>~/.config/shepaw-hub/</code>。Channel：只存密文和路由元数据，TTL 默认 7 天。</p>
+          <p class="lang-en" hidden>App: on-device SQLite and secure storage. Hub: <code>~/.config/shepaw-hub/</code>. Channel: ciphertext and routing metadata only, default TTL 7 days.</p>
+        </details>
+      </div>
+    </article>
+  </div>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

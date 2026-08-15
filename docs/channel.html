@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Channel 与隧道 — Shepaw Docs</title>
+  <link rel="icon" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="docs" data-doc="channel">
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav"></nav>
+    <article class="prose">
+      <div class="lang-zh">
+        <h1>Channel 与隧道</h1>
+        <p>Channel 是 App 与 agent-bridge 之间的<strong>云端收件箱</strong>，外加一条让 NAT 后机器保持可达的传输层。它不是对话参与方，也不是身份提供者。</p>
+      </div>
+      <div class="lang-en" hidden>
+        <h1>Channel and tunnels</h1>
+        <p>Channel is a <strong>cloud inbox</strong> between the app and agent-bridge, plus a transport so a NAT’d machine stays reachable. It is not a chat participant and not an identity provider.</p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th><span class="lang-zh">层级</span><span class="lang-en" hidden>Layer</span></th>
+            <th><span class="lang-zh">能力</span><span class="lang-en" hidden>Job</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="lang-zh">收件箱（主）</span><span class="lang-en" hidden>Inbox (primary)</span></td>
+            <td><span class="lang-zh">异步密文信箱。App / Agent 离线仍可留言；E2E seal-box，服务端只见密文。</span><span class="lang-en" hidden>Async sealed mailbox. App or agent can be offline. E2E seal-box; the server sees ciphertext only.</span></td>
+          </tr>
+          <tr>
+            <td><span class="lang-zh">传输层（辅）</span><span class="lang-en" hidden>Transport (secondary)</span></td>
+            <td>HTTP / WebSocket tunnel · <code>/tunnel/connect</code> · <code>/proxy/:channel_id/*</code></td>
+          </tr>
+          <tr>
+            <td><span class="lang-zh">发现 / 接入</span><span class="lang-en" hidden>Discovery</span></td>
+            <td><span class="lang-zh">Agent 名片、Noise 白名单中介、接入审批</span><span class="lang-en" hidden>Agent cards, Noise allowlist mediation, access grants</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 class="lang-zh">什么时候需要它</h2>
+      <h2 class="lang-en" hidden>When you need it</h2>
+      <p class="lang-zh">同一 Wi-Fi 用 Peer 直连即可，不必开 Channel。出门、差旅、手机 5G 连家里的 Hub 时再配。</p>
+      <p class="lang-en" hidden>On the same Wi-Fi, Peer is enough. Turn on Channel when the phone is away from the hub — travel, cellular, another network.</p>
+
+      <h2 class="lang-zh">在 Hub 里打开</h2>
+      <h2 class="lang-en" hidden>Enable it in Hub</h2>
+      <div class="cli">
+        <div class="cli-bar"><span>hub</span></div>
+        <pre>shepaw-hub gateway-set-channel \
+  --server https://channel.shepaw.com \
+  --channel-id ch_xxx \
+  --secret ch_sec_...
+shepaw-hub web          # 已配置时自动拉起隧道路由器
+shepaw-hub peer-pair    # 二维码同时含 local= 与 channel=</pre>
+      </div>
+
+      <h2 class="lang-zh">收件箱如何串回会话</h2>
+      <h2 class="lang-en" hidden>How the inbox correlates turns</h2>
+      <p class="lang-zh">每条留言带 <code>target_id</code>、<code>session_id</code>、<code>request_id</code>、<code>message_id</code> / <code>reply_to</code>、<code>caller_fp</code>。Agent claim 待办 → 处理后回投密文；App 上线走 <code>/inbox/replies</code> 或 WebSocket <code>/inbox/subscribe</code> 收取。</p>
+      <p class="lang-en" hidden>Each note carries <code>target_id</code>, <code>session_id</code>, <code>request_id</code>, <code>message_id</code> / <code>reply_to</code>, and <code>caller_fp</code>. The agent claims pending mail, replies in ciphertext; the app drains <code>/inbox/replies</code> or the <code>/inbox/subscribe</code> WebSocket when it comes online.</p>
+
+      <div class="note lang-zh">实时路径上的每一字节仍是 Noise IK（ChaCha20-Poly1305）。Channel 看到的是握手字节和 AEAD 密文，测过恶意中继抓包也拿不到聊天正文或 RPC 方法名。</div>
+      <div class="note lang-en" hidden>Live traffic is still Noise IK (ChaCha20-Poly1305). Channel sees handshake bytes and AEAD ciphertext. A hostile relay dumping frames does not get chat text or RPC method names.</div>
+
+      <p><a href="/docs/self-host.html" class="lang-zh">自托管 Channel →</a><a href="/docs/self-host.html" class="lang-en" hidden>Self-host Channel →</a></p>
+    </article>
+  </div>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

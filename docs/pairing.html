@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>扫码配对 — Shepaw Docs</title>
+  <link rel="icon" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="docs" data-doc="pairing">
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav"></nav>
+    <article class="prose">
+      <div class="lang-zh">
+        <h1>扫码配对</h1>
+        <p>ACP v2.1 没有共享 token。每台设备有长期 X25519 身份，Agent 用 <code>authorized_peers.json</code> 白名单放行。二维码只是把「连谁、一次性登记码、指纹」一次交给 App。</p>
+      </div>
+      <div class="lang-en" hidden>
+        <h1>Pairing</h1>
+        <p>ACP v2.1 has no shared token. Each device has a long-term X25519 identity; the agent allowlists it in <code>authorized_peers.json</code>. The QR hands the app the endpoint, a one-time enrollment code, and a fingerprint.</p>
+      </div>
+
+      <h2 class="lang-zh">两种入口，不要扫错</h2>
+      <h2 class="lang-en" hidden>Two entry points — don’t mix them</h2>
+      <table>
+        <thead>
+          <tr>
+            <th><span class="lang-zh">场景</span><span class="lang-en" hidden>When</span></th>
+            <th>URI</th>
+            <th><span class="lang-zh">App 入口</span><span class="lang-en" hidden>In the app</span></th>
+            <th><span class="lang-zh">命令</span><span class="lang-en" hidden>Command</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="lang-zh">一台 Hub，多个实例</span><span class="lang-en" hidden>One hub, many instances</span></td>
+            <td><code>shepaw://peer</code></td>
+            <td>Device Pairing / Scan to Connect</td>
+            <td><code>shepaw-hub peer-pair</code></td>
+          </tr>
+          <tr>
+            <td><span class="lang-zh">单个网关进程</span><span class="lang-en" hidden>Single gateway process</span></td>
+            <td><code>shepaw://pair</code></td>
+            <td><span class="lang-zh">添加 Agent → 扫码</span><span class="lang-en" hidden>Add Agent → Scan</span></td>
+            <td><code>shepaw-acp-proxy pair</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="note lang-zh">Hub 的 Web 仪表盘在「扫码配对」里出的是 Peer 码，一次授权本机全部实例。单网关的 pair 码只绑定那一个 Agent。</div>
+      <div class="note lang-en" hidden>The hub dashboard “pair” button emits a Peer QR and authorizes every instance on that host. A gateway pair QR binds only that one agent.</div>
+
+      <h2 class="lang-zh">二维码里有什么</h2>
+      <h2 class="lang-en" hidden>What’s in the QR</h2>
+      <ul class="lang-zh">
+        <li>WebSocket 地址（局域网 <code>ws://</code>，外网可带 Channel）</li>
+        <li>一次性 enrollment code（握手成功即作废）</li>
+        <li>Fragment：<code>#fp=</code> Agent 静态公钥指纹，可选 <code>pk=</code></li>
+      </ul>
+      <ul class="lang-en" hidden>
+        <li>WebSocket URL (LAN <code>ws://</code>, or Channel when off-site)</li>
+        <li>One-time enrollment code (consumed on handshake)</li>
+        <li>Fragment: <code>#fp=</code> agent static-key fingerprint, optional <code>pk=</code></li>
+      </ul>
+
+      <h2 class="lang-zh">手动配对</h2>
+      <h2 class="lang-en" hidden>Manual pairing</h2>
+      <p class="lang-zh">扫不了码时：把 App「添加 Agent」页显示的设备公钥交给网关：</p>
+      <p class="lang-en" hidden>If you cannot scan, paste the device public key from Add Agent into the gateway:</p>
+      <div class="cli">
+        <div class="cli-bar"><span>peers</span></div>
+        <pre>shepaw-acp-proxy peers add &lt;device-pubkey-base64&gt; --label "My iPhone"
+# Hub：
+shepaw-hub pair &lt;instance-id&gt; --label "My iPhone"</pre>
+      </div>
+      <p class="lang-zh">URL 里的 <code>#fp=</code> 必须和 Agent 真实公钥指纹一致，否则握手以 4403 关闭——这是为了防止中继替换身份。</p>
+      <p class="lang-en" hidden>The <code>#fp=</code> in the URL must match the agent’s real key fingerprint or the handshake closes with 4403 — that blocks a relay from swapping identity.</p>
+
+      <h2 class="lang-zh">吊销一台丢失的手机</h2>
+      <h2 class="lang-en" hidden>Revoke a lost phone</h2>
+      <p class="lang-zh">v2.1 里每台设备是白名单里的一行。删掉那一行即可，不必让其他设备重新配对。</p>
+      <p class="lang-en" hidden>In v2.1 each device is one allowlist row. Remove that row; other devices stay paired.</p>
+      <div class="cli">
+        <div class="cli-bar"><span>revoke</span></div>
+        <pre>shepaw-acp-proxy peers remove &lt;fingerprint-or-label&gt;</pre>
+      </div>
+    </article>
+  </div>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>快速开始 — Shepaw Docs</title>
+  <link rel="icon" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="docs" data-doc="start">
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav"></nav>
+    <article class="prose">
+      <div class="lang-zh">
+        <h1>快速开始</h1>
+        <p>Shepaw 调度的是你机器上已经在跑的编码 Agent，自己不内置模型。最快路径：本机装 Hub，手机装 App，扫一张码。</p>
+      </div>
+      <div class="lang-en" hidden>
+        <h1>Getting started</h1>
+        <p>Shepaw drives coding agents that already run on your machine. It does not ship a model. Fastest path: Hub on the computer, app on the phone, one QR.</p>
+      </div>
+
+      <h2 class="lang-zh">你需要准备</h2>
+      <h2 class="lang-en" hidden>Prerequisites</h2>
+      <ul class="lang-zh">
+        <li>一台能跑 Agent CLI 的电脑（macOS / Linux / Windows）</li>
+        <li>Node.js ≥ 18.17</li>
+        <li>至少一个引擎：Claude Code、Codex、Cursor、Gemini、Copilot、Qwen Code 等，<a href="/docs/engines.html">完整列表</a></li>
+        <li>Shepaw App（iOS / Android / 桌面）</li>
+      </ul>
+      <ul class="lang-en" hidden>
+        <li>A computer that can run an agent CLI (macOS / Linux / Windows)</li>
+        <li>Node.js ≥ 18.17</li>
+        <li>At least one engine: Claude Code, Codex, Cursor, Gemini, Copilot, Qwen Code, and more — <a href="/docs/engines.html">full list</a></li>
+        <li>The Shepaw app (iOS / Android / desktop)</li>
+      </ul>
+
+      <h2 class="lang-zh">1. 安装 Agent Hub</h2>
+      <h2 class="lang-en" hidden>1. Install Agent Hub</h2>
+      <div class="cli">
+        <div class="cli-bar"><span>install</span></div>
+        <pre>curl -fsSL https://raw.githubusercontent.com/shepaw/agent-bridge/main/scripts/install.sh | bash
+# 或
+npm install -g shepaw-agent-hub</pre>
+      </div>
+      <p class="lang-zh">只要单 Agent、不要仪表盘，可以改装 <code>shepaw-acp-proxy-gateway</code>。</p>
+      <p class="lang-en" hidden>For a single agent without the dashboard, install <code>shepaw-acp-proxy-gateway</code> instead.</p>
+
+      <h2 class="lang-zh">2. 启动并添加项目</h2>
+      <h2 class="lang-en" hidden>2. Start and add a project</h2>
+      <div class="cli">
+        <div class="cli-bar"><span>quickstart</span></div>
+        <pre>shepaw-hub quickstart
+# 选引擎 → 确认工作目录 → 终端打印二维码
+
+# 或者分步：
+shepaw-hub web
+# 浏览器打开 :4000，添加实例（引擎 + cwd）</pre>
+      </div>
+      <div class="note lang-zh">仪表盘默认只绑本机。若要在局域网打开 Web UI，必须设置 <code>SHEPAW_HUB_TOKEN</code>，并用 <code>--host 0.0.0.0</code>。</div>
+      <div class="note lang-en" hidden>The dashboard binds to localhost by default. To open it on LAN you must set <code>SHEPAW_HUB_TOKEN</code> and pass <code>--host 0.0.0.0</code>.</div>
+
+      <h2 class="lang-zh">3. 手机扫码</h2>
+      <h2 class="lang-en" hidden>3. Scan from the phone</h2>
+      <p class="lang-zh">打开 Shepaw → <strong>Device Pairing / Scan to Connect</strong>，扫描 Hub 生成的 <code>shepaw://peer</code> 二维码。手机和电脑要在同一 Wi-Fi。这不是「添加远端 Agent」里的 <code>shepaw://pair</code>。</p>
+      <p class="lang-en" hidden>In Shepaw open <strong>Device Pairing / Scan to Connect</strong> and scan the hub’s <code>shepaw://peer</code> QR. Phone and computer must share Wi-Fi. This is not the <code>shepaw://pair</code> flow under Add Agent.</p>
+
+      <h2 class="lang-zh">4. 开始对话</h2>
+      <h2 class="lang-en" hidden>4. Chat</h2>
+      <p class="lang-zh">配对成功后，Peer 通道可以访问这台机器上已授权的全部实例。文件操作和权限弹窗在网关主机执行，再回显到手机。</p>
+      <p class="lang-en" hidden>After pairing, the Peer channel can reach every authorized instance on that host. File ops and permission prompts run on the gateway machine and surface in the app.</p>
+
+      <h2 class="lang-zh">接下来</h2>
+      <h2 class="lang-en" hidden>Where next</h2>
+      <ul>
+        <li><a href="/docs/pairing.html" class="lang-zh">扫码配对与两种入口</a><a href="/docs/pairing.html" class="lang-en" hidden>Pairing and the two entry points</a></li>
+        <li><a href="/docs/hub.html">Agent Hub</a></li>
+        <li><a href="/docs/channel.html" class="lang-zh">离开局域网：Channel</a><a href="/docs/channel.html" class="lang-en" hidden>Off LAN: Channel</a></li>
+        <li><a href="/docs/security.html" class="lang-zh">Noise v2.1 安全模型</a><a href="/docs/security.html" class="lang-en" hidden>Noise v2.1 security</a></li>
+      </ul>
+    </article>
+  </div>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>

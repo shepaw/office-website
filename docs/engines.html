@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>引擎 — Shepaw Docs</title>
+  <link rel="icon" href="/assets/img/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body data-page="docs" data-doc="engines">
+  <div class="docs-shell">
+    <nav class="docs-nav" id="docs-nav"></nav>
+    <article class="prose">
+      <div class="lang-zh">
+        <h1>引擎</h1>
+        <p>网关通过行业标准 ACP（stdio JSON-RPC）拉起上游 CLI。Shepaw 不改它们的行为，只把会话、模型、权限和终端代理到 App。目前内置 <strong>42</strong> 个引擎，也可用 <code>engine add</code> 注册自定义 CLI。</p>
+      </div>
+      <div class="lang-en" hidden>
+        <h1>Engines</h1>
+        <p>The gateway launches upstream CLIs over standard ACP (stdio JSON-RPC). Shepaw does not wrap their behavior — it proxies sessions, models, permissions, and the terminal into the app. <strong>42</strong> built-in engines; register more with <code>engine add</code>.</p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th><code>--engine</code></th>
+            <th><span class="lang-zh">名称</span><span class="lang-en" hidden>Name</span></th>
+            <th><span class="lang-zh">上游命令</span><span class="lang-en" hidden>Upstream</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>claude-code</code></td><td>Claude Code</td><td><code>npx -y @agentclientprotocol/claude-agent-acp@latest</code></td></tr>
+          <tr><td><code>codex</code></td><td>Codex</td><td><code>npx -y @agentclientprotocol/codex-acp@latest</code></td></tr>
+          <tr><td><code>cursor</code></td><td>Cursor</td><td><code>agent acp</code></td></tr>
+          <tr><td><code>copilot</code></td><td>GitHub Copilot</td><td><code>copilot --acp</code></td></tr>
+          <tr><td><code>gemini</code></td><td>Gemini CLI</td><td><code>npx -y @google/gemini-cli@latest --acp</code></td></tr>
+          <tr><td><code>qwen-code</code></td><td>Qwen Code</td><td><code>qwen --acp</code></td></tr>
+          <tr><td><code>glm</code></td><td>GLM Agent</td><td><code>npx -y glm-acp-agent@latest</code></td></tr>
+          <tr><td><code>zcode</code></td><td>ZCode</td><td><code>npx -y zcode-acp-server@latest</code></td></tr>
+          <tr><td><code>deepseek-harness</code></td><td>DeepSeek Harness</td><td><code>npx -y @deepseek-ai/dsh-acp-demo@latest</code></td></tr>
+          <tr><td><code>kimi</code></td><td>Kimi CLI</td><td><code>kimi acp</code></td></tr>
+          <tr><td><code>codebuddy</code></td><td>CodeBuddy Code</td><td><code>codebuddy --acp</code></td></tr>
+          <tr><td><code>traecli</code></td><td>TRAE CLI</td><td><code>traecli acp serve</code></td></tr>
+          <tr><td><code>grok</code></td><td>Grok</td><td><code>grok agent stdio</code></td></tr>
+          <tr><td><code>pi</code></td><td>Pi</td><td><code>npx -y pi-acp</code></td></tr>
+          <tr><td><code>opencode</code></td><td>OpenCode</td><td><code>npx -y opencode-ai@latest acp</code></td></tr>
+          <tr><td><code>openclaw</code></td><td>OpenClaw</td><td><code>npx -y openclaw acp</code></td></tr>
+          <tr><td><code>hermes</code></td><td>Hermes</td><td><code>hermes acp</code></td></tr>
+          <tr><td><code>cline</code></td><td>Cline</td><td><code>npx -y cline@latest --acp</code></td></tr>
+          <tr><td><code>goose</code></td><td>goose</td><td><code>goose acp</code></td></tr>
+          <tr><td><code>junie</code></td><td>Junie</td><td><code>junie --acp true</code></td></tr>
+          <tr><td><code>auggie</code></td><td>Auggie CLI</td><td><code>npx -y @augmentcode/auggie@latest --acp</code></td></tr>
+          <tr><td><code>amp</code></td><td>Amp</td><td><code>amp-acp</code></td></tr>
+          <tr><td><code>factory-droid</code></td><td>Factory Droid</td><td><code>npx -y droid@latest exec --output-format acp-daemon</code></td></tr>
+          <tr><td><code>qoder</code></td><td>Qoder CLI</td><td><code>npx -y @qoder-ai/qodercli@latest --acp</code></td></tr>
+          <tr><td><code>kilo</code></td><td>Kilo</td><td><code>kilo acp</code></td></tr>
+          <tr><td><code>codewhale</code></td><td>CodeWhale</td><td><code>codewhale serve --acp</code></td></tr>
+          <tr><td><code>cortex-code</code></td><td>Cortex Code</td><td><code>cortex acp serve</code></td></tr>
+          <tr><td><code>vtcode</code></td><td>VT Code</td><td><code>vtcode acp</code></td></tr>
+          <tr><td><code>mistral-vibe</code></td><td>Mistral Vibe</td><td><code>vibe-acp</code></td></tr>
+          <tr><td><code>agoragentic</code></td><td>Agoragentic</td><td><code>npx -y agoragentic-mcp@latest --acp</code></td></tr>
+          <tr><td><code>autohand</code></td><td>Autohand Code</td><td><code>npx -y @autohandai/autohand-acp@latest</code></td></tr>
+          <tr><td><code>deepagents</code></td><td>DeepAgents</td><td><code>npx -y deepagents-acp@latest</code></td></tr>
+          <tr><td><code>dimcode</code></td><td>DimCode</td><td><code>npx -y dimcode@latest acp</code></td></tr>
+          <tr><td><code>dirac</code></td><td>Dirac</td><td><code>npx -y dirac-cli@latest --acp</code></td></tr>
+          <tr><td><code>fast-agent</code></td><td>fast-agent</td><td><code>uvx --from fast-agent-acp fast-agent-acp -x</code></td></tr>
+          <tr><td><code>minion-code</code></td><td>Minion Code</td><td><code>uvx --from minion-code minion-code acp</code></td></tr>
+          <tr><td><code>nova</code></td><td>Nova</td><td><code>npx -y @compass-ai/nova@latest acp</code></td></tr>
+          <tr><td><code>poolside</code></td><td>Poolside</td><td><code>pool acp</code></td></tr>
+          <tr><td><code>sigit</code></td><td>siGit Code</td><td><code>sigit</code></td></tr>
+          <tr><td><code>stakpak</code></td><td>Stakpak</td><td><code>stakpak acp</code></td></tr>
+          <tr><td><code>crow-cli</code></td><td>crow-cli</td><td><code>crow-cli acp</code></td></tr>
+          <tr><td><code>corust-agent</code></td><td>Corust Agent</td><td><code>corust-agent-acp</code></td></tr>
+        </tbody>
+      </table>
+
+      <h2 class="lang-zh">自定义引擎</h2>
+      <h2 class="lang-en" hidden>Custom engines</h2>
+      <div class="cli">
+        <div class="cli-bar"><span>custom</span></div>
+        <pre>shepaw-hub engine add my-agent --display "My Local Agent" --command "my-cli acp"
+
+shepaw-acp-proxy serve --engine my-agent --engine-display-name "My Agent" \
+  --acp-command "my-cli acp" --cwd ~/project --port 8090</pre>
+      </div>
+      <p class="lang-zh">自定义引擎写在 <code>hub.json</code> 的 <code>customEngines</code>，仪表盘引擎选择器里能看到。</p>
+      <p class="lang-en" hidden>Custom engines live in <code>hub.json</code> under <code>customEngines</code> and show up in the dashboard picker.</p>
+
+      <h2 class="lang-zh">模型、模式、权限</h2>
+      <h2 class="lang-en" hidden>Models, modes, permissions</h2>
+      <ul class="lang-zh">
+        <li>ACP <code>configOptions</code>（category <code>model</code>）映射到 App 的模型列表 / 切换</li>
+        <li><code>PAW_ACP_SESSION_MODE</code> 在 session 创建或恢复后写入上游（Claude <code>acceptEdits</code>、Codex <code>on-request</code> 等）</li>
+        <li>剩余 <code>session/request_permission</code> 默认问 App（<code>PAW_ACP_APPROVAL_MODE=ask</code>）</li>
+        <li>上游 <code>terminal/*</code> 在网关主机执行</li>
+      </ul>
+      <ul class="lang-en" hidden>
+        <li>ACP <code>configOptions</code> (category <code>model</code>) map to the app model picker</li>
+        <li><code>PAW_ACP_SESSION_MODE</code> is applied after session new/resume (Claude <code>acceptEdits</code>, Codex <code>on-request</code>, …)</li>
+        <li>Remaining <code>session/request_permission</code> calls default to the app (<code>PAW_ACP_APPROVAL_MODE=ask</code>)</li>
+        <li>Upstream <code>terminal/*</code> runs on the gateway host</li>
+      </ul>
+
+      <h2 class="lang-zh">凭据</h2>
+      <h2 class="lang-en" hidden>Credentials</h2>
+      <p class="lang-zh">在仪表盘「设置 → 引擎管理」，或给实例设置环境变量（<code>ANTHROPIC_API_KEY</code>、<code>CURSOR_API_KEY</code> …）。引擎没就绪时创建/启动实例会失败。</p>
+      <p class="lang-en" hidden>Use Settings → Engines in the dashboard, or instance env vars (<code>ANTHROPIC_API_KEY</code>, <code>CURSOR_API_KEY</code>, …). Creating or starting an instance fails if the engine is not ready.</p>
+    </article>
+  </div>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>
