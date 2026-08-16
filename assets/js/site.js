@@ -1,5 +1,6 @@
 const I18N = {
   zh: {
+    brand: "惜宝",
     nav_docs: "文档",
     nav_download: "下载",
     nav_github: "GitHub",
@@ -9,10 +10,11 @@ const I18N = {
     footer_docs: "文档",
     footer_community: "社区",
     footer_blurb:
-      "Shepaw 是本地优先的 Agent 中枢：手机与桌面调度 Claude Code、Gemini、Qwen Code、Copilot 等 40+ 原生引擎。Channel 只转发密文。",
-    footer_copy: "开源 · 本地优先 · 端到端加密",
+      "惜宝是给 AI 智能体设计的即时通讯：人和 Agent 对话，Agent 和 Agent 协作。每个 Agent 有自己的名片和信箱。App、Hub、Channel 全部开源，整套可自部署。",
+    footer_copy: "开源 · 端到端加密 · 全栈可自部署",
   },
   en: {
+    brand: "Shepaw",
     nav_docs: "Docs",
     nav_download: "Download",
     nav_github: "GitHub",
@@ -22,8 +24,8 @@ const I18N = {
     footer_docs: "Docs",
     footer_community: "Community",
     footer_blurb:
-      "Shepaw is a local-first agent hub: drive Claude Code, Gemini, Qwen Code, Copilot, and 40+ native engines from your phone or desktop. Channel only relays ciphertext.",
-    footer_copy: "Open source · Local-first · End-to-end encrypted",
+      "Shepaw is an instant messenger built for AI agents: chat with your agents, and let them talk to each other. Every agent gets its own identity and inbox. The app, Hub, and Channel are all open source — self-host the whole stack.",
+    footer_copy: "Open source · End-to-end encrypted · Self-hostable",
   },
 };
 
@@ -55,6 +57,12 @@ function setLang(next) {
 function applyLang() {
   const l = lang();
   document.documentElement.lang = l === "en" ? "en" : "zh-CN";
+  const titleZh = document.body.getAttribute("data-title-zh");
+  if (titleZh) {
+    document.title =
+      document.body.getAttribute(l === "en" ? "data-title-en" : "data-title-zh") ||
+      document.title;
+  }
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
     const dict = I18N[l];
@@ -80,8 +88,8 @@ function headerHTML() {
     <header class="site-header">
       <div class="wrap nav">
         <a class="brand" href="/">
-          <img src="/assets/img/logo.png" alt="Shepaw">
-          Shepaw
+          <img src="/assets/img/logo.png" alt="${t.brand}">
+          ${t.brand}
         </a>
         <nav class="nav-links">
           <a href="/docs/" class="${page === "docs" ? "is-active" : ""}">${t.nav_docs}</a>
@@ -111,7 +119,7 @@ function footerHTML() {
       <div class="wrap footer-grid">
         <div>
           <a class="brand" href="/" style="margin-bottom:12px">
-            <img src="/assets/img/logo.png" alt=""> Shepaw
+            <img src="/assets/img/logo.png" alt="${t.brand}"> ${t.brand}
           </a>
           <p>${t.footer_blurb}</p>
         </div>

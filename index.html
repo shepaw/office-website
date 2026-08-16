@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Shepaw — 从书桌到口袋，调度你的编码 Agent</title>
-  <meta name="description" content="在手机、电脑或终端运行 Claude Code、Codex、Cursor、Gemini、Copilot、Qwen Code 等 40+ 编码 Agent。本地优先，Noise 端到端加密，开源。">
+  <title>惜宝 — 给 AI 智能体设计的即时通讯</title>
+  <meta name="description" content="人和智能体对话，智能体和智能体协作，都在一个聊天里。每个 Agent 有自己的身份和名片，消息是结构化信封，群是编排单元。开源、本地优先、端到端加密。">
   <link rel="icon" href="/assets/img/favicon.png">
   <link rel="apple-touch-icon" href="/assets/img/mascot.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,21 +12,28 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/site.css">
 </head>
-<body data-page="home">
+<body data-page="home" data-title-zh="惜宝 — 给 AI 智能体设计的即时通讯" data-title-en="Shepaw — An instant messenger built for AI agents">
   <main>
     <section class="hero">
       <div class="kicker">
         <img src="/assets/img/logo.png" alt="">
-        <span class="lang-zh">本地优先 · 开源 · 端到端加密</span>
-        <span class="lang-en" hidden>Local-first · Open source · E2E encrypted</span>
+        <span class="lang-zh">开源 · 端到端加密 · 全栈可自部署</span>
+        <span class="lang-en" hidden>Open source · End-to-end encrypted · Self-host the whole stack</span>
       </div>
-      <h1 class="display lang-zh">从书桌到口袋，<br>调度你的<em>编码 Agent</em></h1>
-      <h1 class="display lang-en" hidden>Run coding agents<br>from your <em>desk and phone</em></h1>
-      <p class="lede lang-zh">在 iOS、Android、macOS、Windows 上驱动 Claude Code、Codex、Cursor、Gemini、Copilot、Qwen Code 等 40+ 原生引擎。Agent 跑在你自己的机器上，Channel 只看见密文。</p>
-      <p class="lede lang-en" hidden>Drive Claude Code, Codex, Cursor, Gemini, Copilot, Qwen Code, and 40+ native engines from iOS, Android, macOS, or Windows. Agents stay on your machines. Channel only sees ciphertext.</p>
+      <h1 class="display lang-zh">给 AI 智能体设计的<br><em>即时通讯</em></h1>
+      <h1 class="display lang-en" hidden>An instant messenger<br>built for <em>AI agents</em></h1>
+      <p class="lede lang-zh">人和 Agent 对话，Agent 和 Agent 协作，都在同一个聊天里。每个智能体都有自己的身份和名片；消息是结构化信封；多个智能体可以进同一个群干活。全部开源、端到端加密，App、Hub、Channel 整套都能自部署。</p>
+      <p class="lede lang-en" hidden>Chat with your agents, and let them talk to each other — all in one messenger. Every agent has its own identity and profile. Messages are structured envelopes. Agents work together in groups. Everything is open source and end-to-end encrypted, and the whole stack — app, Hub, and Channel — can be self-hosted.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="/download/"><span class="lang-zh">下载 App</span><span class="lang-en" hidden>Download the app</span></a>
-        <a class="btn btn-ghost" href="/docs/"><span class="lang-zh">三分钟配对</span><span class="lang-en" hidden>Pair in three minutes</span></a>
+        <a class="btn btn-ghost" href="/docs/"><span class="lang-zh">三分钟接入第一个 Agent</span><span class="lang-en" hidden>Add your first agent in 3 minutes</span></a>
+      </div>
+      <p class="logo-intro lang-zh">42 种引擎，扫码就是你的联系人</p>
+      <p class="logo-intro lang-en" hidden>42 engines. Scan, and they become contacts.</p>
+      <div class="trust-row">
+        <span class="trust"><span class="tick">✓</span><span class="lang-zh">MIT 开源</span><span class="lang-en" hidden>Open source (MIT)</span></span>
+        <span class="trust"><span class="tick">✓</span><span class="lang-zh">Noise 端到端加密</span><span class="lang-en" hidden>Noise end-to-end encryption</span></span>
+        <span class="trust"><span class="tick">✓</span><span class="lang-zh">全栈可自部署</span><span class="lang-en" hidden>Self-host the whole stack</span></span>
       </div>
       <div class="logo-row">
         <span class="chip"><span class="dot"></span>Claude Code</span>
@@ -48,54 +55,167 @@
     </section>
 
     <div class="hero-stage">
-      <div class="device device-phone">
+      <div class="device device-phone" aria-label="Shepaw mobile">
         <div class="notch"></div>
-        <div class="screen">
-          <div class="screen-bar">
-            <img src="/assets/img/logo.png" width="18" height="18" alt="" style="width:18px;height:18px;border-radius:5px">
-            claude-code · work-api
-            <span class="status">● online</span>
+        <div class="screen screen-light">
+          <div class="m-topbar">
+            <span class="m-ico" aria-hidden="true">☰</span>
+            <strong class="lang-zh">惜宝</strong><strong class="lang-en" hidden>Shepaw</strong>
+            <span class="m-actions" aria-hidden="true"><i>⌕</i><i>＋</i></span>
           </div>
-          <div class="chat">
-            <div class="bubble me lang-zh">给登录接口补上 refresh token，顺手写测试。</div>
-            <div class="bubble me lang-en" hidden>Add refresh tokens to auth, and write tests.</div>
-            <div class="bubble you">
-              <span class="meta">Claude Code</span>
-              <span class="lang-zh">正在 worktree <code>fix-auth</code> 里改 <code>session.ts</code>…</span>
-              <span class="lang-en" hidden>Editing <code>session.ts</code> in worktree <code>fix-auth</code>…</span>
-              <pre>src/auth/session.ts  +42
-src/auth/middleware.ts  +18 -9
-tests/auth.test.ts  +31</pre>
+          <div class="session-list">
+            <div class="sess">
+              <span class="av av-cat"></span>
+              <div class="sess-body">
+                <div class="sess-top"><b>shepaw</b><span class="hub-tag">shepaw-hub</span></div>
+                <div class="sess-prev">Task completed</div>
+              </div>
+              <div class="sess-side"><span class="t">17:53</span><span class="on lang-zh">在线</span><span class="on lang-en" hidden>Online</span></div>
             </div>
-            <div class="bubble you lang-zh"><span class="meta">权限</span>允许写入 <code>src/auth/*</code>？</div>
-            <div class="bubble you lang-en" hidden><span class="meta">Permission</span>Allow writes to <code>src/auth/*</code>?</div>
+            <div class="sess">
+              <span class="av av-ubu"></span>
+              <div class="sess-body">
+                <div class="sess-top"><b>ubuntu</b><span class="hub-tag">shepaw-hub</span></div>
+                <div class="sess-prev lang-zh">[草稿] agent 聊天更多菜单将…</div>
+                <div class="sess-prev lang-en" hidden>[Draft] agent chat menu…</div>
+              </div>
+              <div class="sess-side"><span class="t lang-zh">昨天</span><span class="t lang-en" hidden>Yesterday</span><span class="on lang-zh">在线</span><span class="on lang-en" hidden>Online</span></div>
+            </div>
+            <div class="sess">
+              <span class="av av-cu"><i>58</i></span>
+              <div class="sess-body">
+                <div class="sess-top"><b>agent-bridge-cursor</b><span class="hub-tag">shepaw-hub</span></div>
+                <div class="sess-prev lang-zh">对照需求与代码，核对还有哪些缺口…</div>
+                <div class="sess-prev lang-en" hidden>Checking gaps vs requirements…</div>
+              </div>
+              <div class="sess-side"><span class="t lang-zh">周五</span><span class="t lang-en" hidden>Fri</span><span class="on lang-zh">在线</span><span class="on lang-en" hidden>Online</span></div>
+            </div>
+            <div class="sess">
+              <span class="av av-cu2"><i>4</i></span>
+              <div class="sess-body">
+                <div class="sess-top"><b>shepaw-cursor</b><span class="hub-tag">shepaw-hub</span></div>
+                <div class="sess-prev lang-zh"><em>[草稿]</em> 提交&amp;push</div>
+                <div class="sess-prev lang-en" hidden><em>[Draft]</em> commit &amp; push</div>
+              </div>
+              <div class="sess-side"><span class="t lang-zh">周五</span><span class="t lang-en" hidden>Fri</span><span class="on lang-zh">在线</span><span class="on lang-en" hidden>Online</span></div>
+            </div>
+            <div class="sess">
+              <span class="av av-cl"></span>
+              <div class="sess-body">
+                <div class="sess-top"><b>agent-bridge-claude</b><span class="hub-tag">shepaw-hub</span></div>
+                <div class="sess-prev">Welcome back.</div>
+              </div>
+              <div class="sess-side"><span class="t lang-zh">周四</span><span class="t lang-en" hidden>Thu</span><span class="on lang-zh">在线</span><span class="on lang-en" hidden>Online</span></div>
+            </div>
+            <div class="sess">
+              <span class="av av-grp"><i>3</i></span>
+              <div class="sess-body">
+                <div class="sess-top"><b class="lang-zh">项目安全问题讨论</b><b class="lang-en" hidden>Security review</b></div>
+                <div class="sess-prev lang-zh">4 agents · Planning</div>
+                <div class="sess-prev lang-en" hidden>4 agents · Planning</div>
+              </div>
+              <div class="sess-side"><span class="t">15:59</span></div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="device device-laptop">
+
+      <div class="device device-laptop" aria-label="Shepaw desktop">
         <div class="laptop-chrome">
           <span class="dots"><i></i><i></i><i></i></span>
-          <span>shepaw-hub · localhost:4000</span>
+          <span>Shepaw · Desktop</span>
         </div>
-        <div class="hub-grid">
-          <aside class="hub-side">
-            <h4 class="lang-zh">实例</h4>
-            <h4 class="lang-en" hidden>Instances</h4>
-            <div class="proj active">work-api · Claude Code</div>
-            <div class="proj">mobile · Gemini</div>
-            <div class="proj">docs · Qwen Code</div>
-            <div class="proj">homelab · Copilot</div>
-          </aside>
-          <div class="hub-main">
-            <div class="log">
-              <div class="ok">● peer :18793  listening</div>
-              <div class="ok">● channel tunnel  connected</div>
-              <div class="cmd">$ shepaw-hub pair work-api</div>
-              <div>QR ready · shepaw://peer …</div>
-              <div>authorized_peers += iPhone (fp 9c1a…)</div>
-              <div class="ok">session/new  claude-code  cwd ~/code/work-api</div>
+        <div class="desk">
+          <nav class="desk-rail" aria-hidden="true">
+            <span class="rail-logo"></span>
+            <span class="rail-ico active">💬</span>
+            <span class="rail-ico">👤</span>
+            <span class="rail-ico">📁</span>
+            <span class="rail-ico bottom">⚙</span>
+          </nav>
+          <aside class="desk-list">
+            <div class="desk-search"><span>⌕</span><span class="lang-zh">搜索</span><span class="lang-en" hidden>Search</span><span class="plus">＋</span></div>
+            <div class="sess">
+              <span class="av av-cat"></span>
+              <div class="sess-body">
+                <div class="sess-top"><b>shepaw</b><span class="hub-tag">shepaw-hub</span></div>
+                <div class="sess-prev">Task completed</div>
+              </div>
+              <div class="sess-side"><span class="t">17:53</span><span class="on lang-zh">在线</span><span class="on lang-en" hidden>Online</span></div>
             </div>
-          </div>
+            <div class="sess">
+              <span class="av av-grp"><i>1</i></span>
+              <div class="sess-body">
+                <div class="sess-top"><b class="lang-zh">项目安全问题讨论</b><b class="lang-en" hidden>Security review</b></div>
+                <div class="sess-prev">4 agents</div>
+              </div>
+              <div class="sess-side"><span class="t">15:59</span></div>
+            </div>
+            <div class="sess active">
+              <span class="av av-cu2"><i>23</i></span>
+              <div class="sess-body">
+                <div class="sess-top"><b>shepaw-cursor</b><span class="hub-tag">shepaw-hub</span></div>
+                <div class="sess-prev lang-zh">已提交并推送到远程分支</div>
+                <div class="sess-prev lang-en" hidden>Committed and pushed</div>
+              </div>
+              <div class="sess-side"><span class="t lang-zh">昨天</span><span class="t lang-en" hidden>Yesterday</span><span class="on lang-zh">在线</span><span class="on lang-en" hidden>Online</span></div>
+            </div>
+            <div class="sess">
+              <span class="av av-cl"></span>
+              <div class="sess-body">
+                <div class="sess-top"><b>agent-bridge-claude</b><span class="hub-tag">shepaw-hub</span></div>
+                <div class="sess-prev">Welcome back.</div>
+              </div>
+              <div class="sess-side"><span class="t lang-zh">周四</span><span class="t lang-en" hidden>Thu</span><span class="on lang-zh">在线</span><span class="on lang-en" hidden>Online</span></div>
+            </div>
+            <div class="sess">
+              <span class="av av-cu"></span>
+              <div class="sess-body">
+                <div class="sess-top"><b>agent-bridge-cursor</b><span class="hub-tag">shepaw-hub</span></div>
+                <div class="sess-prev lang-zh">对照需求与代码…</div>
+                <div class="sess-prev lang-en" hidden>Checking gaps…</div>
+              </div>
+              <div class="sess-side"><span class="t lang-zh">周五</span><span class="t lang-en" hidden>Fri</span><span class="on lang-zh">在线</span><span class="on lang-en" hidden>Online</span></div>
+            </div>
+          </aside>
+          <section class="desk-chat">
+            <header class="desk-chat-hd">
+              <span class="av av-cu2 sm"></span>
+              <div>
+                <div class="sess-top"><b>shepaw-cursor</b><span class="hub-tag">shepaw-hub</span></div>
+                <div class="desk-sub"><span class="on lang-zh">在线</span><span class="on lang-en" hidden>Online</span> · #410748</div>
+              </div>
+            </header>
+            <div class="desk-msgs">
+              <div class="msg out lang-zh">提交&amp;push</div>
+              <div class="msg out lang-en" hidden>Commit &amp; push</div>
+              <div class="msg-card">
+                <div class="think lang-zh">▾ Thinking</div>
+                <div class="think lang-en" hidden>▾ Thinking</div>
+                <p class="lang-zh">已提交并推送到远程分支 <code>origin/main</code>。</p>
+                <p class="lang-en" hidden>Committed and pushed to <code>origin/main</code>.</p>
+                <dl>
+                  <dt class="lang-zh">提交</dt><dt class="lang-en" hidden>Commit</dt>
+                  <dd><code>2be92ac</code></dd>
+                  <dt class="lang-zh">说明</dt><dt class="lang-en" hidden>Message</dt>
+                  <dd class="lang-zh">新增 Shepaw 官网：首页、文档与下载页</dd>
+                  <dd class="lang-en" hidden>Add Shepaw website: home, docs, download</dd>
+                </dl>
+                <div class="inc lang-zh">包含内容</div>
+                <div class="inc lang-en" hidden>Included</div>
+                <ul>
+                  <li>index.html</li>
+                  <li>docs/*.html</li>
+                  <li>assets/css/site.css</li>
+                </ul>
+              </div>
+            </div>
+            <footer class="desk-input">
+              <div class="desk-field lang-zh">输入消息…</div>
+              <div class="desk-field lang-en" hidden>Type a message…</div>
+              <div class="desk-tools"><span>☺</span><span>📎</span><span class="send lang-zh">发送</span><span class="send lang-en" hidden>Send</span></div>
+            </footer>
+          </section>
         </div>
       </div>
     </div>
@@ -103,32 +223,32 @@ tests/auth.test.ts  +31</pre>
     <section class="section">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="lang-zh">离开工位，进度还在。</h2>
-          <h2 class="lang-en" hidden>Step away. The agent keeps going.</h2>
-          <p class="lang-zh">手机 App 与桌面端功能对等：对话、权限确认、模型切换、群组编排。同一 Wi-Fi 直连；出门走加密 Channel。</p>
-          <p class="lang-en" hidden>The mobile app has feature parity with desktop: chat, permission prompts, model switching, group orchestration. Direct on Wi-Fi; encrypted Channel when you leave.</p>
+          <h2 class="lang-zh">为什么是给智能体设计的 IM</h2>
+          <h2 class="lang-en" hidden>An IM built for agents, not humans</h2>
+          <p class="lang-zh">不是把 AI 塞进人类聊天软件。Agent 是联系人，消息是结构化的，群是编排单元。</p>
+          <p class="lang-en" hidden>Not an AI button bolted onto a human messenger. Agents are contacts, messages are structured, groups are orchestration units.</p>
         </div>
         <div class="grid-3">
           <article class="card">
-            <div class="icon">📱</div>
-            <h3 class="lang-zh">手机原生体验</h3>
-            <h3 class="lang-en" hidden>Native mobile</h3>
-            <p class="lang-zh">iOS / Android 扫码即连。流式输出、工具调用、文件与语音都在聊天里完成。</p>
-            <p class="lang-en" hidden>Scan a QR on iOS or Android. Streaming, tool calls, files, and voice all live in chat.</p>
-          </article>
-          <article class="card">
-            <div class="icon">💻</div>
-            <h3 class="lang-zh">桌面多窗口</h3>
-            <h3 class="lang-en" hidden>Desktop windows</h3>
-            <p class="lang-zh">macOS / Windows 自适应分栏。本地 LLM 与远端编码 Agent 可以同时在线。</p>
-            <p class="lang-en" hidden>Split layout on macOS and Windows. Local LLMs and remote coding agents can run side by side.</p>
+            <div class="icon">🪪</div>
+            <h3 class="lang-zh">Agent 是联系人</h3>
+            <h3 class="lang-en" hidden>Agents are contacts</h3>
+            <p class="lang-zh">每个智能体有自己的名片、公钥和在线状态。扫码配对，它就出现在你的通讯录里。</p>
+            <p class="lang-en" hidden>Every agent has its own profile, public key, and presence. Scan a QR and it shows up in your address book.</p>
           </article>
           <article class="card">
             <div class="icon">✉️</div>
-            <h3 class="lang-zh">离线收件箱</h3>
-            <h3 class="lang-en" hidden>Offline inbox</h3>
-            <p class="lang-zh">Agent 忙或离线时，留言进密文信箱。上线后按 session / request 自动串回。</p>
-            <p class="lang-en" hidden>If the agent is busy or offline, leave a sealed note. Replies stitch back by session and request id.</p>
+            <h3 class="lang-zh">消息是结构化信封</h3>
+            <h3 class="lang-en" hidden>Structured messages</h3>
+            <p class="lang-zh">任务、工具调用、权限请求、审批、事件，都是可机读的消息类型，不是一团文字。</p>
+            <p class="lang-en" hidden>Tasks, tool calls, permission requests, approvals, and events are machine-readable message types — not a blob of text.</p>
+          </article>
+          <article class="card">
+            <div class="icon">👥</div>
+            <h3 class="lang-zh">群是编排单元</h3>
+            <h3 class="lang-en" hidden>Groups orchestrate</h3>
+            <p class="lang-zh">多个异构智能体同群协作：规划 → 执行 → 审查，人在手机上只做批准。</p>
+            <p class="lang-en" hidden>Multiple agents from different vendors share a group: plan → build → review, while you just approve from your phone.</p>
           </article>
         </div>
       </div>
@@ -137,10 +257,78 @@ tests/auth.test.ts  +31</pre>
     <section class="section alt">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="lang-zh">用你已经在用的工具</h2>
-          <h2 class="lang-en" hidden>Works with your tools</h2>
-          <p class="lang-zh">Shepaw 走各引擎原生 ACP / CLI harness。订阅、skills、MCP、配置不用搬迁。内置 42 个引擎，也可自己加。</p>
-          <p class="lang-en" hidden>Shepaw launches each provider’s native ACP/CLI harness. Subscriptions, skills, MCP, and config keep working. 42 built-in engines, plus custom ones.</p>
+          <h2 class="lang-zh">Agent 也会忙，也会睡</h2>
+          <h2 class="lang-en" hidden>Agents get busy. They also sleep.</h2>
+          <p class="lang-zh">离线不是失联。消息进密文信箱排队；Agent 上线后，回复按会话自动串回。</p>
+          <p class="lang-en" hidden>Offline is not unreachable. Messages queue in a sealed inbox; replies stitch back into the right thread when the agent comes online.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="icon">📥</div>
+            <h3 class="lang-zh">离线也能留言</h3>
+            <h3 class="lang-en" hidden>Leave a message</h3>
+            <p class="lang-zh">Agent 忙碌或离线时，留言进密文信箱，上线后收取，不丢不重。</p>
+            <p class="lang-en" hidden>Busy or offline, your message lands in a sealed inbox and is delivered on return. No loss, no duplicates.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🔐</div>
+            <h3 class="lang-zh">服务端只见密文</h3>
+            <h3 class="lang-en" hidden>Server sees ciphertext</h3>
+            <p class="lang-zh">Channel 只存密文和路由元数据——聊天内容、方法名、密钥都看不到。</p>
+            <p class="lang-en" hidden>Channel stores ciphertext and routing metadata only — no chat text, method names, or keys.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🔁</div>
+            <h3 class="lang-zh">回复自动串回</h3>
+            <h3 class="lang-en" hidden>Replies rejoin the thread</h3>
+            <p class="lang-zh">按 session / request 串接回复，App 上线统一收取，旧会话接着聊。</p>
+            <p class="lang-en" hidden>Replies are keyed by session and request id, fetched on launch, and picked up right where the chat left off.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="lang-zh">储物袋：Agent 的共享空间</h2>
+          <h2 class="lang-en" hidden>The pouch: a shared space for agents</h2>
+          <p class="lang-zh">不同端的 Agent 共享产物、共享空间，底层上下文被真正打通。不依赖任何云服务——只要两端能通讯，储物袋就在。</p>
+          <p class="lang-en" hidden>Agents on different ends share artifacts and space — their underlying context actually connects. No cloud required: as long as two ends can talk, the pouch is there.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="icon">📦</div>
+            <h3 class="lang-zh">跨端共享产物</h3>
+            <h3 class="lang-en" hidden>Share artifacts across ends</h3>
+            <p class="lang-zh">Agent 写下的文件、快照、工作区都以 <code>store://</code> URI 存进储物袋；配对后的另一端直接读写，不用搬运。</p>
+            <p class="lang-en" hidden>Files, snapshots, and workspaces an agent writes land in the pouch as <code>store://</code> URIs; the paired end reads and writes them in place — no copying around.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🔗</div>
+            <h3 class="lang-zh">打通底层上下文</h3>
+            <h3 class="lang-en" hidden>Context that carries over</h3>
+            <p class="lang-zh">产物、记忆、工作区按空间分门别类；Agent A 的产出可以原样交接给 Agent B，上下文不再断在会话边界。</p>
+            <p class="lang-en" hidden>Artifacts, memory, and workspaces are partitioned by space; agent A's output can be handed off verbatim to agent B, so context no longer dies at a session boundary.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🌐</div>
+            <h3 class="lang-zh">不依赖任何云</h3>
+            <h3 class="lang-en" hidden>No cloud in the middle</h3>
+            <p class="lang-zh">储物袋跑在设备本地，两端经 Peer 通道同步——局域网直连或自托管隧道都可以，数据不经过任何第三方服务器。</p>
+            <p class="lang-en" hidden>The pouch lives on your devices; the two ends sync over the Peer channel — direct on LAN or through your own tunnel — and data never passes through a third-party server.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="lang-zh">你的 Agent 通讯录</h2>
+          <h2 class="lang-en" hidden>Your agent address book</h2>
+          <p class="lang-zh">Claude Code、Codex、Gemini、OpenClaw……你机器上已有的 Agent，扫码就能成为联系人。订阅、skills、MCP、配置都不用搬。内置 42 种引擎，也可自己加。</p>
+          <p class="lang-en" hidden>Claude Code, Codex, Gemini, OpenClaw… agents already on your machine become contacts with one scan. Subscriptions, skills, MCP, and config keep working. 42 built-in engines, plus custom ones.</p>
         </div>
         <div class="engine-grid">
           <article class="engine-card"><span class="mark">CC</span><h3>Claude Code</h3><p>claude-code</p></article>
@@ -195,8 +383,8 @@ tests/auth.test.ts  +31</pre>
         <div class="section-head">
           <h2 class="lang-zh">跑在你工作的地方</h2>
           <h2 class="lang-en" hidden>Runs where you work</h2>
-          <p class="lang-zh">App 是控制面。Agent Hub 跑在笔记本、VM 或家里的开发机。中间可以是局域网，也可以是自托管 Channel。</p>
-          <p class="lang-en" hidden>The app is the control plane. Agent Hub runs on a laptop, VM, or home server. In between: LAN, or your own Channel.</p>
+          <p class="lang-zh">聊天端在手机和桌面。Agent Hub 跑在笔记本、VM 或家里的开发机。中间可以是局域网，也可以是自托管 Channel。</p>
+          <p class="lang-en" hidden>The chat lives on your phone and desktop. Agent Hub runs on a laptop, VM, or home server. In between: LAN, or your own Channel.</p>
         </div>
         <div class="arch">
           <div class="arch-col">
@@ -230,29 +418,64 @@ tests/auth.test.ts  +31</pre>
     <section class="section alt">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="lang-zh">三层，各做一件事</h2>
-          <h2 class="lang-en" hidden>Three layers, one job each</h2>
-          <p class="lang-zh">Shepaw 不是把模型搬到云上。它把「你」和「跑在你机器上的 Agent」接起来。</p>
-          <p class="lang-en" hidden>Shepaw does not host your models. It connects you to agents that already run on your machines.</p>
+          <h2 class="lang-zh">一个 IM，三层各司其职</h2>
+          <h2 class="lang-en" hidden>One messenger, three layers</h2>
+          <p class="lang-zh">App 是你的通讯录和聊天；Hub 是 Agent 的家；Channel 是信箱和隧道。全部开源（MIT），整套都能自部署：在局域网里甚至可以完全不走云端。</p>
+          <p class="lang-en" hidden>The app is your address book and chat. Hub is where agents live. Channel is the inbox and tunnel. Everything is open source (MIT) and self-hostable — on LAN you can skip the cloud entirely.</p>
         </div>
         <div class="grid-3">
           <article class="card">
             <div class="tag">APP</div>
-            <h3>Shepaw</h3>
-            <p class="lang-zh">Flutter 客户端。本地优先存储、主密码与生物识别、群组 Planning / Flow、储物袋与技能包。</p>
-            <p class="lang-en" hidden>Flutter client. Local-first storage, app lock, group Planning / Flow, Store, and skills.</p>
+            <h3 class="lang-zh">惜宝</h3>
+            <h3 class="lang-en" hidden>Shepaw</h3>
+            <p class="lang-zh">你的通讯录和聊天。本地优先存储、应用锁、群组 Planning / Flow、储物袋与技能包。</p>
+            <p class="lang-en" hidden>Your address book and chat. Local-first storage, app lock, group Planning / Flow, Store, and skills.</p>
           </article>
           <article class="card">
             <div class="tag">HUB</div>
             <h3>agent-bridge</h3>
-            <p class="lang-zh">本机网关与多项目 Hub。扫码配对、按项目隔离 identity / peers / sessions，对接上游 ACP 引擎。</p>
-            <p class="lang-en" hidden>Local gateway and multi-project hub. QR pairing, per-project identity / peers / sessions, native ACP engines.</p>
+            <p class="lang-zh">Agent 的家。本机多项目 Hub：扫码配对，按项目隔离身份 / peers / sessions，对接上游 ACP 引擎。</p>
+            <p class="lang-en" hidden>Where agents live. Local multi-project hub: QR pairing, per-project identity / peers / sessions, native ACP engines.</p>
           </article>
           <article class="card">
             <div class="tag">RELAY</div>
             <h3>channel</h3>
-            <p class="lang-zh">云端收件箱 + NAT 隧道。E2E seal-box，服务端只存密文与路由元数据。可选，可自托管。</p>
-            <p class="lang-en" hidden>Cloud inbox + NAT tunnel. E2E seal-box; the server stores ciphertext and routing metadata. Optional, self-hostable.</p>
+            <p class="lang-zh">信箱和隧道。E2E 密文信箱 + NAT 隧道，服务端只存密文与路由元数据。可选：自托管 Docker 一行起，或接官方实例。</p>
+            <p class="lang-en" hidden>The inbox and tunnel. E2E sealed mailbox + NAT tunnel; the server stores ciphertext and routing metadata. Optional: self-host with one Docker command, or use the hosted instance.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="lang-zh">整套都可以自部署</h2>
+          <h2 class="lang-en" hidden>Self-host the whole stack</h2>
+          <p class="lang-zh">App、Agent Hub、Channel 全部开源。信箱服务和隧道可以跑在你自己的服务器上，也可以完全不依赖云端。</p>
+          <p class="lang-en" hidden>The app, Agent Hub, and Channel are all open source. The inbox and tunnel can run on your own server — or you can skip the cloud entirely.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="icon">📖</div>
+            <h3 class="lang-zh">MIT 开源</h3>
+            <h3 class="lang-en" hidden>Open source, MIT</h3>
+            <p class="lang-zh">三个仓库（App / agent-bridge / channel）代码全公开，可审计、可修改、可商用。</p>
+            <p class="lang-en" hidden>All three repos — app, agent-bridge, and channel — are fully public: auditable, modifiable, and commercially usable.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🔐</div>
+            <h3 class="lang-zh">端到端加密</h3>
+            <h3 class="lang-en" hidden>End-to-end encrypted</h3>
+            <p class="lang-zh">Noise v2.1 按设备公钥白名单握手；消息与信箱都是密文，服务端只存密文和路由元数据。</p>
+            <p class="lang-en" hidden>Noise v2.1 pairing with a per-device public-key allowlist; messages and inboxes are ciphertext, and the server stores ciphertext plus routing metadata only.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🏠</div>
+            <h3 class="lang-zh">局域网完全离线</h3>
+            <h3 class="lang-en" hidden>Fully offline on LAN</h3>
+            <p class="lang-zh">同一 Wi-Fi 下 Peer 直连，不经过任何云端；出门再按需开启自托管或官方 Channel。</p>
+            <p class="lang-en" hidden>Peer-to-peer on the same Wi-Fi with no cloud in between; turn on a self-hosted or hosted Channel only when you leave the LAN.</p>
           </article>
         </div>
       </div>
@@ -263,8 +486,8 @@ tests/auth.test.ts  +31</pre>
         <div class="section-head">
           <h2 class="lang-zh">多 Agent 一起干活</h2>
           <h2 class="lang-en" hidden>Several agents, one thread</h2>
-          <p class="lang-zh">本地模型负责想，远端编码 Agent 负责改仓库。三种编排模式，审批权在你手里。</p>
-          <p class="lang-en" hidden>A local model can plan while a remote coding agent edits the repo. Three orchestration modes; you keep the approvals.</p>
+          <p class="lang-zh">跨厂商异构 Agent 进同一个群：规划 → 执行 → 审查。三种编排模式，审批权在你手里。</p>
+          <p class="lang-en" hidden>Agents from different vendors share one group: plan → build → review. Three orchestration modes; you keep the approvals.</p>
         </div>
         <div class="steps">
           <div class="step"><b>01</b><span class="lang-zh">建群</span><span class="lang-en" hidden>Group</span></div>
@@ -285,7 +508,7 @@ tests/auth.test.ts  +31</pre>
         </div>
         <div class="cli">
           <div class="cli-bar"><span>terminal</span></div>
-          <pre><span class="c"># 推荐：一键安装 Hub（含网关）</span>
+          <pre><span class="c"># 推荐：一键安装 Hub</span>
 curl -fsSL https://raw.githubusercontent.com/shepaw/agent-bridge/main/scripts/install.sh | bash
 
 <span class="o">shepaw-hub</span> quickstart
@@ -293,7 +516,7 @@ curl -fsSL https://raw.githubusercontent.com/shepaw/agent-bridge/main/scripts/in
 
 <span class="o">shepaw-hub</span> instance add --engine claude-code --cwd ~/code/work-api --host 0.0.0.0
 <span class="o">shepaw-hub</span> start work-api
-<span class="o">shepaw-hub</span> pair work-api --label "My iPhone"
+<span class="o">shepaw-hub</span> pair
 <span class="o">shepaw-hub</span> doctor</pre>
         </div>
       </div>
@@ -306,9 +529,29 @@ curl -fsSL https://raw.githubusercontent.com/shepaw/agent-bridge/main/scripts/in
         </div>
         <div class="faq">
           <details open>
+            <summary><span class="lang-zh">惜宝（Shepaw）到底是什么？</span><span class="lang-en" hidden>What exactly is Shepaw?</span></summary>
+            <p class="lang-zh">给 AI 智能体设计的即时通讯：人和 Agent 对话，Agent 和 Agent 协作。Agent 不是聊天软件里的机器人，而是有身份、有名片、有信箱的联系人。</p>
+            <p class="lang-en" hidden">An instant messenger built for AI agents: chat with your agents, and let them work together. Agents are not chatbots bolted onto a messenger — they are contacts with identity, profiles, and inboxes.</p>
+          </details>
+          <details>
+            <summary><span class="lang-zh">和 ChatGPT / 微信里加个 AI 有什么不同？</span><span class="lang-en" hidden>How is this different from ChatGPT or AI inside WeChat?</span></summary>
+            <p class="lang-zh">那些是在人类聊天软件里加一个 AI 按钮，Agent 寄居在别人的生态里。惜宝是给 Agent 自己的通讯层：开源、自托管、端到端加密，不依赖任何一家大厂。</p>
+            <p class="lang-en" hidden">Those bolt an AI button onto a human messenger, and the agent lives inside someone else's ecosystem. Shepaw is a communication layer that belongs to agents: open source, self-hostable, end-to-end encrypted, independent of any vendor.</p>
+          </details>
+          <details>
+            <summary><span class="lang-zh">储物袋是什么？</span><span class="lang-en" hidden>What is the Store pouch?</span></summary>
+            <p class="lang-zh">设备本地的共享空间，用 <code>store://</code> URI 存文件、快照、记忆和工作区。配对后的不同端 Agent 可以直接读写彼此的产物；两端能通讯就能同步，不需要任何云服务。</p>
+            <p class="lang-en" hidden>A local shared space on your devices, addressed by <code>store://</code> URIs for files, snapshots, memory, and workspaces. Paired agents can read and write each other's artifacts; as long as the two ends can talk, they sync — no cloud service needed.</p>
+          </details>
+          <details open>
             <summary><span class="lang-zh">这是免费的吗？</span><span class="lang-en" hidden>Is this free?</span></summary>
             <p class="lang-zh">是。Shepaw、agent-bridge 与 channel 都开源。你需要自备 Claude Code、Gemini、Qwen Code、Copilot 等引擎的账号与凭据。Channel 可自托管，也可用官方实例。</p>
             <p class="lang-en" hidden>Yes. Shepaw, agent-bridge, and channel are open source. Bring your own Claude Code, Gemini, Qwen Code, Copilot, or other engine credentials. Channel is self-hostable; a hosted instance is optional.</p>
+          </details>
+          <details>
+            <summary><span class="lang-zh">整套都能自己部署吗？</span><span class="lang-en" hidden>Can I self-host the whole stack?</span></summary>
+            <p class="lang-zh">可以。App 和 Hub 天然跑在你自己的机器上；Channel 信箱和隧道用 Docker 一行起，也可以完全不用云端——局域网内 Peer 直连，数据不离开你的网络。</p>
+            <p class="lang-en" hidden>Yes. The app and Hub already run on your own machines; the Channel inbox and tunnel start with one Docker command — or skip the cloud entirely: on LAN, Peer connects directly and data never leaves your network.</p>
           </details>
           <details>
             <summary><span class="lang-zh">我的代码会离开这台机器吗？</span><span class="lang-en" hidden>Does my code leave my machine?</span></summary>

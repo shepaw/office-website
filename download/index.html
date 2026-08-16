@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>下载 Shepaw — iOS、Android、macOS、Windows、Hub</title>
+  <title>下载 惜宝 — iOS、Android、macOS、Windows、Hub</title>
   <meta name="description" content="下载 Shepaw 客户端，并在开发机上安装 Agent Hub。">
   <link rel="icon" href="/assets/img/favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,14 +11,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/site.css">
 </head>
-<body data-page="download">
+<body data-page="download" data-title-zh="下载 惜宝 — iOS、Android、macOS、Windows、Hub" data-title-en="Download Shepaw — iOS, Android, macOS, Windows, Hub">
   <main>
     <section class="dl-hero wrap">
       <p class="kicker"><img src="/assets/img/logo.png" alt=""> Download</p>
       <h1 class="display lang-zh">下载</h1>
       <h1 class="display lang-en" hidden>Download</h1>
-      <p class="lede lang-zh" style="margin-left:0">客户端装在你随身的设备上；Agent Hub 装在跑代码的那台机器上。</p>
-      <p class="lede lang-en" hidden style="margin-left:0">Put the app on the device you carry. Put Agent Hub on the machine that runs the code.</p>
+      <p class="lede lang-zh" style="margin-left:0">聊天端装在你随身的设备上；Agent Hub 是你 Agent 的家，装在跑代码的那台机器上。</p>
+      <p class="lede lang-en" hidden style="margin-left:0">The chat lives on the device you carry. Agent Hub is where your agents live — put it on the machine that runs the code.</p>
     </section>
 
     <section class="section" style="padding-top:12px">
@@ -59,17 +59,17 @@
     <section class="section alt">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="lang-zh">本机 Hub / 网关</h2>
-          <h2 class="lang-en" hidden>Hub / gateway on the machine</h2>
-          <p class="lang-zh">需要 Node.js ≥ 18.17，以及你选的引擎 CLI（Claude Code、Gemini、Qwen Code、Copilot …）。</p>
-          <p class="lang-en" hidden>Needs Node.js ≥ 18.17 and the engine CLI you pick (Claude Code, Gemini, Qwen Code, Copilot, …).</p>
+          <h2 class="lang-zh">本机 Agent Hub</h2>
+          <h2 class="lang-en" hidden>Agent Hub on the machine</h2>
+          <p class="lang-zh">需要 Node.js ≥ 18.17，以及你选的引擎 CLI（Claude Code、Gemini、Qwen Code、Copilot …）。一条命令安装，再 <code>quickstart</code> 扫码。</p>
+          <p class="lang-en" hidden>Needs Node.js ≥ 18.17 and the engine CLI you pick (Claude Code, Gemini, Qwen Code, Copilot, …). Install, then <code>quickstart</code> and scan.</p>
         </div>
         <div class="dl-grid">
           <article class="dl-card">
             <div class="tag">recommended</div>
             <h3>Agent Hub</h3>
-            <p class="lang-zh">多项目：Web 仪表盘 + Peer 配对 + 可选 Channel。一条命令开干。</p>
-            <p class="lang-en" hidden>Many projects: web dashboard, Peer pairing, optional Channel. One command to start.</p>
+            <p class="lang-zh">多项目：Web 仪表盘 + Peer 扫码 + 可选 Channel。</p>
+            <p class="lang-en" hidden>Many projects: web dashboard, Peer pairing, optional Channel.</p>
             <div class="cli">
               <div class="cli-bar"><span>npm</span></div>
               <pre>npm install -g shepaw-agent-hub
@@ -77,18 +77,6 @@ shepaw-hub quickstart</pre>
             </div>
             <div class="dl-actions">
               <a class="btn btn-ghost" href="/docs/hub.html">Hub docs</a>
-            </div>
-          </article>
-          <article class="dl-card">
-            <div class="tag">minimal</div>
-            <h3>ACP Proxy</h3>
-            <p class="lang-zh">单 Agent 网关。一个项目、一台机器、一张二维码。</p>
-            <p class="lang-en" hidden>Single-agent gateway. One project, one machine, one QR.</p>
-            <div class="cli">
-              <div class="cli-bar"><span>npm</span></div>
-              <pre>npm install -g shepaw-acp-proxy-gateway
-shepaw-acp-proxy serve --engine claude-code --cwd ~/project --host 0.0.0.0
-shepaw-acp-proxy pair</pre>
             </div>
           </article>
         </div>
@@ -104,8 +92,8 @@ shepaw-acp-proxy pair</pre>
         <div class="section-head">
           <h2 class="lang-zh">Channel（可选）</h2>
           <h2 class="lang-en" hidden>Channel (optional)</h2>
-          <p class="lang-zh">只有离开局域网才需要。官方实例或 Docker 自托管均可。</p>
-          <p class="lang-en" hidden>Only needed off LAN. Use the hosted instance or run Docker yourself.</p>
+          <p class="lang-zh">只有离开局域网才需要。官方实例或 Docker 自托管均可——整套系统（App / Hub / Channel）都可以跑在你自己机器上。</p>
+          <p class="lang-en" hidden>Only needed off LAN. Use the hosted instance or run Docker yourself — the whole stack (app / Hub / Channel) can live on your own machines.</p>
         </div>
         <div class="cli">
           <div class="cli-bar"><span>docker compose</span></div>

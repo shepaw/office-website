@@ -16,11 +16,11 @@
     <article class="prose">
       <div class="lang-zh">
         <h1>Agent Hub</h1>
-        <p>Hub 是本机（或 VM）上的多项目监督器：为每个仓库拉起 <code>shepaw-acp-proxy</code>，并提供 Web 仪表盘、Peer 扫码、可选 Channel 隧道路由。</p>
+        <p>Hub 是本机（或 VM）上的多项目监督器：为每个仓库拉起编码 Agent，并提供 Web 仪表盘、Peer 扫码、可选 Channel 隧道路由。</p>
       </div>
       <div class="lang-en" hidden>
         <h1>Agent Hub</h1>
-        <p>Hub is a multi-project supervisor on your machine or VM. It spawns <code>shepaw-acp-proxy</code> per repo, plus a web dashboard, Peer pairing, and an optional Channel tunnel router.</p>
+        <p>Hub is a multi-project supervisor on your machine or VM. It starts a coding agent per repo, plus a web dashboard, Peer pairing, and an optional Channel tunnel router.</p>
       </div>
 
       <h2 class="lang-zh">默认端口</h2>
@@ -50,8 +50,8 @@
             <td><code>18789</code> <span class="lang-zh">（本机）</span><span class="lang-en" hidden>(loopback)</span></td>
           </tr>
           <tr>
-            <td><span class="lang-zh">Agent 实例</span><span class="lang-en" hidden>Agent instances</span></td>
-            <td>shepaw-acp-proxy</td>
+            <td><span class="lang-zh">编码 Agent 实例</span><span class="lang-en" hidden>Agent instances</span></td>
+            <td><span class="lang-zh">每个项目一个上游 CLI</span><span class="lang-en" hidden>One upstream CLI per project</span></td>
             <td><code>8090+</code></td>
           </tr>
         </tbody>
@@ -64,10 +64,10 @@
         <div class="cli-bar"><span>shepaw-hub</span></div>
         <pre>shepaw-hub init
 shepaw-hub doctor
-shepaw-hub web                          # 仪表盘 + Peer（Channel 已配则拉起路由器）
+shepaw-hub web                          # 仪表盘 + Peer（Channel 已配且加 --gateway 则拉起路由器）
 shepaw-hub instance add --engine claude-code --cwd ~/code/work-api --host 0.0.0.0
 shepaw-hub start &lt;id&gt;
-shepaw-hub pair &lt;id&gt; --label "My iPhone"
+shepaw-hub pair
 shepaw-hub logs &lt;id&gt; -f
 shepaw-hub update                       # npm 全局安装才支持自动升级</pre>
       </div>
@@ -90,8 +90,8 @@ shepaw-hub web --host 0.0.0.0 --port 4000 --no-open</pre>
   --server https://channel.shepaw.com \
   --channel-id ch_xxx \
   --secret &lt;hmac-secret&gt;
-# shepaw-hub web 会在已配置 Channel 时自动 gateway-start
-shepaw-hub peer-pair   # 二维码同时带 local= 与 channel=</pre>
+# shepaw-hub web --gateway  会在已配置 Channel 时拉起隧道路由器
+shepaw-hub pair        # 二维码同时带 local= 与 channel=</pre>
       </div>
       <p class="lang-zh">高级 tunnel 三项必须同时填写或全部留空。详见 <a href="/docs/channel.html">Channel</a>。</p>
       <p class="lang-en" hidden>The three advanced tunnel fields must all be set or all empty. See <a href="/docs/channel.html">Channel</a>.</p>

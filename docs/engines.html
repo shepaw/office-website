@@ -16,11 +16,11 @@
     <article class="prose">
       <div class="lang-zh">
         <h1>引擎</h1>
-        <p>网关通过行业标准 ACP（stdio JSON-RPC）拉起上游 CLI。Shepaw 不改它们的行为，只把会话、模型、权限和终端代理到 App。目前内置 <strong>42</strong> 个引擎，也可用 <code>engine add</code> 注册自定义 CLI。</p>
+        <p>Hub 通过行业标准 ACP（stdio JSON-RPC）拉起上游 CLI。Shepaw 不改它们的行为，只把会话、模型、权限和终端代理到 App。目前内置 <strong>42</strong> 个引擎，也可用 <code>engine add</code> 注册自定义 CLI。</p>
       </div>
       <div class="lang-en" hidden>
         <h1>Engines</h1>
-        <p>The gateway launches upstream CLIs over standard ACP (stdio JSON-RPC). Shepaw does not wrap their behavior — it proxies sessions, models, permissions, and the terminal into the app. <strong>42</strong> built-in engines; register more with <code>engine add</code>.</p>
+        <p>Hub launches upstream CLIs over standard ACP (stdio JSON-RPC). Shepaw does not wrap their behavior — it proxies sessions, models, permissions, and the terminal into the app. <strong>42</strong> built-in engines; register more with <code>engine add</code>.</p>
       </div>
 
       <table>
@@ -81,10 +81,7 @@
       <h2 class="lang-en" hidden>Custom engines</h2>
       <div class="cli">
         <div class="cli-bar"><span>custom</span></div>
-        <pre>shepaw-hub engine add my-agent --display "My Local Agent" --command "my-cli acp"
-
-shepaw-acp-proxy serve --engine my-agent --engine-display-name "My Agent" \
-  --acp-command "my-cli acp" --cwd ~/project --port 8090</pre>
+        <pre>shepaw-hub engine add my-agent --display "My Local Agent" --command "my-cli acp"</pre>
       </div>
       <p class="lang-zh">自定义引擎写在 <code>hub.json</code> 的 <code>customEngines</code>，仪表盘引擎选择器里能看到。</p>
       <p class="lang-en" hidden>Custom engines live in <code>hub.json</code> under <code>customEngines</code> and show up in the dashboard picker.</p>
@@ -95,13 +92,13 @@ shepaw-acp-proxy serve --engine my-agent --engine-display-name "My Agent" \
         <li>ACP <code>configOptions</code>（category <code>model</code>）映射到 App 的模型列表 / 切换</li>
         <li><code>PAW_ACP_SESSION_MODE</code> 在 session 创建或恢复后写入上游（Claude <code>acceptEdits</code>、Codex <code>on-request</code> 等）</li>
         <li>剩余 <code>session/request_permission</code> 默认问 App（<code>PAW_ACP_APPROVAL_MODE=ask</code>）</li>
-        <li>上游 <code>terminal/*</code> 在网关主机执行</li>
+        <li>上游 <code>terminal/*</code> 在 Hub 所在机器执行</li>
       </ul>
       <ul class="lang-en" hidden>
         <li>ACP <code>configOptions</code> (category <code>model</code>) map to the app model picker</li>
         <li><code>PAW_ACP_SESSION_MODE</code> is applied after session new/resume (Claude <code>acceptEdits</code>, Codex <code>on-request</code>, …)</li>
         <li>Remaining <code>session/request_permission</code> calls default to the app (<code>PAW_ACP_APPROVAL_MODE=ask</code>)</li>
-        <li>Upstream <code>terminal/*</code> runs on the gateway host</li>
+        <li>Upstream <code>terminal/*</code> runs on the Hub host</li>
       </ul>
 
       <h2 class="lang-zh">凭据</h2>

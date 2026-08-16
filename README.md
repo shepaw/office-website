@@ -5,7 +5,7 @@ Shepaw 产品站：首页、文档、下载。对照 [paseo.sh](https://paseo.sh
 | 层 | 仓库 | 官网怎么讲 |
 |---|---|---|
 | App | `../shepaw` | 手机 / 桌面控制面，本地 LLM + 远端编码 Agent |
-| Hub | `../agent-bridge` | 本机多项目网关，扫码配对，拉起 Claude Code / Codex / Cursor … |
+| Hub | `../agent-bridge` | 本机多项目 Hub，扫码配对，拉起 Claude Code / Codex / Cursor … |
 | Relay | `../channel` | 可选：密文收件箱 + NAT 隧道 |
 
 纯静态，无构建步骤。品牌色来自 App 主题：橘 `#EE7A1E`、肉垫粉、暖黑背景。
