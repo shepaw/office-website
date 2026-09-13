@@ -16,11 +16,11 @@
     <article class="prose">
       <div class="lang-zh">
         <h1>引擎</h1>
-        <p>Hub 通过行业标准 ACP（stdio JSON-RPC）拉起上游 CLI。Shepaw 不改它们的行为，只把会话、模型、权限和终端代理到 App。目前内置 <strong>42</strong> 个引擎，也可用 <code>engine add</code> 注册自定义 CLI。</p>
+        <p>Hub 通过行业标准 ACP（stdio JSON-RPC）拉起上游 CLI。Shepaw 不改它们的行为，只把会话、模型、权限和终端代理到 App。目前内置 <strong>15</strong> 个引擎，也可用 <code>engine add</code> 注册自定义 CLI。</p>
       </div>
       <div class="lang-en" hidden>
         <h1>Engines</h1>
-        <p>Hub launches upstream CLIs over standard ACP (stdio JSON-RPC). Shepaw does not wrap their behavior — it proxies sessions, models, permissions, and the terminal into the app. <strong>42</strong> built-in engines; register more with <code>engine add</code>.</p>
+        <p>Hub launches upstream CLIs over standard ACP (stdio JSON-RPC). Shepaw does not wrap their behavior — it proxies sessions, models, permissions, and the terminal into the app. <strong>15</strong> built-in engines; register more with <code>engine add</code>.</p>
       </div>
 
       <table>
@@ -36,46 +36,22 @@
           <tr><td><code>codex</code></td><td>Codex</td><td><code>npx -y @agentclientprotocol/codex-acp@latest</code></td></tr>
           <tr><td><code>cursor</code></td><td>Cursor</td><td><code>agent acp</code></td></tr>
           <tr><td><code>copilot</code></td><td>GitHub Copilot</td><td><code>copilot --acp</code></td></tr>
-          <tr><td><code>gemini</code></td><td>Gemini CLI</td><td><code>npx -y @google/gemini-cli@latest --acp</code></td></tr>
+          <tr><td><code>gemini</code></td><td>Gemini CLI</td><td><code>gemini --acp</code></td></tr>
           <tr><td><code>qwen-code</code></td><td>Qwen Code</td><td><code>qwen --acp</code></td></tr>
-          <tr><td><code>glm</code></td><td>GLM Agent</td><td><code>npx -y glm-acp-agent@latest</code></td></tr>
+          <tr><td><code>kiro</code></td><td>Kiro</td><td><code>kiro-cli acp --trust-all-tools</code></td></tr>
           <tr><td><code>zcode</code></td><td>ZCode</td><td><code>npx -y zcode-acp-server@latest</code></td></tr>
-          <tr><td><code>deepseek-harness</code></td><td>DeepSeek Harness</td><td><code>npx -y @deepseek-ai/dsh-acp-demo@latest</code></td></tr>
+          <tr><td><code>deepseek-harness</code></td><td>DeepSeek Harness</td><td><code>dsh --profile shepaw</code></td></tr>
           <tr><td><code>kimi</code></td><td>Kimi CLI</td><td><code>kimi acp</code></td></tr>
           <tr><td><code>codebuddy</code></td><td>CodeBuddy Code</td><td><code>codebuddy --acp</code></td></tr>
-          <tr><td><code>traecli</code></td><td>TRAE CLI</td><td><code>traecli acp serve</code></td></tr>
-          <tr><td><code>grok</code></td><td>Grok</td><td><code>grok agent stdio</code></td></tr>
           <tr><td><code>pi</code></td><td>Pi</td><td><code>npx -y pi-acp</code></td></tr>
           <tr><td><code>opencode</code></td><td>OpenCode</td><td><code>npx -y opencode-ai@latest acp</code></td></tr>
           <tr><td><code>openclaw</code></td><td>OpenClaw</td><td><code>npx -y openclaw acp</code></td></tr>
           <tr><td><code>hermes</code></td><td>Hermes</td><td><code>hermes acp</code></td></tr>
-          <tr><td><code>cline</code></td><td>Cline</td><td><code>npx -y cline@latest --acp</code></td></tr>
-          <tr><td><code>goose</code></td><td>goose</td><td><code>goose acp</code></td></tr>
-          <tr><td><code>junie</code></td><td>Junie</td><td><code>junie --acp true</code></td></tr>
-          <tr><td><code>auggie</code></td><td>Auggie CLI</td><td><code>npx -y @augmentcode/auggie@latest --acp</code></td></tr>
-          <tr><td><code>amp</code></td><td>Amp</td><td><code>amp-acp</code></td></tr>
-          <tr><td><code>factory-droid</code></td><td>Factory Droid</td><td><code>npx -y droid@latest exec --output-format acp-daemon</code></td></tr>
-          <tr><td><code>qoder</code></td><td>Qoder CLI</td><td><code>npx -y @qoder-ai/qodercli@latest --acp</code></td></tr>
-          <tr><td><code>kilo</code></td><td>Kilo</td><td><code>kilo acp</code></td></tr>
-          <tr><td><code>codewhale</code></td><td>CodeWhale</td><td><code>codewhale serve --acp</code></td></tr>
-          <tr><td><code>cortex-code</code></td><td>Cortex Code</td><td><code>cortex acp serve</code></td></tr>
-          <tr><td><code>vtcode</code></td><td>VT Code</td><td><code>vtcode acp</code></td></tr>
-          <tr><td><code>mistral-vibe</code></td><td>Mistral Vibe</td><td><code>vibe-acp</code></td></tr>
-          <tr><td><code>agoragentic</code></td><td>Agoragentic</td><td><code>npx -y agoragentic-mcp@latest --acp</code></td></tr>
-          <tr><td><code>autohand</code></td><td>Autohand Code</td><td><code>npx -y @autohandai/autohand-acp@latest</code></td></tr>
-          <tr><td><code>deepagents</code></td><td>DeepAgents</td><td><code>npx -y deepagents-acp@latest</code></td></tr>
-          <tr><td><code>dimcode</code></td><td>DimCode</td><td><code>npx -y dimcode@latest acp</code></td></tr>
-          <tr><td><code>dirac</code></td><td>Dirac</td><td><code>npx -y dirac-cli@latest --acp</code></td></tr>
-          <tr><td><code>fast-agent</code></td><td>fast-agent</td><td><code>uvx --from fast-agent-acp fast-agent-acp -x</code></td></tr>
-          <tr><td><code>minion-code</code></td><td>Minion Code</td><td><code>uvx --from minion-code minion-code acp</code></td></tr>
-          <tr><td><code>nova</code></td><td>Nova</td><td><code>npx -y @compass-ai/nova@latest acp</code></td></tr>
-          <tr><td><code>poolside</code></td><td>Poolside</td><td><code>pool acp</code></td></tr>
-          <tr><td><code>sigit</code></td><td>siGit Code</td><td><code>sigit</code></td></tr>
-          <tr><td><code>stakpak</code></td><td>Stakpak</td><td><code>stakpak acp</code></td></tr>
-          <tr><td><code>crow-cli</code></td><td>crow-cli</td><td><code>crow-cli acp</code></td></tr>
-          <tr><td><code>corust-agent</code></td><td>Corust Agent</td><td><code>corust-agent-acp</code></td></tr>
         </tbody>
       </table>
+
+      <p class="lang-zh">其中 CodeBuddy Code、Hermes、ZCode、Kiro 需你先自行安装对应的上游 CLI，Hub 不提供安装命令；其余引擎可用 <code>shepaw-hub engine install &lt;engine-id&gt;</code> 安装。上游命令由 Hub 在实例启动时按 ACP（stdio）拉起。</p>
+      <p class="lang-en" hidden>CodeBuddy Code, Hermes, ZCode, and Kiro require you to install the upstream CLI yourself — Hub ships no install command for them. The others can be installed with <code>shepaw-hub engine install &lt;engine-id&gt;</code>. Hub launches the upstream command over ACP (stdio) when the instance starts.</p>
 
       <h2 class="lang-zh">自定义引擎</h2>
       <h2 class="lang-en" hidden>Custom engines</h2>
