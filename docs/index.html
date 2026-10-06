@@ -26,46 +26,39 @@
       <h2 class="lang-zh">你需要准备</h2>
       <h2 class="lang-en" hidden>Prerequisites</h2>
       <ul class="lang-zh">
-        <li>一台能跑 Agent CLI 的电脑（macOS / Linux / Windows）</li>
-        <li>Node.js ≥ 18.17</li>
+        <li>一台电脑（macOS / Linux / Windows）</li>
         <li>至少一个引擎：Claude Code、Codex、Cursor、Gemini、Copilot、Qwen Code 等，<a href="/docs/engines.html">完整列表</a></li>
         <li>Shepaw App（iOS / Android / 桌面）</li>
       </ul>
       <ul class="lang-en" hidden>
-        <li>A computer that can run an agent CLI (macOS / Linux / Windows)</li>
-        <li>Node.js ≥ 18.17</li>
+        <li>A computer (macOS / Linux / Windows)</li>
         <li>At least one engine: Claude Code, Codex, Cursor, Gemini, Copilot, Qwen Code, and more — <a href="/docs/engines.html">full list</a></li>
         <li>The Shepaw app (iOS / Android / desktop)</li>
       </ul>
 
-      <h2 class="lang-zh">1. 安装 Agent Hub</h2>
-      <h2 class="lang-en" hidden>1. Install Agent Hub</h2>
+      <h2 class="lang-zh">1. 安装 CLI</h2>
+      <h2 class="lang-en" hidden>1. Install the CLI</h2>
       <div class="cli">
         <div class="cli-bar"><span>install</span></div>
-        <pre>curl -fsSL https://raw.githubusercontent.com/shepaw/agent-bridge/main/scripts/install.sh | bash
-# 或
-npm install -g shepaw-agent-hub</pre>
+        <pre>curl -fsSL https://shepaw.com/install | bash
+# Windows PowerShell:
+irm https://shepaw.com/install.ps1 | iex</pre>
       </div>
 
-      <h2 class="lang-zh">2. 一条命令开干</h2>
-      <h2 class="lang-en" hidden>2. One command to start</h2>
+      <h2 class="lang-zh">2. 启动并配对</h2>
+      <h2 class="lang-en" hidden>2. Start and pair</h2>
       <div class="cli">
-        <div class="cli-bar"><span>quickstart</span></div>
-        <pre>shepaw-hub quickstart
-# 选引擎 → 确认工作目录 → 终端打印二维码
-
-# 或者打开仪表盘，在浏览器里添加项目：
-shepaw-hub web</pre>
+        <div class="cli-bar"><span>shepaw</span></div>
+        <pre>shepaw start
+shepaw pair</pre>
       </div>
-      <div class="note lang-zh">仪表盘默认只绑本机。若要在局域网打开 Web UI，必须设置 <code>SHEPAW_HUB_TOKEN</code>，并用 <code>--host 0.0.0.0</code>。</div>
-      <div class="note lang-en" hidden>The dashboard binds to localhost by default. To open it on LAN you must set <code>SHEPAW_HUB_TOKEN</code> and pass <code>--host 0.0.0.0</code>.</div>
 
       <h2 class="lang-zh">3. 扫码，开始对话</h2>
       <h2 class="lang-en" hidden>3. Scan, then chat</h2>
       <p class="lang-zh">打开 Shepaw，扫描 Hub 打印的二维码。手机和电脑要在同一 Wi-Fi。一次配对授权这台机器上的全部实例；文件操作和权限弹窗在电脑上执行，再回显到手机。</p>
       <p class="lang-en" hidden>Open Shepaw and scan the QR Hub printed. Phone and computer must share Wi-Fi. One scan authorizes every instance on that host. File ops and permission prompts run on the computer and surface in the app.</p>
-      <p class="lang-zh">之后也可以随时再出一张码：<code>shepaw-hub pair</code>，或仪表盘「扫码配对」。</p>
-      <p class="lang-en" hidden>Mint another code anytime with <code>shepaw-hub pair</code>, or the dashboard Pair button.</p>
+      <p class="lang-zh">之后也可以随时再出一张码：<code>shepaw pair</code>。</p>
+      <p class="lang-en" hidden>Mint another code anytime with <code>shepaw pair</code>.</p>
 
       <h2 class="lang-zh">接下来</h2>
       <h2 class="lang-en" hidden>Where next</h2>

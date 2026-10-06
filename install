@@ -1,0 +1,220 @@
+#!/usr/bin/env bash
+# Shepaw CLI 安装脚本。
+# macOS / Linux:
+#   curl -fsSL https://shepaw.com/install | bash
+#
+# 装到 SHEPAW_INSTALL_DIR，缺省是 ~/.local/bin。
+# 发布清单来自 SHEPAW_RELEASE_BASE，缺省是 https://release.shepaw.com。
+# 设 SHEPAW_NO_PATH=1 时不改 shell 配置。
+
+set -euo pipefail
+
+RELEASE_BASE="${SHEPAW_RELEASE_BASE:-https://release.shepaw.com}"
+RELEASE_BASE="${RELEASE_BASE%/}"
+MAX_BYTES=$((128 * 1024 * 1024))
+
+say() {
+  printf '%s\n' "$*" >&2
+}
+
+die() {
+  say "错误: $*"
+  exit 1
+}
+
+need() {
+  command -v "$1" >/dev/null 2>&1 || die "需要 $1"
+}
+
+detect_target() {
+  local os arch
+  case "$(uname -s)" in
+    Darwin) os=macos ;;
+    Linux) os=linux ;;
+    MINGW*|MSYS*|CYGWIN*)
+      die "Windows 请用 PowerShell: irm https://shepaw.com/install.ps1 | iex"
+      ;;
+    *) die "不支持的系统: $(uname -s)" ;;
+  esac
+  case "$(uname -m)" in
+    x86_64|amd64) arch=x86_64 ;;
+    arm64|aarch64) arch=aarch64 ;;
+    *) die "不支持的架构: $(uname -m)" ;;
+  esac
+  printf '%s %s\n' "$os" "$arch"
+}
+
+allow_url() {
+  local url="$1"
+  case "$url" in
+    https://*) return 0 ;;
+  esac
+  case "$RELEASE_BASE" in
+    http://127.0.0.1:*|http://localhost:*|http://[::1]:*)
+      case "$url" in
+        http://127.0.0.1:*|http://localhost:*|http://[::1]:*) return 0 ;;
+      esac
+      ;;
+  esac
+  return 1
+}
+
+fetch() {
+  local url="$1" dest="$2" limit="$3"
+  allow_url "$url" || die "地址必须是 https:// : $url"
+  local -a args
+  args=(-sS --retry 3 --retry-delay 1 --max-time 60 --max-filesize "$limit" -o "$dest" -w '%{http_code}')
+  case "$url" in
+    https://*) args+=(--proto '=https' --tlsv1.2) ;;
+  esac
+  local code
+  code="$(curl "${args[@]}" "$url" || true)"
+  if [[ "$code" == "200" ]]; then
+    return 0
+  fi
+  rm -f "$dest"
+  if [[ "$code" == "000" || -z "$code" ]]; then
+    printf '%s' "000"
+  else
+    printf '%s' "$code"
+  fi
+  return 1
+}
+
+json_field() {
+  local json="$1" key="$2"
+  JSON_INPUT="$json" JSON_KEY="$key" python3 - <<'PY'
+import json, os
+data = json.loads(os.environ["JSON_INPUT"])
+if not isinstance(data, dict):
+    raise SystemExit("manifest")
+aliases = {
+    "downloadUrl": ("downloadUrl", "download_url"),
+    "checksum": ("checksum", "sha256"),
+}
+keys = aliases.get(os.environ["JSON_KEY"], (os.environ["JSON_KEY"],))
+for key in keys:
+    value = data.get(key)
+    if isinstance(value, str) and value.strip():
+        print(value.strip())
+        break
+PY
+}
+
+sha256_file() {
+  local file="$1"
+  if command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$file" | awk '{print $1}'
+  else
+    shasum -a 256 "$file" | awk '{print $1}'
+  fi
+}
+
+looks_like_binary() {
+  local magic
+  magic="$(od -An -t x1 -N 4 "$1" | tr -d ' \n')"
+  case "$magic" in
+    7f454c46|cffaedfe|feedfacf|cefaedfe|cafebabe|4d5a*) return 0 ;;
+  esac
+  return 1
+}
+
+ensure_on_path() {
+  local dir="$1"
+  case ":$PATH:" in
+    *":$dir:"*) return 0 ;;
+  esac
+  if [[ "${SHEPAW_NO_PATH:-}" == "1" ]]; then
+    say "把下面这行加到 shell 配置里："
+    say "  export PATH=\"$dir:\$PATH\""
+    return 0
+  fi
+  local rc line marker="# added by shepaw install"
+  case "${SHELL:-}" in
+    */zsh) rc="$HOME/.zshrc" ;;
+    */bash) rc="${HOME}/.bashrc" ;;
+    *)
+      say "把下面这行加到 shell 配置里："
+      say "  export PATH=\"$dir:\$PATH\""
+      return 0
+      ;;
+  esac
+  line="export PATH=\"$dir:\$PATH\""
+  if [[ -f "$rc" ]] && grep -qF "$marker" "$rc"; then
+    :
+  else
+    printf '\n%s\n%s\n' "$marker" "$line" >>"$rc"
+    say "已写入 $rc"
+  fi
+  say "打开一个新终端，或执行: export PATH=\"$dir:\$PATH\""
+}
+
+main() {
+  need curl
+  need python3
+  if [[ "$(id -u)" -eq 0 && -z "${SHEPAW_INSTALL_DIR:-}" ]]; then
+    die "不要用 sudo。脚本会装到当前用户的 ~/.local/bin"
+  fi
+  allow_url "$RELEASE_BASE" || die "发布地址必须是 https://"
+
+  local os arch
+  read -r os arch < <(detect_target)
+
+  local work body
+  work="$(mktemp -d)"
+  trap 'rm -rf "$work"' EXIT
+  body="$work/manifest.json"
+
+  local manifest="$RELEASE_BASE/api/v1/latest-cli-${os}-${arch}.json"
+  say "读取 $manifest"
+  local code
+  if ! code="$(fetch "$manifest" "$body" 1048576)"; then
+    if [[ "$code" == "404" ]]; then
+      die "还没有 ${os}-${arch} 的安装包: $manifest"
+    fi
+    die "发布服务返回 ${code:-错误}: $manifest"
+  fi
+
+  local version download checksum signature
+  version="$(json_field "$(cat "$body")" version)" || die "更新清单不是 JSON"
+  download="$(json_field "$(cat "$body")" downloadUrl)" || die "更新清单不是 JSON"
+  checksum="$(json_field "$(cat "$body")" checksum || true)"
+  signature="$(json_field "$(cat "$body")" signature || true)"
+  [[ -n "$version" ]] || die "更新清单缺少 version"
+  [[ -n "$download" ]] || die "更新清单没有下载地址"
+  allow_url "$download" || die "下载地址必须是 https://"
+
+  local bin="$work/shepaw"
+  say "下载 shepaw $version"
+  if ! code="$(fetch "$download" "$bin" "$MAX_BYTES")"; then
+    die "下载失败（${code:-错误}）: $download"
+  fi
+  looks_like_binary "$bin" || die "下载到的不是可执行文件"
+
+  if [[ -n "$checksum" ]]; then
+    local expect actual
+    expect="$(printf '%s' "$checksum" | tr '[:upper:]' '[:lower:]' | sed 's/^sha256://')"
+    actual="$(sha256_file "$bin")"
+    [[ "$expect" == "$actual" ]] || die "校验和不匹配，期望 $expect，实际 $actual"
+  elif [[ -z "$signature" ]]; then
+    die "安装包清单没有校验和，也没有签名"
+  else
+    say "清单没有校验和。文件经 HTTPS 下载，签名会在 shepaw update 时校验。"
+  fi
+
+  local dest_dir dest
+  dest_dir="${SHEPAW_INSTALL_DIR:-$HOME/.local/bin}"
+  mkdir -p "$dest_dir"
+  dest="$dest_dir/shepaw"
+  chmod 755 "$bin"
+  mv -f "$bin" "$dest"
+
+  say "已安装 shepaw $version"
+  say "  $dest"
+  ensure_on_path "$dest_dir"
+  say "下一步:"
+  say "  shepaw start"
+  say "  shepaw pair"
+}
+
+main "$@"

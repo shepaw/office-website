@@ -351,16 +351,14 @@
         </div>
         <div class="cli">
           <div class="cli-bar"><span>terminal</span></div>
-          <pre><span class="c"># 推荐：一键安装 Hub</span>
-curl -fsSL https://raw.githubusercontent.com/shepaw/agent-bridge/main/scripts/install.sh | bash
+          <pre><span class="c"># macOS / Linux</span>
+curl -fsSL https://shepaw.com/install | bash
 
-<span class="o">shepaw-hub</span> quickstart
-<span class="c"># 选引擎 → 确认 cwd → 手机扫码</span>
+<span class="c"># Windows PowerShell</span>
+irm https://shepaw.com/install.ps1 | iex
 
-<span class="o">shepaw-hub</span> instance add --engine claude-code --cwd ~/code/work-api --host 0.0.0.0
-<span class="o">shepaw-hub</span> start work-api
-<span class="o">shepaw-hub</span> pair
-<span class="o">shepaw-hub</span> doctor</pre>
+<span class="o">shepaw</span> start
+<span class="o">shepaw</span> pair</pre>
         </div>
       </div>
     </section>

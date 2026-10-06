@@ -59,30 +59,36 @@
     <section class="section alt">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="lang-zh">本机 Agent Hub</h2>
-          <h2 class="lang-en" hidden>Agent Hub on the machine</h2>
-          <p class="lang-zh">需要 Node.js ≥ 18.17，以及你选的引擎 CLI（Claude Code、Gemini、Qwen Code、Copilot …）。一条命令安装，再 <code>quickstart</code> 扫码。</p>
-          <p class="lang-en" hidden>Needs Node.js ≥ 18.17 and the engine CLI you pick (Claude Code, Gemini, Qwen Code, Copilot, …). Install, then <code>quickstart</code> and scan.</p>
+          <h2 class="lang-zh">本机 CLI</h2>
+          <h2 class="lang-en" hidden>CLI on the machine</h2>
+          <p class="lang-zh">一条命令安装本机 CLI，然后 <code>shepaw start</code> 和 <code>shepaw pair</code>。编码引擎（Claude Code、Codex、Cursor …）仍装在这台机器上。</p>
+          <p class="lang-en" hidden>One command installs the local CLI, then <code>shepaw start</code> and <code>shepaw pair</code>. Coding engines (Claude Code, Codex, Cursor, …) stay installed on this machine.</p>
         </div>
         <div class="dl-grid">
           <article class="dl-card">
-            <div class="tag">recommended</div>
-            <h3>Agent Hub</h3>
-            <p class="lang-zh">多项目：Web 仪表盘 + Peer 扫码 + 可选 Channel。</p>
-            <p class="lang-en" hidden>Many projects: web dashboard, Peer pairing, optional Channel.</p>
+            <div class="tag">macOS / Linux</div>
+            <h3>shepaw</h3>
+            <p class="lang-zh">装到 <code>~/.local/bin</code>。打开新终端后启动 Hub，再扫码配对。</p>
+            <p class="lang-en" hidden>Installs to <code>~/.local/bin</code>. Open a new terminal, start Hub, then scan to pair.</p>
             <div class="cli">
-              <div class="cli-bar"><span>npm</span></div>
-              <pre>npm install -g shepaw-agent-hub
-shepaw-hub quickstart</pre>
-            </div>
-            <div class="dl-actions">
-              <a class="btn btn-ghost" href="/docs/hub.html">Hub docs</a>
+              <div class="cli-bar"><span>bash</span></div>
+              <pre>curl -fsSL https://shepaw.com/install | bash
+shepaw start
+shepaw pair</pre>
             </div>
           </article>
-        </div>
-        <div class="cli" style="margin-top:16px">
-          <div class="cli-bar"><span>install.sh</span></div>
-          <pre>curl -fsSL https://raw.githubusercontent.com/shepaw/agent-bridge/main/scripts/install.sh | bash</pre>
+          <article class="dl-card">
+            <div class="tag">Windows</div>
+            <h3>shepaw</h3>
+            <p class="lang-zh">装到 <code>%LOCALAPPDATA%\shepaw\bin</code>，并写入用户 PATH。</p>
+            <p class="lang-en" hidden>Installs to <code>%LOCALAPPDATA%\shepaw\bin</code> and adds it to the user PATH.</p>
+            <div class="cli">
+              <div class="cli-bar"><span>PowerShell</span></div>
+              <pre>irm https://shepaw.com/install.ps1 | iex
+shepaw start
+shepaw pair</pre>
+            </div>
+          </article>
         </div>
       </div>
     </section>

@@ -1,10 +1,23 @@
 www.shepaw.com, shepaw.com {
 	root * /var/www/shepaw
-	file_server
-	try_files {path} {path}/ {path}.html
 	encode gzip
 	header {
 		X-Content-Type-Options nosniff
 		Referrer-Policy strict-origin-when-cross-origin
+	}
+
+	# curl | bash 和 irm | iex 都要拿到纯文本。
+	@installer path /install /install.ps1
+	handle @installer {
+		header {
+			defer
+			Content-Type "text/plain; charset=utf-8"
+		}
+		file_server
+	}
+
+	handle {
+		try_files {path} {path}/ {path}.html
+		file_server
 	}
 }

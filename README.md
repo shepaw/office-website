@@ -26,10 +26,25 @@ python3 -m http.server 4173
 
 Caddy 示例见 `Caddyfile`。GitHub Pages 若不是仓库根，需要改成相对路径，或把本目录作为独立仓库的根。
 
+`/install` 和 `/install.ps1` 必须按 `text/plain; charset=utf-8` 返回，否则 Windows 的 `irm | iex` 不会把正文当脚本执行。Caddyfile 已按路径覆盖 Content-Type。Nginx 需要：
+
+```nginx
+location = /install {
+	default_type text/plain;
+	charset utf-8;
+}
+location = /install.ps1 {
+	default_type text/plain;
+	charset utf-8;
+}
+```
+
 ## 页面
 
 - `/` 产品首页
-- `/download/` 客户端 + Hub + Channel
+- `/install` macOS / Linux 安装脚本（`curl -fsSL https://shepaw.com/install | bash`）
+- `/install.ps1` Windows 安装脚本（`irm https://shepaw.com/install.ps1 | iex`）
+- `/download/` 客户端 + CLI + Channel
 - `/docs/` 快速开始、配对、Hub、引擎、CLI、Channel、安全、自托管、FAQ
 
 导航右上角可切换中 / 英。
