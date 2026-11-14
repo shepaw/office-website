@@ -26,8 +26,8 @@
         <div class="section-head">
           <h2 class="lang-zh">客户端</h2>
           <h2 class="lang-en" hidden>App</h2>
-          <p class="lang-zh">iOS、Android、macOS、Windows。当前版本 1.0.19。安装包见 GitHub Releases；更新检查默认走 release.shepaw.com。</p>
-          <p class="lang-en" hidden>iOS, Android, macOS, Windows. Current version 1.0.19. Builds are on GitHub Releases; the app checks release.shepaw.com for updates.</p>
+          <p class="lang-zh">iOS、Android、macOS、Windows。当前版本 1.0.23。安装包见 GitHub Releases 与 <code>release.shepaw.com/download/</code>；更新检查走 <code>https://release.shepaw.com/api/v1/latest-{platform}.json</code>。</p>
+          <p class="lang-en" hidden>iOS, Android, macOS, Windows. Current version 1.0.23. Builds are on GitHub Releases and <code>release.shepaw.com/download/</code>; the app checks <code>https://release.shepaw.com/api/v1/latest-{platform}.json</code> for updates.</p>
         </div>
         <div class="dl-grid">
           <article class="dl-card">
@@ -47,8 +47,10 @@
             <h3 class="lang-en" hidden>Desktop</h3>
             <p class="lang-zh">多窗口、本地 LLM、和手机同一套身份。不替代 Hub —— 编码 Agent 仍跑在有 CLI 的那台机器上。</p>
             <p class="lang-en" hidden>Multi-window, local LLMs, same identity as the phone. It does not replace Hub — coding agents still run where the CLI is installed.</p>
+            <p class="lang-zh" style="margin-top:10px">产物是 macOS 的 <code>.tar.gz</code> 与 Windows 的 <code>.zip</code>；macOS 包为 universal（x86_64 + arm64）。解压后把 ShePaw.app 拖进「应用程序」或按说明安装，本渠道不自动安装。</p>
+            <p class="lang-en" hidden style="margin-top:10px">Builds ship as a macOS <code>.tar.gz</code> and a Windows <code>.zip</code>; the macOS build is universal (x86_64 + arm64). Extract and drag ShePaw.app into Applications, or follow the included instructions — this channel does not auto-install.</p>
             <div class="dl-actions">
-              <a class="btn btn-light" href="https://github.com/shepaw/shepaw/releases">.dmg / .exe</a>
+              <a class="btn btn-light" href="https://github.com/shepaw/shepaw/releases">macOS .tar.gz / Windows .zip</a>
               <a class="btn btn-ghost" href="https://github.com/shepaw/shepaw">Source</a>
             </div>
           </article>
@@ -68,8 +70,8 @@
           <article class="dl-card">
             <div class="tag">macOS / Linux</div>
             <h3>shepaw</h3>
-            <p class="lang-zh">装到 <code>~/.local/bin</code>。打开新终端后启动 Hub，再扫码配对。</p>
-            <p class="lang-en" hidden>Installs to <code>~/.local/bin</code>. Open a new terminal, start Hub, then scan to pair.</p>
+            <p class="lang-zh">装到 <code>~/.shepaw/bin</code>。打开新终端后启动 Hub，再扫码配对。</p>
+            <p class="lang-en" hidden>Installs to <code>~/.shepaw/bin</code>. Open a new terminal, start Hub, then scan to pair.</p>
             <div class="cli">
               <div class="cli-bar"><span>bash</span></div>
               <pre>curl -fsSL https://shepaw.com/install | bash
@@ -80,8 +82,8 @@ shepaw pair</pre>
           <article class="dl-card">
             <div class="tag">Windows</div>
             <h3>shepaw</h3>
-            <p class="lang-zh">装到 <code>%LOCALAPPDATA%\shepaw\bin</code>，并写入用户 PATH。</p>
-            <p class="lang-en" hidden>Installs to <code>%LOCALAPPDATA%\shepaw\bin</code> and adds it to the user PATH.</p>
+            <p class="lang-zh">装到 <code>%LOCALAPPDATA%\Shepaw\bin</code>，并写入用户 PATH。</p>
+            <p class="lang-en" hidden>Installs to <code>%LOCALAPPDATA%\Shepaw\bin</code> and adds it to the user PATH.</p>
             <div class="cli">
               <div class="cli-bar"><span>PowerShell</span></div>
               <pre>irm https://shepaw.com/install.ps1 | iex

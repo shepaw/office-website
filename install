@@ -3,9 +3,17 @@
 # macOS / Linux:
 #   curl -fsSL https://shepaw.com/install | bash
 #
-# 装到 SHEPAW_INSTALL_DIR，缺省是 ~/.local/bin。
-# 发布清单来自 SHEPAW_RELEASE_BASE，缺省是 https://release.shepaw.com。
+# 装到 SHEPAW_INSTALL_DIR，缺省是 ~/.shepaw/bin（与 App 的 CliHost / CliBundle 一致）。
+# 发布清单来自 SHEPAW_RELEASE_BASE，缺省是 https://release.shepaw.com；
+# 覆盖时必须仍是 https://，或指向本机回环 http://127.0.0.1:PORT（仅用于本地联调）。
 # 设 SHEPAW_NO_PATH=1 时不改 shell 配置。
+#
+# 完整性：清单必须是 v2（schemaVersion=2 + 平台/架构匹配 + 未撤回 + 未过期），
+# checksum 必填且必须是 sha256:<64 hex>，fileSize 与下载字节数强比对，downloadUrl
+# 只允许三端一致的 host 白名单。首次安装的二进制正是将来负责验签的程序，不能拿
+# 「签名非空、以后会验签」当理由放行；签名/包签名只做格式检查，真正的 ed25519
+# 验签由装好后的 `shepaw update` 对后续替换负责（本脚本不自带验签原语；
+# 首次安装的信任边界见 README「首次安装的信任边界」）。
 
 set -euo pipefail
 
@@ -13,8 +21,26 @@ RELEASE_BASE="${SHEPAW_RELEASE_BASE:-https://release.shepaw.com}"
 RELEASE_BASE="${RELEASE_BASE%/}"
 MAX_BYTES=$((128 * 1024 * 1024))
 
+# 与 App（kUpdateAllowedHosts）、主机 CLI（UPDATE_HOST_ALLOWLIST）、
+# 发布门禁（URL_HOST_ALLOWLIST）完全一致的下载 host 白名单。
+RELEASE_HOST_ALLOWLIST='release.shepaw.com github.com objects.githubusercontent.com release-assets.githubusercontent.com'
+
+# EXIT 清理用全局变量：main 里的 local 变量在函数返回后就不可见了，
+# 用 local 名做 trap 会让临时文件留在磁盘上。
+WORK_DIR=""
+DOWNLOAD_TMP=""
+cleanup() {
+  if [[ -n "$WORK_DIR" ]]; then rm -rf -- "$WORK_DIR" || true; fi
+  if [[ -n "$DOWNLOAD_TMP" ]]; then rm -f -- "$DOWNLOAD_TMP" || true; fi
+}
+trap cleanup EXIT
+
 say() {
   printf '%s\n' "$*" >&2
+}
+
+warn() {
+  say "警告: $*"
 }
 
 die() {
@@ -44,61 +70,221 @@ detect_target() {
   printf '%s %s\n' "$os" "$arch"
 }
 
+# 自定义 RELEASE_BASE（https）的 host 也允许承载安装包，方便自建发布源；
+# 但清单把下载地址指向白名单之外的第三方域一律拒绝。
+base_host() {
+  local host=""
+  if [[ "$RELEASE_BASE" =~ ^https://([^/@:?#]+)(:([0-9]+))?(/.*)?$ ]]; then
+    host="${BASH_REMATCH[1]}"
+    printf '%s' "$host" | tr '[:upper:]' '[:lower:]'
+  fi
+}
+
 allow_url() {
-  local url="$1"
+  local url="$1" host port allowed
+  # 拒绝空白/控制字符（防止把 URL 拆成额外参数）。
   case "$url" in
-    https://*) return 0 ;;
+    *[[:space:]]*|*$'\r'*|*$'\n'*) return 1 ;;
   esac
-  case "$RELEASE_BASE" in
-    http://127.0.0.1:*|http://localhost:*|http://[::1]:*)
-      case "$url" in
-        http://127.0.0.1:*|http://localhost:*|http://[::1]:*) return 0 ;;
-      esac
-      ;;
+  # SHEPAW_RELEASE_BASE 仍可用于本地联调：仅当基址本身就是回环 http 时，
+  # 才允许清单/下载地址同样落在回环 http 上，且端口必须是数字。
+  if [[ "$RELEASE_BASE" =~ ^http://(127\.0\.0\.1|localhost|\[::1\])(:[0-9]+)?/?$ ]]; then
+    if [[ "$url" =~ ^http://(127\.0\.0\.1|localhost|\[::1\])(:[0-9]+)?(/.*)?$ ]]; then
+      return 0
+    fi
+  fi
+  # 正式发布：https + 无 userinfo + 端口 443（或省略）+ host 白名单。
+  [[ "$url" =~ ^https://([^/@:?#]+)(:([0-9]+))?(/[^#]*)?$ ]] || return 1
+  host="${BASH_REMATCH[1]}"
+  port="${BASH_REMATCH[3]:-443}"
+  [[ "$port" == "443" ]] || return 1
+  host="$(printf '%s' "$host" | tr '[:upper:]' '[:lower:]')"
+  [[ "$host" != *. ]] || return 1 # 尾随点会绕过朴素字符串白名单
+  allowed="$RELEASE_HOST_ALLOWLIST $(base_host)"
+  case " $allowed " in
+    *" $host "*) return 0 ;;
   esac
   return 1
 }
 
 fetch() {
   local url="$1" dest="$2" limit="$3"
-  allow_url "$url" || die "地址必须是 https:// : $url"
-  local -a args
-  args=(-sS --retry 3 --retry-delay 1 --max-time 60 --max-filesize "$limit" -o "$dest" -w '%{http_code}')
-  case "$url" in
-    https://*) args+=(--proto '=https' --tlsv1.2) ;;
-  esac
-  local code
-  code="$(curl "${args[@]}" "$url" || true)"
-  if [[ "$code" == "200" ]]; then
-    return 0
-  fi
-  rm -f "$dest"
-  if [[ "$code" == "000" || -z "$code" ]]; then
-    printf '%s' "000"
-  else
-    printf '%s' "$code"
-  fi
-  return 1
+  [[ -n "$WORK_DIR" ]] || die "内部错误: 临时目录未初始化"
+  local hop code curl_status location
+  local hdr="$WORK_DIR/hop.headers"
+  # 逐跳跟随：每一跳都重新跑白名单校验，且只允许 https（回环联调除外）。
+  # curl 自动 -L 会在看不见的中间跳落到任意 host，契约 §2.1 不允许。
+  for ((hop = 0; hop < 5; hop++)); do
+    allow_url "$url" || die "地址必须是 https:// 白名单地址（第 ${hop} 跳）: $url"
+    local -a args
+    args=(-sS --retry 3 --retry-delay 1 --max-time 60 --max-filesize "$limit" \
+          -o "$dest" -D "$hdr" -w '%{http_code}')
+    case "$url" in
+      https://*) args+=(--proto '=https' --tlsv1.2) ;;
+    esac
+    curl_status=0
+    code="$(curl "${args[@]}" "$url")" || curl_status=$?
+    # curl 传输失败（TLS / 截断 / 超过 max-filesize）时即使已打印 200 也不算成功。
+    if [[ "$curl_status" -ne 0 ]]; then
+      rm -f -- "$dest"
+      say "下载失败（curl 退出码 ${curl_status}）: $url"
+      printf '%s' "${code:-000}"
+      return 1
+    fi
+    if [[ "$code" == "200" ]]; then
+      return 0
+    fi
+    case "$code" in
+      301|302|303|307|308)
+        location="$(LC_ALL=C tr -d '\r' < "$hdr" | grep -i '^location:' | head -1 \
+          | sed 's/^[^:]*:[[:space:]]*//' || true)"
+        [[ -n "$location" ]] || die "重定向没有 Location 头: $url"
+        url="$(CURRENT_URL="$url" LOCATION="$location" python3 -I -c \
+          'import os, urllib.parse; print(urllib.parse.urljoin(os.environ["CURRENT_URL"], os.environ["LOCATION"]))')" \
+          || die "无法解析重定向地址: $location"
+        ;;
+      *)
+        rm -f -- "$dest"
+        if [[ "$code" == "000" || -z "$code" ]]; then
+          printf '%s' "000"
+        else
+          printf '%s' "$code"
+        fi
+        return 1
+        ;;
+    esac
+  done
+  die "重定向超过 5 跳: $url"
 }
 
 json_field() {
   local json="$1" key="$2"
+  # 只认 v2 契约字段名，不认 v1 别名（download_url / sha256）。
   JSON_INPUT="$json" JSON_KEY="$key" python3 - <<'PY'
 import json, os
 data = json.loads(os.environ["JSON_INPUT"])
 if not isinstance(data, dict):
     raise SystemExit("manifest")
-aliases = {
-    "downloadUrl": ("downloadUrl", "download_url"),
-    "checksum": ("checksum", "sha256"),
-}
-keys = aliases.get(os.environ["JSON_KEY"], (os.environ["JSON_KEY"],))
+keys = (os.environ["JSON_KEY"],)
 for key in keys:
     value = data.get(key)
+    # v2 的 fileSize / rollout / seq 是 JSON 数字，不能只认字符串。
+    if isinstance(value, bool):
+        continue
+    if isinstance(value, (int, float)):
+        print(str(value))
+        break
     if isinstance(value, str) and value.strip():
         print(value.strip())
         break
 PY
+}
+
+# v2 清单整体校验：字段类型、平台/架构匹配、签名格式、未撤回、未过期。
+# 这里只校验「声明与格式」；密码学验签由安装后的 CLI 用内置公钥负责。
+validate_manifest() {
+  local json="$1" os="$2" arch="$3"
+  MANIFEST_JSON="$json" MANIFEST_OS="$os" MANIFEST_ARCH="$arch" python3 - <<'PY'
+import base64
+import datetime as dt
+import json
+import os
+import re
+import sys
+
+
+def bad(message):
+    print("更新清单不合法: " + message, file=sys.stderr)
+    sys.exit(1)
+
+
+try:
+    m = json.loads(os.environ["MANIFEST_JSON"])
+except (ValueError, KeyError) as exc:
+    bad("不是 JSON: %s" % exc)
+if not isinstance(m, dict):
+    bad("顶层不是 JSON 对象")
+
+
+def is_int(value):
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def is_sha(value):
+    return isinstance(value, str) and bool(
+        re.fullmatch(r"sha256:[0-9a-fA-F]{64}", value.strip())
+    )
+
+
+def is_sig(value):
+    if not isinstance(value, str) or not value.startswith("ed25519:"):
+        return False
+    try:
+        return len(base64.b64decode(value[8:], validate=True)) == 64
+    except Exception:
+        return False
+
+
+if m.get("schemaVersion") != 2 or not is_int(m.get("schemaVersion")):
+    bad("schemaVersion 必须是整数 2")
+if m.get("channel") not in ("stable", "beta"):
+    bad("channel 必须是 stable / beta")
+if m.get("platform") != os.environ["MANIFEST_OS"]:
+    bad("platform 与本机不匹配（期望 %s）" % os.environ["MANIFEST_OS"])
+if m.get("arch") != os.environ["MANIFEST_ARCH"]:
+    bad("arch 与本机不匹配（期望 %s）" % os.environ["MANIFEST_ARCH"])
+if not isinstance(m.get("version"), str) or not re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+", m["version"]):
+    bad("version 必须是 x.y.z")
+if not isinstance(m.get("buildNumber"), str) or not re.fullmatch(r"[0-9]+", m["buildNumber"]):
+    bad("buildNumber 必须是十进制字符串")
+if not is_int(m.get("seq")) or m["seq"] <= 0:
+    bad("seq 必须是正整数")
+if not isinstance(m.get("releaseDate"), str) or not m["releaseDate"]:
+    bad("releaseDate 缺失")
+expiry = m.get("expiry")
+if expiry:
+    if not isinstance(expiry, str) or not re.fullmatch(
+        r"[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]+)?Z", expiry
+    ):
+        bad("expiry 必须是 ISO8601 UTC")
+    try:
+        deadline = dt.datetime.fromisoformat(expiry.replace("Z", "+00:00"))
+    except ValueError:
+        bad("expiry 日期无效")
+    if deadline <= dt.datetime.now(dt.timezone.utc):
+        bad("expiry 已过期（%s）" % expiry)
+if not is_int(m.get("fileSize")) or m["fileSize"] <= 0:
+    bad("fileSize 必须是正整数")
+if not is_sha(m.get("checksum")):
+    bad("checksum 必须是 sha256:<64 hex>")
+if not is_sig(m.get("signature")):
+    bad("signature 必须是 ed25519:<64 字节 base64>")
+if not is_sig(m.get("packageSignature")):
+    bad("packageSignature 必须是 ed25519:<64 字节 base64>")
+for name in ("isMandatory", "yanked"):
+    if not isinstance(m.get(name), bool):
+        bad("%s 必须是 bool" % name)
+if m.get("yanked") is True:
+    bad("该版本已撤回（yanked=true）")
+if not is_int(m.get("rollout")) or not 0 <= m["rollout"] <= 100:
+    bad("rollout 必须在 0–100")
+PY
+}
+
+# 校验 checksum 格式，成功时把规范化的 64 位小写 hex 打印出来。
+normalize_checksum() {
+  local raw hex
+  # 只去首尾空白，绝不做「删除所有空白」或大小写归一化：否则
+  # "sha 256:<hex>" / "SHA256:<hex>" 都会被宽松地当成合法算法前缀。
+  raw="$(printf '%s' "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
+  case "$raw" in
+    sha256:*) hex="${raw#sha256:}" ;;
+    *) return 1 ;; # v2 契约强制小写算法前缀，不接受裸 hex
+  esac
+  hex="$(printf '%s' "$hex" | tr '[:upper:]' '[:lower:]')"
+  [[ ${#hex} -eq 64 ]] || return 1
+  [[ "$hex" != *[!0-9a-f]* ]] || return 1
+  printf '%s' "$hex"
 }
 
 sha256_file() {
@@ -111,12 +297,50 @@ sha256_file() {
 }
 
 looks_like_binary() {
-  local magic
-  magic="$(od -An -t x1 -N 4 "$1" | tr -d ' \n')"
-  case "$magic" in
-    7f454c46|cffaedfe|feedfacf|cefaedfe|cafebabe|4d5a*) return 0 ;;
+  local file="$1" os="$2" magic
+  [[ -f "$file" && -s "$file" ]] || return 1
+  magic="$(od -An -t x1 -N 4 "$file" 2>/dev/null | tr -d ' \n')" || return 1
+  [[ ${#magic} -eq 8 ]] || return 1
+  magic="$(printf '%s' "$magic" | tr '[:upper:]' '[:lower:]')"
+  # 按平台限定魔数：否则一份声明 macos 的清单可以把 Windows PE / Linux ELF
+  # 塞进 ~/.shepaw/bin/shepaw（清单里的 platform 只说明来源，不校验字节）。
+  case "$os" in
+    macos)
+      # Mach-O 32/64 位大小端 + fat(universal)
+      case "$magic" in
+        cffaedfe|cefaedfe|feedface|feedfacf|cafebabe|cafebabf) return 0 ;;
+      esac ;;
+    linux)
+      case "$magic" in
+        7f454c46) return 0 ;;
+      esac ;;
   esac
   return 1
+}
+
+stop_running_hub() {
+  if ! command -v shepaw >/dev/null 2>&1; then
+    warn "未找到 shepaw 命令，跳过 shepaw stop"
+    return 0
+  fi
+  if shepaw stop >/dev/null 2>&1; then
+    say "已停止正在运行的 shepaw Hub"
+  else
+    warn "shepaw stop 未成功（可能没有运行中的 Hub），继续替换"
+  fi
+  return 0
+}
+
+clear_quarantine() {
+  local path="$1"
+  if ! command -v xattr >/dev/null 2>&1; then
+    warn "找不到 xattr，跳过清除 com.apple.quarantine"
+    return 0
+  fi
+  if ! xattr -d com.apple.quarantine "$path" >/dev/null 2>&1; then
+    warn "清除 com.apple.quarantine 失败（通常表示没有该标记，可忽略）"
+  fi
+  return 0
 }
 
 ensure_on_path() {
@@ -152,62 +376,92 @@ ensure_on_path() {
 main() {
   need curl
   need python3
-  if [[ "$(id -u)" -eq 0 && -z "${SHEPAW_INSTALL_DIR:-}" ]]; then
-    die "不要用 sudo。脚本会装到当前用户的 ~/.local/bin"
+  need od
+  need mktemp
+  if ! command -v sha256sum >/dev/null 2>&1 && ! command -v shasum >/dev/null 2>&1; then
+    die "需要 sha256sum 或 shasum"
   fi
-  allow_url "$RELEASE_BASE" || die "发布地址必须是 https://"
+  if [[ "$(id -u)" -eq 0 && -z "${SHEPAW_INSTALL_DIR:-}" ]]; then
+    die "不要用 sudo。脚本会装到当前用户的 ~/.shepaw/bin"
+  fi
+  allow_url "$RELEASE_BASE" || die "发布地址必须是 https:// 白名单地址（本机联调可用 http://127.0.0.1:PORT）"
 
   local os arch
   read -r os arch < <(detect_target)
 
-  local work body
-  work="$(mktemp -d)"
-  trap 'rm -rf "$work"' EXIT
-  body="$work/manifest.json"
+  # 目标目录必须在下载前确定：临时文件要和目标在同一目录，mv 才是原子替换。
+  local dest_dir dest tmp
+  dest_dir="${SHEPAW_INSTALL_DIR:-$HOME/.shepaw/bin}"
+  # ensure_on_path 会把这个路径原文写进 ~/.zshrc / ~/.bashrc；含 shell 元字符时
+  # 下次开终端会被命令替换执行（例如 $(touch /tmp/pwned)）。直接拒绝。
+  case "$dest_dir" in
+    *'$'*|*'`'*|*'"'*|*"'"*|*';'*|*'&'*|*'|'*|*'('*|*')'*|*'<'*|*'>'*|*$'\n'*|*$'\r'*)
+      die "安装目录包含会被 shell 解释的字符: $dest_dir" ;;
+  esac
+  mkdir -p -- "$dest_dir" || die "无法创建安装目录: $dest_dir"
+  dest="$dest_dir/shepaw"
+  tmp="$dest_dir/.shepaw.download.$$"
+  DOWNLOAD_TMP="$tmp"
+  rm -f -- "$tmp" || die "无法清理旧的下载临时文件: $tmp"
 
-  local manifest="$RELEASE_BASE/api/v1/latest-cli-${os}-${arch}.json"
-  say "读取 $manifest"
+  WORK_DIR="$(mktemp -d)" || die "无法创建临时目录"
+  local body="$WORK_DIR/manifest.json"
+
+  local manifest_url="$RELEASE_BASE/api/v1/latest-cli-${os}-${arch}.json"
+  say "读取 $manifest_url"
   local code
-  if ! code="$(fetch "$manifest" "$body" 1048576)"; then
+  if ! code="$(fetch "$manifest_url" "$body" 1048576)"; then
     if [[ "$code" == "404" ]]; then
-      die "还没有 ${os}-${arch} 的安装包: $manifest"
+      die "还没有 ${os}-${arch} 的安装包: $manifest_url"
     fi
-    die "发布服务返回 ${code:-错误}: $manifest"
+    die "发布服务返回 ${code:-错误}: $manifest_url"
   fi
 
-  local version download checksum signature
-  version="$(json_field "$(cat "$body")" version)" || die "更新清单不是 JSON"
-  download="$(json_field "$(cat "$body")" downloadUrl)" || die "更新清单不是 JSON"
-  checksum="$(json_field "$(cat "$body")" checksum || true)"
-  signature="$(json_field "$(cat "$body")" signature || true)"
+  local manifest_json version download checksum file_size expect actual actual_size
+  manifest_json="$(cat "$body")"
+  # v2 契约：schema / 平台架构 / seq / expiry / yanked / 两个签名的格式一次性校验，
+  # 失败即终止（旧清单、撤回版本、错架构包、无签名清单都不能装）。
+  validate_manifest "$manifest_json" "$os" "$arch"
+  version="$(json_field "$manifest_json" version)" || die "更新清单不是 JSON"
+  download="$(json_field "$manifest_json" downloadUrl)" || die "更新清单不是 JSON"
+  checksum="$(json_field "$manifest_json" checksum || true)"
+  file_size="$(json_field "$manifest_json" fileSize || true)"
   [[ -n "$version" ]] || die "更新清单缺少 version"
   [[ -n "$download" ]] || die "更新清单没有下载地址"
-  allow_url "$download" || die "下载地址必须是 https://"
+  allow_url "$download" || die "下载地址必须是 https:// 白名单地址且端口为 443（本机联调除外）: $download"
 
-  local bin="$work/shepaw"
+  # checksum 必填且格式合法；签名不能替代校验和（见文件头说明）。
+  [[ -n "$checksum" ]] || die "更新清单缺少 checksum（必须 sha256:<64 hex>）"
+  expect="$(normalize_checksum "$checksum")" || \
+    die "checksum 格式不合法，必须 sha256:<64 hex>: $checksum"
+  # v2 清单必带 fileSize：下载后强比对字节数，防截断包被当成完整包安装。
+  [[ -n "$file_size" ]] || die "更新清单缺少 fileSize（v2 必填）"
+  [[ "$file_size" =~ ^[0-9]+$ ]] || die "fileSize 必须是十进制正整数: $file_size"
+
   say "下载 shepaw $version"
-  if ! code="$(fetch "$download" "$bin" "$MAX_BYTES")"; then
+  if ! code="$(fetch "$download" "$tmp" "$MAX_BYTES")"; then
     die "下载失败（${code:-错误}）: $download"
   fi
-  looks_like_binary "$bin" || die "下载到的不是可执行文件"
+  [[ -s "$tmp" ]] || die "下载到的文件为空: $download"
+  looks_like_binary "$tmp" "$os" || die "下载到的不是 ${os} 可执行文件（魔数不匹配）"
 
-  if [[ -n "$checksum" ]]; then
-    local expect actual
-    expect="$(printf '%s' "$checksum" | tr '[:upper:]' '[:lower:]' | sed 's/^sha256://')"
-    actual="$(sha256_file "$bin")"
-    [[ "$expect" == "$actual" ]] || die "校验和不匹配，期望 $expect，实际 $actual"
-  elif [[ -z "$signature" ]]; then
-    die "安装包清单没有校验和，也没有签名"
-  else
-    say "清单没有校验和。文件经 HTTPS 下载，签名会在 shepaw update 时校验。"
+  actual_size="$(wc -c < "$tmp" | tr -d '[:space:]')"
+  [[ "$actual_size" == "$file_size" ]] || \
+    die "文件大小不匹配，期望 ${file_size}，实际 ${actual_size}"
+  actual="$(sha256_file "$tmp")"
+  [[ "$expect" == "$actual" ]] || die "校验和不匹配，期望 ${expect}，实际 ${actual}"
+
+  # 替换前尽力停掉运行中的 Hub：命令不存在或失败只 warn，不阻断。
+  stop_running_hub
+
+  # 校验通过后 chmod + 同目录 mv -f 原子替换；mv 前不做任何会被执行的操作。
+  chmod 755 "$tmp" || die "chmod 失败: $tmp"
+  mv -f -- "$tmp" "$dest" || die "无法替换 ${dest}（先执行 shepaw stop，再重试）"
+  DOWNLOAD_TMP=""
+
+  if [[ "$os" == "macos" ]]; then
+    clear_quarantine "$dest"
   fi
-
-  local dest_dir dest
-  dest_dir="${SHEPAW_INSTALL_DIR:-$HOME/.local/bin}"
-  mkdir -p "$dest_dir"
-  dest="$dest_dir/shepaw"
-  chmod 755 "$bin"
-  mv -f "$bin" "$dest"
 
   say "已安装 shepaw $version"
   say "  $dest"
