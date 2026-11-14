@@ -211,8 +211,9 @@ def is_int(value):
 
 
 def is_sha(value):
+    # 不用 strip()：Dart/Python 发布端都拒 checksum 首尾空白。
     return isinstance(value, str) and bool(
-        re.fullmatch(r"sha256:[0-9a-fA-F]{64}", value.strip())
+        re.fullmatch(r"sha256:[0-9a-fA-F]{64}", value)
     )
 
 
@@ -223,6 +224,20 @@ def is_sig(value):
         return len(base64.b64decode(value[8:], validate=True)) == 64
     except Exception:
         return False
+
+
+# 与 PowerShell Assert-ManifestV2 同口径：v2 契约必填字段全部做精确类型检查。
+for name in ("channel", "platform", "arch", "version", "buildNumber",
+             "releaseDate", "downloadUrl", "checksum", "signature",
+             "packageSignature", "description"):
+    if not isinstance(m.get(name), str):
+        bad("%s 缺失或不是 string" % name)
+for name in ("isMandatory", "yanked"):
+    if not isinstance(m.get(name), bool):
+        bad("%s 缺失或不是 bool" % name)
+for name in ("seq", "fileSize", "rollout"):
+    if not is_int(m.get(name)):
+        bad("%s 缺失或不是 int" % name)
 
 
 if m.get("schemaVersion") != 2 or not is_int(m.get("schemaVersion")):
@@ -354,6 +369,8 @@ ensure_on_path() {
   fi
   # marker 带目录：旧版脚本（装到 ~/.local/bin）写下的无目录 marker 不应让
   # 新目录被跳过，否则新二进制装到了 ~/.shepaw/bin 而 PATH 仍指向旧目录。
+  # 双引号里的 `\\` 会被折叠成 `\`，写 rc 前把反斜杠翻倍，保证路径原样。
+  local rc_dir="${dir//\\/\\\\}"
   local rc line marker
   marker="# added by shepaw install: $dir"
   case "${SHELL:-}" in
@@ -361,12 +378,14 @@ ensure_on_path() {
     */bash) rc="${HOME}/.bashrc" ;;
     *)
       say "把下面这行加到 shell 配置里："
-      say "  export PATH=\"$dir:\$PATH\""
+      say "  export PATH=\"$rc_dir:\$PATH\""
       return 0
       ;;
   esac
-  line="export PATH=\"$dir:\$PATH\""
-  if [[ -f "$rc" ]] && grep -qF "$marker" "$rc"; then
+  line="export PATH=\"$rc_dir:\$PATH\""
+  # -x 整行精确匹配：只用 -F 时 `/tmp/shepaw/bin` 会命中
+  # `/tmp/shepaw/bin2` 的 marker，导致换目录后跳过写 rc。
+  if [[ -f "$rc" ]] && grep -qFx -- "$marker" "$rc"; then
     :
   else
     printf '\n%s\n%s\n' "$marker" "$line" >>"$rc"

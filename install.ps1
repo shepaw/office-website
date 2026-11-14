@@ -57,7 +57,7 @@ function Test-Ed25519Signature([string]$Value) {
     if ([string]::IsNullOrEmpty($Value)) { return $false }
     if (-not $Value.StartsWith('ed25519:', [StringComparison]::Ordinal)) { return $false }
     $raw = $Value.Substring(8)
-    if (-not [regex]::IsMatch($raw, '^[A-Za-z0-9+/]+={0,2}$')) { return $false }
+    if (-not [regex]::IsMatch($raw, '^[A-Za-z0-9+/]+={0,2}\z')) { return $false }
     try {
         $bytes = [Convert]::FromBase64String($raw)
         return ($bytes.Length -eq 64)
@@ -65,6 +65,29 @@ function Test-Ed25519Signature([string]$Value) {
         return $false
     }
 }
+
+# Windows PowerShell 5.1 的 Invoke-RestMethod / ConvertFrom-Json 会把 ISO8601
+# 字符串反序列化成 [datetime]（PS 7.5+ 才有 -DateKind String）。统一归一化成
+# InvariantCulture 的 UTC ISO8601 文本，避免区域日历（佛历/回历）改写年份，
+# 也让后续正则与 CompareOrdinal 拿到的始终是同一格式。
+function ConvertTo-IsoUtcString($Value, [string]$Label) {
+    if ($null -eq $Value) { return '' }
+    if ($Value -is [string]) { return $Value }
+    if ($Value -is [datetime]) {
+        $utc = if ($Value.Kind -eq [DateTimeKind]::Utc) {
+            $Value
+        } elseif ($Value.Kind -eq [DateTimeKind]::Local) {
+            $Value.ToUniversalTime()
+        } else {
+            [datetime]::SpecifyKind($Value, [DateTimeKind]::Utc)
+        }
+        return $utc.ToString('yyyy-MM-dd\THH:mm:ss\Z',
+            [Globalization.CultureInfo]::InvariantCulture)
+    }
+    throw "$Label 必须是 ISO8601 字符串"
+}
+
+$ISO_UTC_PATTERN = '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z\z'
 
 # v2 清单整体校验：只校验「声明与格式」，密码学验签由装好后的 CLI 负责。
 # $AllowX64Fallback 用于 ARM64 Windows 回退到 x86_64 清单的场景。
@@ -90,8 +113,13 @@ function Assert-ManifestV2($Manifest, [string]$ArchName, [bool]$AllowX64Fallback
     foreach ($flag in @('isMandatory','yanked')) {
         if ($Manifest.$flag -isnot [bool]) { throw "$flag 必须是 bool" }
     }
-    foreach ($text in @('description','releaseDate','downloadUrl','checksum','signature','packageSignature','version','buildNumber','platform','arch','channel')) {
+    foreach ($text in @('description','downloadUrl','checksum','signature','packageSignature','version','buildNumber','platform','arch','channel')) {
         if ($Manifest.$text -isnot [string]) { throw "$text 必须是 string" }
+    }
+    # releaseDate / expiry 在 PS 5.1 可能已是 [datetime]，单独归一化。
+    $releaseDateText = ConvertTo-IsoUtcString $Manifest.releaseDate 'releaseDate'
+    if (-not [regex]::IsMatch($releaseDateText, $ISO_UTC_PATTERN)) {
+        throw 'releaseDate 必须是 ISO8601 UTC'
     }
     if ($Manifest.schemaVersion -ne 2) { throw 'schemaVersion 必须是整数 2' }
     if (@('stable','beta') -cnotcontains $Manifest.channel) { throw 'channel 必须是 stable / beta' }
@@ -119,9 +147,9 @@ function Assert-ManifestV2($Manifest, [string]$ArchName, [bool]$AllowX64Fallback
         throw 'packageSignature 必须是 ed25519:<64 字节 base64>'
     }
     if ($Manifest.yanked) { throw '该版本已撤回（yanked=true）' }
-    $expiry = [string]$Manifest.expiry
+    $expiry = ConvertTo-IsoUtcString $Manifest.expiry 'expiry'
     if ($expiry) {
-        if (-not [regex]::IsMatch($expiry, '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z\z')) {
+        if (-not [regex]::IsMatch($expiry, $ISO_UTC_PATTERN)) {
             throw 'expiry 必须是 ISO8601 UTC'
         }
         # InvariantCulture：佛历/回历区域的 yyyy 会输出 2569/1448，导致
@@ -271,7 +299,7 @@ function Install-Shepaw {
             if ($stream) { $stream.Dispose() }
             if ($response) { $response.Dispose() }
         }
-        $length = (Get-Item $tmp).Length
+        $length = (Get-Item -LiteralPath $tmp).Length
         if ($length -le 0 -or $length -gt $maxBytes) {
             throw '安装包大小不对'
         }
@@ -283,7 +311,7 @@ function Install-Shepaw {
         if ($head[0] -ne 0x4D -or $head[1] -ne 0x5A) {
             throw '下载到的不是 Windows 可执行文件'
         }
-        $actual = (Get-FileHash -Algorithm SHA256 -Path $tmp).Hash.ToLowerInvariant()
+        $actual = (Get-FileHash -Algorithm SHA256 -LiteralPath $tmp).Hash.ToLowerInvariant()
         if ($expect -ne $actual) {
             throw "校验和不匹配，期望 ${expect}，实际 ${actual}"
         }
@@ -292,14 +320,14 @@ function Install-Shepaw {
         Stop-ShepawHub
 
         try {
-            Move-Item -Force -Path $tmp -Destination $dest
+            Move-Item -Force -LiteralPath $tmp -Destination $dest
         } catch {
             throw "无法替换 ${dest}。先执行 shepaw stop，再重新安装。"
         }
 
         # 去掉 Mark-of-the-Web，避免 SmartScreen / Defender 对未签名 exe 的额外拦截。
         try {
-            Unblock-File -Path $dest -ErrorAction Stop
+            Unblock-File -LiteralPath $dest -ErrorAction Stop
         } catch {
             Write-Host "警告: Unblock-File 失败: $($_.Exception.Message)"
         }
@@ -311,7 +339,7 @@ function Install-Shepaw {
         Write-Host '  shepaw start'
         Write-Host '  shepaw pair'
     } finally {
-        Remove-Item -Force $tmp -ErrorAction SilentlyContinue
+        Remove-Item -Force -LiteralPath $tmp -ErrorAction SilentlyContinue
     }
 }
 
