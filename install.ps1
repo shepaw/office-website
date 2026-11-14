@@ -31,10 +31,11 @@ function Test-AllowedUrl([string]$Url, [string]$ReleaseBase) {
         'objects.githubusercontent.com', 'release-assets.githubusercontent.com'
     )
     if ([string]::IsNullOrEmpty($Url)) { return $false }
-    if ($Url -match '[\s\r\n]') { return $false }
+    if ([regex]::IsMatch($Url, '[\s\r\n]')) { return $false }
     # 回环 http 只用于 SHEPAW_RELEASE_BASE 显式指向本机的本地联调。
-    if ($ReleaseBase -match '^http://(127\.0\.0\.1|localhost|\[::1\])(:[0-9]+)?/?$') {
-        if ($Url -match '^http://(127\.0\.0\.1|localhost|\[::1\])(:[0-9]+)?(/.*)?$') {
+    # 用 [regex]::IsMatch（大小写敏感），不用默认 IgnoreCase 的 -match。
+    if ([regex]::IsMatch($ReleaseBase, '^http://(127\.0\.0\.1|localhost|\[::1\])(:[0-9]+)?/?$')) {
+        if ([regex]::IsMatch($Url, '^http://(127\.0\.0\.1|localhost|\[::1\])(:[0-9]+)?(/.*)?$')) {
             return $true
         }
     }
@@ -47,13 +48,18 @@ function Test-AllowedUrl([string]$Url, [string]$ReleaseBase) {
     $allowed = @($allowlist)
     $baseMatch = [regex]::Match($ReleaseBase, '^https://([^/@:?#]+)')
     if ($baseMatch.Success) { $allowed += $baseMatch.Groups[1].Value.ToLowerInvariant() }
-    return ($allowed -contains $hostName)
+    return ($allowed -ccontains $hostName)
 }
 
 function Test-Ed25519Signature([string]$Value) {
-    if (-not $Value -or -not $Value.StartsWith('ed25519:')) { return $false }
+    # PowerShell 的 StartsWith 重载默认大小写敏感；这里显式指定 Ordinal，
+    # 并先过滤 base64 字符集，避免 FromBase64String 忽略内嵌空白/换行。
+    if ([string]::IsNullOrEmpty($Value)) { return $false }
+    if (-not $Value.StartsWith('ed25519:', [StringComparison]::Ordinal)) { return $false }
+    $raw = $Value.Substring(8)
+    if (-not [regex]::IsMatch($raw, '^[A-Za-z0-9+/]+={0,2}$')) { return $false }
     try {
-        $bytes = [Convert]::FromBase64String($Value.Substring(8))
+        $bytes = [Convert]::FromBase64String($raw)
         return ($bytes.Length -eq 64)
     } catch {
         return $false
@@ -68,48 +74,64 @@ function Assert-ManifestV2($Manifest, [string]$ArchName, [bool]$AllowX64Fallback
     foreach ($required in @(
         'schemaVersion','channel','platform','arch','version','buildNumber','seq',
         'releaseDate','downloadUrl','fileSize','checksum','signature',
-        'packageSignature','isMandatory','rollout','yanked')) {
-        if ($names -notcontains $required) { throw "更新清单缺少 $required" }
+        'packageSignature','isMandatory','rollout','yanked','description')) {
+        # -cnotcontains：PowerShell 的 -contains/-notcontains 默认忽略大小写，
+        # 会让 SCHEMAVERSION 之类非契约字段名蒙混过关。
+        if ($names -cnotcontains $required) { throw "更新清单缺少 $required" }
     }
     foreach ($numeric in @('schemaVersion','seq','fileSize','rollout')) {
+        # 必须是 JSON 整数：Invoke-RestMethod 把 2.0 解析成 decimal/double，
+        # 字符串化后同样是 "2"，不能靠字符串化判断（bash 侧 is_int 会拒绝）。
         $v = $Manifest.$numeric
-        if ($v -is [string] -or $v -is [bool] -or $v -is [array]) {
-            throw "$numeric 必须是 JSON 数字"
+        if (-not ($v -is [int] -or $v -is [long])) {
+            throw "$numeric 必须是 JSON 整数"
         }
     }
     foreach ($flag in @('isMandatory','yanked')) {
         if ($Manifest.$flag -isnot [bool]) { throw "$flag 必须是 bool" }
     }
-    if ("$($Manifest.schemaVersion)" -ne '2') { throw 'schemaVersion 必须是整数 2' }
-    if (@('stable','beta') -notcontains $Manifest.channel) { throw 'channel 必须是 stable / beta' }
-    if ($Manifest.platform -ne 'windows') { throw 'platform 必须是 windows' }
-    $archOk = ($Manifest.arch -eq $ArchName) -or ($AllowX64Fallback -and $Manifest.arch -eq 'x86_64')
-    if (-not $archOk) { throw "arch 与本机不匹配（期望 $ArchName）" }
-    if ($Manifest.version -notmatch '^[0-9]+\.[0-9]+\.[0-9]+$') { throw 'version 必须是 x.y.z' }
-    if ("$($Manifest.buildNumber)" -notmatch '^[0-9]+$') { throw 'buildNumber 必须是十进制字符串' }
-    if ("$($Manifest.seq)" -notmatch '^[1-9][0-9]*$') { throw 'seq 必须是正整数' }
-    if ("$($Manifest.fileSize)" -notmatch '^[1-9][0-9]*$') { throw 'fileSize 必须是正整数' }
-    if ("$($Manifest.rollout)" -notmatch '^[0-9]+$' -or [int]$Manifest.rollout -gt 100) {
-        throw 'rollout 必须在 0–100'
+    foreach ($text in @('description','releaseDate','downloadUrl','checksum','signature','packageSignature','version','buildNumber','platform','arch','channel')) {
+        if ($Manifest.$text -isnot [string]) { throw "$text 必须是 string" }
     }
-    if ($Manifest.checksum -notmatch '^sha256:[0-9a-fA-F]{64}$') {
+    if ($Manifest.schemaVersion -ne 2) { throw 'schemaVersion 必须是整数 2' }
+    if (@('stable','beta') -cnotcontains $Manifest.channel) { throw 'channel 必须是 stable / beta' }
+    if ($Manifest.platform -cne 'windows') { throw 'platform 必须是 windows' }
+    $archOk = ($Manifest.arch -ceq $ArchName) -or ($AllowX64Fallback -and ($Manifest.arch -ceq 'x86_64'))
+    if (-not $archOk) { throw "arch 与本机不匹配（期望 $ArchName）" }
+    # 所有正则用 [regex]::IsMatch（大小写敏感）并以 \z 收尾，避免 PowerShell
+    # 默认 IgnoreCase 与 .NET `$` 允许末尾换行的双重放宽。
+    if (-not [regex]::IsMatch($Manifest.version, '^[0-9]+\.[0-9]+\.[0-9]+\z')) {
+        throw 'version 必须是 x.y.z'
+    }
+    if (-not [regex]::IsMatch($Manifest.buildNumber, '^[0-9]+\z')) {
+        throw 'buildNumber 必须是十进制字符串'
+    }
+    if ($Manifest.seq -le 0) { throw 'seq 必须是正整数' }
+    if ($Manifest.fileSize -le 0) { throw 'fileSize 必须是正整数' }
+    if ($Manifest.rollout -lt 0 -or $Manifest.rollout -gt 100) { throw 'rollout 必须在 0–100' }
+    if (-not [regex]::IsMatch($Manifest.checksum, '^sha256:[0-9a-fA-F]{64}\z')) {
         throw 'checksum 必须是 sha256:<64 hex>'
     }
-    if (-not (Test-Ed25519Signature ([string]$Manifest.signature))) {
+    if (-not (Test-Ed25519Signature $Manifest.signature)) {
         throw 'signature 必须是 ed25519:<64 字节 base64>'
     }
-    if (-not (Test-Ed25519Signature ([string]$Manifest.packageSignature))) {
+    if (-not (Test-Ed25519Signature $Manifest.packageSignature)) {
         throw 'packageSignature 必须是 ed25519:<64 字节 base64>'
     }
-    if ("$($Manifest.yanked)" -eq 'True') { throw '该版本已撤回（yanked=true）' }
+    if ($Manifest.yanked) { throw '该版本已撤回（yanked=true）' }
     $expiry = [string]$Manifest.expiry
     if ($expiry) {
-        if ($expiry -notmatch '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z$') {
+        if (-not [regex]::IsMatch($expiry, '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\.[0-9]+)?Z\z')) {
             throw 'expiry 必须是 ISO8601 UTC'
         }
-        # 同格式 ISO8601 UTC 的字典序即时间序，避免依赖本机区域设置。
-        $nowUtc = [datetime]::UtcNow.ToString('yyyy-MM-dd\THH:mm:ss\Z')
-        if (($expiry.Substring(0, 19) + 'Z') -le $nowUtc) { throw "expiry 已过期（$expiry）" }
+        # InvariantCulture：佛历/回历区域的 yyyy 会输出 2569/1448，导致
+        # 未过期清单被判过期或过期清单通过；CompareOrdinal 避免区域排序规则。
+        $nowUtc = [datetime]::UtcNow.ToString('yyyy-MM-dd\THH:mm:ss\Z',
+            [Globalization.CultureInfo]::InvariantCulture)
+        $expiryKey = $expiry.Substring(0, 19) + 'Z'
+        if ([string]::CompareOrdinal($expiryKey, $nowUtc) -le 0) {
+            throw "expiry 已过期（$expiry）"
+        }
     }
 }
 
@@ -185,18 +207,25 @@ function Install-Shepaw {
         throw '下载地址必须是 https:// 白名单地址，且端口为 443（本机联调除外）'
     }
 
-    # checksum 必填且必须带 sha256: 前缀 + 64 位 hex；签名不能替代校验和。
+    # checksum 必填且必须带小写 sha256: 前缀 + 64 位 hex；签名不能替代校验和。
+    # 用 [regex]::IsMatch（-notmatch 默认忽略大小写，会放过 SHA256:）。
     if (-not $checksum) { throw '更新清单缺少 checksum（必须 sha256:<64 hex>）' }
     $checksum = $checksum.Trim()
-    if ($checksum -notmatch '^sha256:[0-9a-fA-F]{64}$') {
+    if (-not [regex]::IsMatch($checksum, '^sha256:[0-9a-fA-F]{64}\z')) {
         throw "checksum 格式不合法，必须 sha256:<64 hex>: $checksum"
     }
     $expect = $checksum.Substring(7).ToLowerInvariant()
 
     # v2 清单必带 fileSize：下载后强比对字节数，防截断包被当成完整包安装。
     if (-not $fileSize) { throw '更新清单缺少 fileSize（v2 必填）' }
-    if ($fileSize -notmatch '^[0-9]+$') { throw "fileSize 必须是十进制正整数: $fileSize" }
+    if (-not [regex]::IsMatch($fileSize, '^[0-9]+\z')) {
+        throw "fileSize 必须是十进制正整数: $fileSize"
+    }
     $expectedLength = [long]$fileSize
+    # 下载前就按清单声明拒绝超大包，别等写满磁盘才发现。
+    if ($expectedLength -gt $maxBytes) {
+        throw "清单声明的 fileSize $expectedLength 超过 $maxBytes 字节上限"
+    }
 
     # 临时文件放目标目录内：同一卷内 Move-Item 才是原子替换，不会留下半成品。
     $destDir = if ($env:SHEPAW_INSTALL_DIR) { $env:SHEPAW_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA 'Shepaw\bin' }
@@ -205,21 +234,43 @@ function Install-Shepaw {
     $tmp = Join-Path $destDir ('.shepaw.download.' + [guid]::NewGuid().ToString('n'))
     try {
         Write-Host "下载 shepaw $version"
-        # HEAD 预检能让无 Content-Length 之外的超大响应尽早被拒绝；服务器不支持
-        # HEAD 时只警告，后面仍有 fileSize 与实际长度强比对兜底。
-        $tooBig = $false
+        # Windows 侧无法逐跳重验白名单，因此 fail closed：不允许自动重定向，
+        # 3xx 直接失败（README 已写明 downloadUrl 必须是直链）。
+        # 用 HttpWebRequest 流式读取并在写入时累计字节，超上限立即中止；
+        # 不再用 Invoke-WebRequest -OutFile 把整个响应无界落盘后再检查长度。
+        $request = [Net.WebRequest]::Create($download)
+        $request.Method = 'GET'
+        $request.AllowAutoRedirect = $false
+        $request.Timeout = 60000
+        $request.ReadWriteTimeout = 60000
+        $response = $null
+        $stream = $null
+        $outStream = $null
         try {
-            $head = Invoke-WebRequest -Uri $download -Method Head -UseBasicParsing `
-                -MaximumRedirection 0 -TimeoutSec 30
-            $declared = $head.Headers['Content-Length']
-            if ($declared -and [long]$declared -gt $maxBytes) { $tooBig = $true }
-        } catch {
-            Write-Host "警告: HEAD 预检不可用: $($_.Exception.Message)"
+            $response = $request.GetResponse()
+            $status = [int]$response.StatusCode
+            if ($status -ne 200) {
+                throw "下载地址返回 $status（不允许重定向，请确认 downloadUrl 是直链）"
+            }
+            $stream = $response.GetResponseStream()
+            $outStream = [IO.File]::Create($tmp)
+            $buffer = New-Object byte[] 65536
+            $total = [long]0
+            while ($true) {
+                $read = $stream.Read($buffer, 0, $buffer.Length)
+                if ($read -le 0) { break }
+                $total += $read
+                if ($total -gt $maxBytes) {
+                    throw "安装包超过 $maxBytes 字节上限"
+                }
+                $outStream.Write($buffer, 0, $read)
+            }
+            $outStream.Flush()
+        } finally {
+            if ($outStream) { $outStream.Dispose() }
+            if ($stream) { $stream.Dispose() }
+            if ($response) { $response.Dispose() }
         }
-        if ($tooBig) { throw "安装包超过 $maxBytes 字节上限" }
-        # 不允许自动重定向：脚本无法逐跳重验白名单，遇到 3xx 直接失败（fail closed）。
-        Invoke-WebRequest -Uri $download -OutFile $tmp -UseBasicParsing `
-            -MaximumRedirection 0 -TimeoutSec 60
         $length = (Get-Item $tmp).Length
         if ($length -le 0 -or $length -gt $maxBytes) {
             throw '安装包大小不对'

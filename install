@@ -345,15 +345,17 @@ clear_quarantine() {
 
 ensure_on_path() {
   local dir="$1"
-  case ":$PATH:" in
-    *":$dir:"*) return 0 ;;
-  esac
+  # grep -qF 做字面匹配，避免目录里的 * ? [ 被 case 当通配符误判「已在 PATH」。
+  if printf '%s' ":$PATH:" | grep -qF ":$dir:"; then return 0; fi
   if [[ "${SHEPAW_NO_PATH:-}" == "1" ]]; then
     say "把下面这行加到 shell 配置里："
     say "  export PATH=\"$dir:\$PATH\""
     return 0
   fi
-  local rc line marker="# added by shepaw install"
+  # marker 带目录：旧版脚本（装到 ~/.local/bin）写下的无目录 marker 不应让
+  # 新目录被跳过，否则新二进制装到了 ~/.shepaw/bin 而 PATH 仍指向旧目录。
+  local rc line marker
+  marker="# added by shepaw install: $dir"
   case "${SHELL:-}" in
     */zsh) rc="$HOME/.zshrc" ;;
     */bash) rc="${HOME}/.bashrc" ;;
@@ -392,10 +394,11 @@ main() {
   # 目标目录必须在下载前确定：临时文件要和目标在同一目录，mv 才是原子替换。
   local dest_dir dest tmp
   dest_dir="${SHEPAW_INSTALL_DIR:-$HOME/.shepaw/bin}"
-  # ensure_on_path 会把这个路径原文写进 ~/.zshrc / ~/.bashrc；含 shell 元字符时
-  # 下次开终端会被命令替换执行（例如 $(touch /tmp/pwned)）。直接拒绝。
+  # 只挡双引号内真正会被 shell 解释的字符：`$`（命令替换）、反引号、
+  # 双引号（逃出字符串）、CR/LF（注入新行）。单引号、括号、分号、&、|、
+  # <、> 在双引号里都是字面量，挡掉它们会误拒 `Applications (dev)/bin` 这类合法路径。
   case "$dest_dir" in
-    *'$'*|*'`'*|*'"'*|*"'"*|*';'*|*'&'*|*'|'*|*'('*|*')'*|*'<'*|*'>'*|*$'\n'*|*$'\r'*)
+    *'$'*|*'`'*|*'"'*|*$'\n'*|*$'\r'*)
       die "安装目录包含会被 shell 解释的字符: $dest_dir" ;;
   esac
   mkdir -p -- "$dest_dir" || die "无法创建安装目录: $dest_dir"

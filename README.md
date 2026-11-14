@@ -85,8 +85,12 @@ LibreSSL 也不支持 `openssl pkeyutl -verify -rawin`，强行「探测到就�
 - 强制 v2 清单（`schemaVersion=2`、platform/arch 与本机匹配、`seq`、`expiry` 未过期、
   `yanked=false`、`rollout`、`signature` / `packageSignature` 存在且格式合法）；
 - `checksum` 必须是 `sha256:<64 hex>`，`fileSize` 与下载字节数强比对，魔数检查；
-- `downloadUrl` 与清单地址只允许 HTTPS + 四域名白名单 + 默认端口；bash 逐跳跟随重定向并
-  每跳重验白名单，PowerShell 因无法逐跳重验而用 `-MaximumRedirection 0` **直接拒绝 3xx**
+- `downloadUrl`、清单地址与 `SHEPAW_RELEASE_BASE` 只允许 HTTPS + 四域名白名单 + 默认端口。
+  例外两处：用户显式把 `SHEPAW_RELEASE_BASE` 设为自建 https 源时，该源的 host 也被允许承载
+  `downloadUrl`（此时首次安装的信任锚还包含「用户自己指定的 RELEASE_BASE」）；以及本机联调时
+  基址与地址可同为回环 `http://127.0.0.1:PORT`。
+  bash 逐跳跟随重定向并每跳重验白名单，PowerShell 因无法逐跳重验而对清单请求用
+  `-MaximumRedirection 0`、对下载用 `AllowAutoRedirect = false`，**直接拒绝 3xx**
   （所以 Windows 一键安装要求 `downloadUrl` 是直链，GitHub Release 资产需先镜像）；
 - 校验通过后才在同目录原子替换，并尽力 `shepaw stop` / 清 quarantine。
 
