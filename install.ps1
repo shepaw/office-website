@@ -257,7 +257,7 @@ function Install-Shepaw {
 
     # 临时文件放目标目录内：同一卷内 Move-Item 才是原子替换，不会留下半成品。
     $destDir = if ($env:SHEPAW_INSTALL_DIR) { $env:SHEPAW_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA 'Shepaw\bin' }
-    New-Item -ItemType Directory -Force -Path $destDir | Out-Null
+    New-Item -ItemType Directory -Force -LiteralPath $destDir | Out-Null
     $dest = Join-Path $destDir 'shepaw.exe'
     $tmp = Join-Path $destDir ('.shepaw.download.' + [guid]::NewGuid().ToString('n'))
     try {
