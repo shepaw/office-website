@@ -488,7 +488,7 @@ main() {
   say "已安装 shepaw $version"
   say "  $dest"
   ensure_on_path "$dest_dir"
-  say "下一步:"
+  say "下一步（新开一个终端后）:"
   say "  shepaw init --name <name>   # 口令从 stdin 读一行"
   say "  shepaw start"
   say "  shepaw pair"

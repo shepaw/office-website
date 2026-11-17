@@ -335,7 +335,7 @@ function Install-Shepaw {
         Write-Host "已安装 shepaw $version"
         Write-Host "  $dest"
         Add-ShepawPath $destDir
-        Write-Host '下一步:'
+        Write-Host '下一步（新开一个终端后）:'
         Write-Host '  shepaw init --name <name>   # password from stdin'
         Write-Host '  shepaw start'
         Write-Host '  shepaw pair'
