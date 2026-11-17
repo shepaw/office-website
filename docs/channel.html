@@ -65,8 +65,8 @@ shepaw pair            # 二维码同时含 local= 与 channel=</pre>
 
       <h2 class="lang-zh">收件箱如何串回会话</h2>
       <h2 class="lang-en" hidden>How the inbox correlates turns</h2>
-      <p class="lang-zh">每条留言带 <code>target_id</code>、<code>session_id</code>、<code>request_id</code>、<code>message_id</code> / <code>reply_to</code>、<code>caller_fp</code>。Agent claim 待办 → 处理后回投密文；App 上线走 <code>/inbox/replies</code> 或 WebSocket <code>/inbox/subscribe</code> 收取。</p>
-      <p class="lang-en" hidden>Each note carries <code>target_id</code>, <code>session_id</code>, <code>request_id</code>, <code>message_id</code> / <code>reply_to</code>, and <code>caller_fp</code>. The agent claims pending mail, replies in ciphertext; the app drains <code>/inbox/replies</code> or the <code>/inbox/subscribe</code> WebSocket when it comes online.</p>
+      <p class="lang-zh">每条留言带 <code>target_id</code>、<code>session_id</code>、<code>request_id</code>、<code>message_id</code> / <code>reply_to</code>、<code>caller_fp</code>。Agent claim 待办 → 处理后回投密文；App 上线走 <code>/api/v1/inbox/replies</code> 或 WebSocket <code>/api/v1/inbox/subscribe</code> 收取。</p>
+      <p class="lang-en" hidden>Each note carries <code>target_id</code>, <code>session_id</code>, <code>request_id</code>, <code>message_id</code> / <code>reply_to</code>, and <code>caller_fp</code>. The agent claims pending mail, replies in ciphertext; the app drains <code>/api/v1/inbox/replies</code> or the <code>/api/v1/inbox/subscribe</code> WebSocket when it comes online.</p>
 
       <div class="note lang-zh">实时路径上的每一字节仍是 Noise IK（ChaCha20-Poly1305）。Channel 看到的是握手字节和 AEAD 密文，测过恶意中继抓包也拿不到聊天正文或 RPC 方法名。</div>
       <div class="note lang-en" hidden>Live traffic is still Noise IK (ChaCha20-Poly1305). Channel sees handshake bytes and AEAD ciphertext. A hostile relay dumping frames does not get chat text or RPC method names.</div>
