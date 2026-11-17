@@ -28,10 +28,10 @@
         <a class="btn btn-primary" href="/download/"><span class="lang-zh">下载 App</span><span class="lang-en" hidden>Download the app</span></a>
         <a class="btn btn-ghost" href="/docs/"><span class="lang-zh">三分钟接入第一个 Agent</span><span class="lang-en" hidden>Add your first agent in 3 minutes</span></a>
       </div>
-      <p class="logo-intro lang-zh">15 种引擎，扫码就是你的联系人</p>
-      <p class="logo-intro lang-en" hidden>15 engines. Scan, and they become contacts.</p>
+      <p class="logo-intro lang-zh">17 种引擎，扫码就是你的联系人</p>
+      <p class="logo-intro lang-en" hidden>17 engines. Scan, and they become contacts.</p>
       <div class="trust-row">
-        <span class="trust"><span class="tick">✓</span><span class="lang-zh">MIT 开源</span><span class="lang-en" hidden>Open source (MIT)</span></span>
+        <span class="trust"><span class="tick">✓</span><span class="lang-zh">开源可审计</span><span class="lang-en" hidden>Open source and auditable</span></span>
         <span class="trust"><span class="tick">✓</span><span class="lang-zh">Noise 端到端加密</span><span class="lang-en" hidden>Noise end-to-end encryption</span></span>
         <span class="trust"><span class="tick">✓</span><span class="lang-zh">全栈可自部署</span><span class="lang-en" hidden>Self-host the whole stack</span></span>
       </div>
@@ -163,16 +163,16 @@
         <div class="section-head">
           <h2 class="lang-zh">储物袋：Agent 的共享空间</h2>
           <h2 class="lang-en" hidden>The pouch: a shared space for agents</h2>
-          <p class="lang-zh">不同端的 Agent 共享产物、共享空间，底层上下文被真正打通。不依赖任何云服务——只要两端能通讯，储物袋就在。</p>
-          <p class="lang-en" hidden>Agents on different ends share artifacts and space — their underlying context actually connects. No cloud required: as long as two ends can talk, the pouch is there.</p>
+          <p class="lang-zh">储物袋在主机上，Agent 的产物、记忆和工作区都落在同一份空间里。连上这台主机的客户端直接读写，不用搬运。</p>
+          <p class="lang-en" hidden>The pouch lives on the host; artifacts, memory, and workspaces share one space. Any client connected to that host reads and writes it in place — no copying around.</p>
         </div>
         <div class="grid-3">
           <article class="card">
             <div class="icon">📦</div>
-            <h3 class="lang-zh">跨端共享产物</h3>
-            <h3 class="lang-en" hidden>Share artifacts across ends</h3>
-            <p class="lang-zh">Agent 写下的文件、快照、工作区都以 <code>store://</code> URI 存进储物袋；配对后的另一端直接读写，不用搬运。</p>
-            <p class="lang-en" hidden>Files, snapshots, and workspaces an agent writes land in the pouch as <code>store://</code> URIs; the paired end reads and writes them in place — no copying around.</p>
+            <h3 class="lang-zh">同一份产物</h3>
+            <h3 class="lang-en" hidden>One copy of every artifact</h3>
+            <p class="lang-zh">Agent 写下的文件、快照、工作区都以 <code>pouch://</code> URI 存进主机储物袋；手机和其他客户端读到的是同一份。</p>
+            <p class="lang-en" hidden>Files, snapshots, and workspaces an agent writes land in the host pouch as <code>pouch://</code> URIs; the phone and every other client read the same copy.</p>
           </article>
           <article class="card">
             <div class="icon">🔗</div>
@@ -185,8 +185,8 @@
             <div class="icon">🌐</div>
             <h3 class="lang-zh">不依赖任何云</h3>
             <h3 class="lang-en" hidden>No cloud in the middle</h3>
-            <p class="lang-zh">储物袋跑在设备本地，两端经 Peer 通道同步——局域网直连或自托管隧道都可以，数据不经过任何第三方服务器。</p>
-            <p class="lang-en" hidden>The pouch lives on your devices; the two ends sync over the Peer channel — direct on LAN or through your own tunnel — and data never passes through a third-party server.</p>
+            <p class="lang-zh">储物袋跑在主机本地，客户端经 Peer 通道读写——局域网直连或自托管隧道都可以，数据不经过任何第三方服务器。</p>
+            <p class="lang-en" hidden>The pouch lives on the host; clients read and write it over the Peer channel — direct on LAN or through your own tunnel — and data never passes through a third-party server.</p>
           </article>
         </div>
       </div>
@@ -197,8 +197,8 @@
         <div class="section-head">
           <h2 class="lang-zh">你的 Agent 通讯录</h2>
           <h2 class="lang-en" hidden>Your agent address book</h2>
-          <p class="lang-zh">Claude Code、Codex、Gemini、OpenClaw……你机器上已有的 Agent，扫码就能成为联系人。订阅、skills、MCP、配置都不用搬。内置 15 种引擎，也可自己加。</p>
-          <p class="lang-en" hidden>Claude Code, Codex, Gemini, OpenClaw… agents already on your machine become contacts with one scan. Subscriptions, skills, MCP, and config keep working. 15 built-in engines, plus custom ones.</p>
+          <p class="lang-zh">Claude Code、Codex、Gemini、OpenClaw……你机器上已有的 Agent，扫码就能成为联系人。订阅、skills、MCP、配置都不用搬。内置 17 种引擎，用 <code>shepaw instance engines</code> 查看本机可用的。</p>
+          <p class="lang-en" hidden>Claude Code, Codex, Gemini, OpenClaw… agents already on your machine become contacts with one scan. Subscriptions, skills, MCP, and config keep working. 17 built-in engines — run <code>shepaw instance engines</code> to see what is available on this machine.</p>
         </div>
         <div class="engine-grid">
           <article class="engine-card"><span class="mark">CC</span><h3>Claude Code</h3><p>claude-code</p></article>
@@ -216,6 +216,8 @@
           <article class="engine-card"><span class="mark">OC</span><h3>OpenCode</h3><p>opencode</p></article>
           <article class="engine-card"><span class="mark">Cl</span><h3>OpenClaw</h3><p>openclaw</p></article>
           <article class="engine-card"><span class="mark">He</span><h3>Hermes</h3><p>hermes</p></article>
+          <article class="engine-card"><span class="mark">Kn</span><h3>Knot</h3><p>knot</p></article>
+          <article class="engine-card"><span class="mark">Qd</span><h3>Qoder</h3><p>qoder</p></article>
         </div>
         <p class="engine-more"><a class="btn btn-ghost" href="/docs/engines.html"><span class="lang-zh">完整引擎表与启动命令</span><span class="lang-en" hidden>Full engine table and spawn commands</span></a></p>
       </div>
@@ -263,8 +265,8 @@
         <div class="section-head">
           <h2 class="lang-zh">一个 IM，三层各司其职</h2>
           <h2 class="lang-en" hidden>One messenger, three layers</h2>
-          <p class="lang-zh">App 是你的通讯录和聊天；Hub 是 Agent 的家；Channel 是信箱和隧道。全部开源（MIT），整套都能自部署：在局域网里甚至可以完全不走云端。</p>
-          <p class="lang-en" hidden>The app is your address book and chat. Hub is where agents live. Channel is the inbox and tunnel. Everything is open source (MIT) and self-hostable — on LAN you can skip the cloud entirely.</p>
+          <p class="lang-zh">App 是你的通讯录和聊天；Hub 是 Agent 的家；Channel 是信箱和隧道。App 与主机开源（MIT / Apache-2.0），整套都能自部署：在局域网里甚至可以完全不走云端。</p>
+          <p class="lang-en" hidden>The app is your address book and chat. Hub is where agents live. Channel is the inbox and tunnel. The app and host are open source (MIT / Apache-2.0), and the whole stack is self-hostable — on LAN you can skip the cloud entirely.</p>
         </div>
         <div class="grid-3">
           <article class="card">
@@ -272,7 +274,7 @@
             <h3 class="lang-zh">惜宝</h3>
             <h3 class="lang-en" hidden>Shepaw</h3>
             <p class="lang-zh">你的通讯录和聊天。本地优先存储、应用锁、群组 Planning / Flow、储物袋与技能包。</p>
-            <p class="lang-en" hidden>Your address book and chat. Local-first storage, app lock, group Planning / Flow, Store, and skills.</p>
+            <p class="lang-en" hidden>Your address book and chat. Local-first storage, app lock, group Planning / Flow, Pouch, and skills.</p>
           </article>
           <article class="card">
             <div class="tag">HUB</div>
@@ -295,16 +297,16 @@
         <div class="section-head">
           <h2 class="lang-zh">整套都可以自部署</h2>
           <h2 class="lang-en" hidden>Self-host the whole stack</h2>
-          <p class="lang-zh">App、Agent Hub、Channel 全部开源。信箱服务和隧道可以跑在你自己的服务器上，也可以完全不依赖云端。</p>
-          <p class="lang-en" hidden>The app, Agent Hub, and Channel are all open source. The inbox and tunnel can run on your own server — or you can skip the cloud entirely.</p>
+          <p class="lang-zh">App、Agent Hub、Channel 都公开源码。信箱服务和隧道可以跑在你自己的服务器上，也可以完全不依赖云端。</p>
+          <p class="lang-en" hidden>The app, Agent Hub, and Channel all publish their source. The inbox and tunnel can run on your own server — or you can skip the cloud entirely.</p>
         </div>
         <div class="grid-3">
           <article class="card">
             <div class="icon">📖</div>
-            <h3 class="lang-zh">MIT 开源</h3>
-            <h3 class="lang-en" hidden>Open source, MIT</h3>
-            <p class="lang-zh">三个仓库（App / shepaw-cli / channel）代码全公开，可审计、可修改、可商用。</p>
-            <p class="lang-en" hidden>All three repos — app, shepaw-cli, and channel — are fully public: auditable, modifiable, and commercially usable.</p>
+            <h3 class="lang-zh">开源可审计</h3>
+            <h3 class="lang-en" hidden>Open source, auditable</h3>
+            <p class="lang-zh">App 用 MIT，主机 <code>shepaw-cli</code> 用 Apache-2.0；Channel 源码同样公开。可审计、可修改。</p>
+            <p class="lang-en" hidden>The app is MIT, the <code>shepaw-cli</code> host is Apache-2.0, and the Channel source is public too. Auditable and modifiable.</p>
           </article>
           <article class="card">
             <div class="icon">🔐</div>
@@ -346,8 +348,8 @@
         <div class="section-head">
           <h2 class="lang-zh">界面能做的，终端也能做</h2>
           <h2 class="lang-en" hidden>Fully scriptable</h2>
-          <p class="lang-zh">一台机器、多个项目：每个实例独立身份、会话和授权设备。</p>
-          <p class="lang-en" hidden>One host, many projects. Each instance has its own identity, sessions, and authorized devices.</p>
+          <p class="lang-zh">一台机器、多个项目：每个实例有自己的引擎、工作目录和会话；设备授权由这台主机统一管理。</p>
+          <p class="lang-en" hidden>One host, many projects. Each instance has its own engine, working directory, and sessions; device authorization is managed once at the host.</p>
         </div>
         <div class="cli">
           <div class="cli-bar"><span>terminal</span></div>
@@ -357,6 +359,7 @@ curl -fsSL https://shepaw.com/install | bash
 <span class="c"># Windows PowerShell</span>
 irm https://shepaw.com/install.ps1 | iex
 
+<span class="o">shepaw</span> init --name &lt;name&gt;
 <span class="o">shepaw</span> start
 <span class="o">shepaw</span> pair</pre>
         </div>
@@ -380,14 +383,14 @@ irm https://shepaw.com/install.ps1 | iex
             <p class="lang-en" hidden">Those bolt an AI button onto a human messenger, and the agent lives inside someone else's ecosystem. Shepaw is a communication layer that belongs to agents: open source, self-hostable, end-to-end encrypted, independent of any vendor.</p>
           </details>
           <details>
-            <summary><span class="lang-zh">储物袋是什么？</span><span class="lang-en" hidden>What is the Store pouch?</span></summary>
-            <p class="lang-zh">设备本地的共享空间，用 <code>store://</code> URI 存文件、快照、记忆和工作区。配对后的不同端 Agent 可以直接读写彼此的产物；两端能通讯就能同步，不需要任何云服务。</p>
-            <p class="lang-en" hidden>A local shared space on your devices, addressed by <code>store://</code> URIs for files, snapshots, memory, and workspaces. Paired agents can read and write each other's artifacts; as long as the two ends can talk, they sync — no cloud service needed.</p>
+            <summary><span class="lang-zh">储物袋是什么？</span><span class="lang-en" hidden>What is the pouch?</span></summary>
+            <p class="lang-zh">主机上的内容寻址共享空间，用 <code>pouch://</code> URI 存文件、快照、记忆和工作区。手机和其他客户端连上这台主机后直接读写同一份产物；数据留在主机本地，不需要云服务。</p>
+            <p class="lang-en" hidden>A content-addressed shared space on the host, addressed by <code>pouch://</code> URIs for files, snapshots, memory, and workspaces. The phone and other clients read and write the same artifacts once connected to that host; data stays local, with no cloud service needed.</p>
           </details>
           <details open>
             <summary><span class="lang-zh">这是免费的吗？</span><span class="lang-en" hidden>Is this free?</span></summary>
-            <p class="lang-zh">是。Shepaw、shepaw-cli 与 channel 都开源。你需要自备 Claude Code、Gemini、Qwen Code、Copilot 等引擎的账号与凭据。Channel 可自托管，也可用官方实例。</p>
-            <p class="lang-en" hidden>Yes. Shepaw, shepaw-cli, and channel are open source. Bring your own Claude Code, Gemini, Qwen Code, Copilot, or other engine credentials. Channel is self-hostable; a hosted instance is optional.</p>
+            <p class="lang-zh">是。Shepaw、shepaw-cli 与 channel 都公开源码。你需要自备 Claude Code、Gemini、Qwen Code、Copilot 等引擎的账号与凭据。Channel 可自托管，也可用官方实例。</p>
+            <p class="lang-en" hidden>Yes. Shepaw, shepaw-cli, and channel publish their source. Bring your own Claude Code, Gemini, Qwen Code, Copilot, or other engine credentials. Channel is self-hostable; a hosted instance is optional.</p>
           </details>
           <details>
             <summary><span class="lang-zh">整套都能自己部署吗？</span><span class="lang-en" hidden>Can I self-host the whole stack?</span></summary>
@@ -401,8 +404,8 @@ irm https://shepaw.com/install.ps1 | iex
           </details>
           <details>
             <summary><span class="lang-zh">必须装桌面 App 吗？</span><span class="lang-en" hidden>Do I need the desktop app?</span></summary>
-            <p class="lang-zh">不必。机器上装 <code>shepaw-agent-hub</code> 即可，用手机 App 扫码。桌面 App 用来在电脑上聊、管本地 LLM 和群组。</p>
-            <p class="lang-en" hidden>No. Install <code>shepaw-agent-hub</code> on the machine, then pair from the phone app. The desktop app is for chatting on the computer, local LLMs, and groups.</p>
+            <p class="lang-zh">不必。机器上装 <code>shepaw-cli</code>（命令是 <code>shepaw</code>）即可，用手机 App 扫码。桌面 App 用来在电脑上聊、管本地 LLM 和群组。</p>
+            <p class="lang-en" hidden>No. Install <code>shepaw-cli</code> (the command is <code>shepaw</code>) on the machine, then pair from the phone app. The desktop app is for chatting on the computer, local LLMs, and groups.</p>
           </details>
           <details>
             <summary><span class="lang-zh">如何从外网连回家？</span><span class="lang-en" hidden>Can I connect from outside my network?</span></summary>

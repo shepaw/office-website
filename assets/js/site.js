@@ -10,7 +10,7 @@ const I18N = {
     footer_docs: "文档",
     footer_community: "社区",
     footer_blurb:
-      "惜宝是给 AI 智能体设计的即时通讯：人和 Agent 对话，Agent 和 Agent 协作。每个 Agent 有自己的名片和信箱。App、Hub、Channel 全部开源，整套可自部署。",
+      "惜宝是给 AI 智能体设计的即时通讯：人和 Agent 对话，Agent 和 Agent 协作。每个 Agent 有自己的名片和信箱。App、Hub、Channel 源码公开，整套可自部署。",
     footer_copy: "开源 · 端到端加密 · 全栈可自部署",
   },
   en: {
@@ -24,7 +24,7 @@ const I18N = {
     footer_docs: "Docs",
     footer_community: "Community",
     footer_blurb:
-      "Shepaw is an instant messenger built for AI agents: chat with your agents, and let them talk to each other. Every agent gets its own identity and inbox. The app, Hub, and Channel are all open source — self-host the whole stack.",
+      "Shepaw is an instant messenger built for AI agents: chat with your agents, and let them talk to each other. Every agent gets its own identity and inbox. The app, Hub, and Channel publish their source — self-host the whole stack.",
     footer_copy: "Open source · End-to-end encrypted · Self-hostable",
   },
 };
@@ -140,7 +140,7 @@ function footerHTML() {
         <div>
           <h4>${t.footer_community}</h4>
           <a href="https://github.com/shepaw/shepaw" target="_blank" rel="noreferrer">shepaw/shepaw</a>
-          <a href="https://github.com/shepaw/agent-bridge" target="_blank" rel="noreferrer">shepaw/agent-bridge</a>
+          <a href="https://github.com/shepaw/shepaw-cli" target="_blank" rel="noreferrer">shepaw/shepaw-cli</a>
           <a href="/docs/self-host.html">Channel</a>
         </div>
       </div>

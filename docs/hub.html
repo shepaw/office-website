@@ -62,7 +62,8 @@
       <h2 class="lang-en" hidden>Everyday commands</h2>
       <div class="cli">
         <div class="cli-bar"><span>shepaw</span></div>
-        <pre>shepaw start                   # 后台起 Hub（含 /peer/ws）
+        <pre>shepaw init --name &lt;name&gt;     # 第一次：建储物袋和口令（口令从 stdin 读一行）
+shepaw start                   # 后台起 Hub（含 /peer/ws）
 shepaw status [--json]
 shepaw doctor
 shepaw logs [--tail 50]
@@ -85,11 +86,12 @@ shepaw update [--check] [--yes]   # 对照签名清单自升级</pre>
   --server https://channel.shepaw.com \
   --id ch_xxx \
   --secret &lt;hmac-secret&gt;
-# channel set 会连上正在运行的 Hub；改完配置用 shepaw restart
+# channel set 只保存配置；重启 Hub 让隧道路由器加载它
+shepaw restart
 shepaw pair        # 二维码同时带 local= 与 channel=</pre>
       </div>
-      <p class="lang-zh">高级 tunnel 三项必须同时填写或全部留空。详见 <a href="/docs/channel.html">Channel</a>。</p>
-      <p class="lang-en" hidden>The three advanced tunnel fields must all be set or all empty. See <a href="/docs/channel.html">Channel</a>.</p>
+      <p class="lang-zh">Channel 地址、ID 和密钥必须同时填写；<code>--endpoint</code> 是 Channel 服务上的短名，留空则走 <code>/proxy/&lt;id&gt;</code>。详见 <a href="/docs/channel.html">Channel</a>。</p>
+      <p class="lang-en" hidden>The Channel address, ID, and secret must all be set; <code>--endpoint</code> is the short name on the Channel service and defaults to <code>/proxy/&lt;id&gt;</code>. See <a href="/docs/channel.html">Channel</a>.</p>
     </article>
   </div>
   <script src="/assets/js/site.js"></script>

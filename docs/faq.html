@@ -28,23 +28,23 @@
         </details>
         <details>
           <summary><span class="lang-zh">还要单独装 ACP Proxy / 网关吗？</span><span class="lang-en" hidden>Do I still need a standalone ACP proxy / gateway?</span></summary>
-          <p class="lang-zh">不用。装 <code>shepaw-agent-hub</code> 即可。扫码走 Peer 通道，一次授权这台机器上的全部实例。</p>
-          <p class="lang-en" hidden>No. Install <code>shepaw-agent-hub</code>. Pairing uses the Peer channel; one scan authorizes every instance on that host.</p>
+          <p class="lang-zh">不用。装 Rust 主机 <code>shepaw</code>（安装脚本会放好）即可。扫码走 Peer 通道，一次配对授权这台主机给该设备。</p>
+          <p class="lang-en" hidden>No. Install the Rust host <code>shepaw</code> (the install script does this). Pairing uses the Peer channel; one scan authorizes that host for the device.</p>
         </details>
         <details>
-          <summary><span class="lang-zh">储物袋是什么？</span><span class="lang-en" hidden>What is the Store pouch?</span></summary>
-          <p class="lang-zh">设备本地的共享空间，用 <code>store://</code> URI 存文件、快照、记忆和工作区。配对后的不同端 Agent 可以直接读写彼此的产物；两端能通讯（局域网直连或自托管隧道）就能同步，不需要任何云服务。</p>
-          <p class="lang-en" hidden>A local shared space on your devices, addressed by <code>store://</code> URIs for files, snapshots, memory, and workspaces. Paired agents can read and write each other's artifacts; as long as the two ends can talk (direct on LAN or through your own tunnel), they sync — no cloud service needed.</p>
+          <summary><span class="lang-zh">储物袋是什么？</span><span class="lang-en" hidden>What is the pouch?</span></summary>
+          <p class="lang-zh">主机上的内容寻址共享空间，用 <code>pouch://</code> URI 存文件、快照、记忆和工作区。手机和其他客户端连上主机后直接读写同一份产物；数据在主机本地，不需要任何云服务。</p>
+          <p class="lang-en" hidden>A content-addressed shared space on the host, addressed by <code>pouch://</code> URIs for files, snapshots, memory, and workspaces. The phone and other clients read and write the same artifacts once connected to the host; data stays local, with no cloud service needed.</p>
         </details>
         <details>
-          <summary><span class="lang-zh">扫码失败、4405 unauthorized peer？</span><span class="lang-en" hidden>Pairing fails with 4405 unauthorized peer?</span></summary>
-          <p class="lang-zh">设备公钥没进白名单。重启 Peer：<code>shepaw restart</code>。Hub 启动 Peer 时会把 Peer 公钥写入各实例的 <code>authorized_peers.json</code>。</p>
-          <p class="lang-en" hidden>The device key is not on the allowlist. Restart Peer: <code>shepaw restart</code>. Starting Peer writes its public key into each instance’s <code>authorized_peers.json</code>.</p>
+          <summary><span class="lang-zh">扫码失败、4403 fingerprint mismatch？</span><span class="lang-en" hidden>Pairing fails with 4403 fingerprint mismatch?</span></summary>
+          <p class="lang-zh">设备公钥没进白名单，或手机记着的主机公钥已经变了。先在手机上删掉旧的主机记录，再 <code>shepaw pair</code> 重新扫码。仍然失败时用 <code>shepaw peers list</code> 查看已配对设备，<code>shepaw peers remove &lt;指纹&gt;</code> 清掉旧记录后重试。</p>
+          <p class="lang-en" hidden>The device key is not on the allowlist, or the host key cached on the phone has changed. Delete the old host entry on the phone, then run <code>shepaw pair</code> and scan again. If it still fails, list paired devices with <code>shepaw peers list</code>, remove the stale entry with <code>shepaw peers remove &lt;fingerprint&gt;</code>, and retry.</p>
         </details>
         <details>
           <summary><span class="lang-zh">外网连不上？</span><span class="lang-en" hidden>Off-site connection fails?</span></summary>
-          <p class="lang-zh">确认 Channel 已保存且 Hub 在跑（<code>shepaw channel</code> / <code>shepaw status</code>），然后重新 <code>shepaw pair</code> 让二维码带上 <code>channel=</code>。</p>
-          <p class="lang-en" hidden>Confirm Channel is saved and the Hub is running (<code>shepaw channel</code> / <code>shepaw status</code>), then run <code>shepaw pair</code> again so the QR includes <code>channel=</code>.</p>
+          <p class="lang-zh">确认 Channel 已保存且 Hub 在跑（<code>shepaw channel</code> / <code>shepaw status</code>）；改过配置要 <code>shepaw restart</code> 让隧道加载，然后重新 <code>shepaw pair</code> 让二维码带上 <code>channel=</code>。</p>
+          <p class="lang-en" hidden>Confirm Channel is saved and the Hub is running (<code>shepaw channel</code> / <code>shepaw status</code>). After changing the config, run <code>shepaw restart</code> so the tunnel picks it up, then run <code>shepaw pair</code> again so the QR includes <code>channel=</code>.</p>
         </details>
         <details>
           <summary><span class="lang-zh">必须用 GitHub 吗？</span><span class="lang-en" hidden>Do I need git or GitHub?</span></summary>
@@ -58,8 +58,8 @@
         </details>
         <details>
           <summary><span class="lang-zh">整套都能自己部署吗？</span><span class="lang-en" hidden>Can I self-host the whole stack?</span></summary>
-          <p class="lang-zh">可以。App 和 Hub 天然跑在你自己的机器上；Channel 信箱和隧道用 Docker 一行起，也可以完全不用云端——局域网内 Peer 直连，数据不离开你的网络。三个仓库均为 MIT 开源。</p>
-          <p class="lang-en" hidden>Yes. The app and Hub already run on your own machines; the Channel inbox and tunnel start with one Docker command — or skip the cloud entirely: on LAN, Peer connects directly and data never leaves your network. All three repos are MIT-licensed.</p>
+          <p class="lang-zh">可以。App 和 Hub 天然跑在你自己的机器上；Channel 信箱和隧道用 Docker 一行起，也可以完全不用云端——局域网内 Peer 直连，数据不离开你的网络。App 用 MIT、主机 shepaw-cli 用 Apache-2.0，Channel 源码同样公开。</p>
+          <p class="lang-en" hidden>Yes. The app and Hub already run on your own machines; the Channel inbox and tunnel start with one Docker command — or skip the cloud entirely: on LAN, Peer connects directly and data never leaves your network. The app is MIT-licensed, the shepaw-cli host is Apache-2.0, and the Channel source is public too.</p>
         </details>
       </div>
     </article>

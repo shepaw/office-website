@@ -63,8 +63,8 @@
         <div class="section-head">
           <h2 class="lang-zh">本机 CLI</h2>
           <h2 class="lang-en" hidden>CLI on the machine</h2>
-          <p class="lang-zh">一条命令安装本机 CLI，然后 <code>shepaw start</code> 和 <code>shepaw pair</code>。编码引擎（Claude Code、Codex、Cursor …）仍装在这台机器上。</p>
-          <p class="lang-en" hidden>One command installs the local CLI, then <code>shepaw start</code> and <code>shepaw pair</code>. Coding engines (Claude Code, Codex, Cursor, …) stay installed on this machine.</p>
+          <p class="lang-zh">一条命令安装本机 CLI，然后 <code>shepaw init</code>、<code>shepaw start</code> 和 <code>shepaw pair</code>。编码引擎（Claude Code、Codex、Cursor …）仍装在这台机器上。</p>
+          <p class="lang-en" hidden>One command installs the local CLI, then run <code>shepaw init</code>, <code>shepaw start</code>, and <code>shepaw pair</code>. Coding engines (Claude Code, Codex, Cursor, …) stay installed on this machine.</p>
         </div>
         <div class="dl-grid">
           <article class="dl-card">
@@ -75,6 +75,7 @@
             <div class="cli">
               <div class="cli-bar"><span>bash</span></div>
               <pre>curl -fsSL https://shepaw.com/install | bash
+shepaw init --name &lt;name&gt;   # 口令从 stdin 读一行
 shepaw start
 shepaw pair</pre>
             </div>
@@ -87,6 +88,7 @@ shepaw pair</pre>
             <div class="cli">
               <div class="cli-bar"><span>PowerShell</span></div>
               <pre>irm https://shepaw.com/install.ps1 | iex
+shepaw init --name &lt;name&gt;   # password from stdin
 shepaw start
 shepaw pair</pre>
             </div>

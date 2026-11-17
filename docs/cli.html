@@ -16,22 +16,29 @@
     <article class="prose">
       <div class="lang-zh">
         <h1>CLI 参考</h1>
-        <p>主机是 Rust 写的 <code>shepaw-cli</code>，装好后的命令叫 <code>shepaw</code>。<code>start</code> 起后台 Hub，<code>pair</code> 打印配对二维码。</p>
+        <p>主机是 Rust 写的 <code>shepaw-cli</code>，装好后的命令叫 <code>shepaw</code>。第一次先 <code>init</code> 建储物袋和口令，再 <code>start</code> 起后台 Hub，<code>pair</code> 打印配对二维码。</p>
       </div>
       <div class="lang-en" hidden>
         <h1>CLI reference</h1>
-        <p>The host is the Rust workspace <code>shepaw-cli</code>; the installed command is <code>shepaw</code>. Run <code>start</code> for the background Hub, then <code>pair</code> to print the pairing QR.</p>
+        <p>The host is the Rust workspace <code>shepaw-cli</code>; the installed command is <code>shepaw</code>. On a new machine, run <code>init</code> to create the pouch and password, then <code>start</code> for the background Hub and <code>pair</code> to print the pairing QR.</p>
       </div>
 
       <h2>shepaw</h2>
       <div class="cli">
         <div class="cli-bar"><span>host</span></div>
-        <pre>shepaw start
+        <pre>shepaw init --name &lt;name&gt;       # 口令从 stdin 读一行
+
+shepaw start
 shepaw status [--json]
 shepaw logs [--tail 50]
 shepaw doctor
 shepaw restart | stop
 shepaw update [--check] [--yes]
+
+shepaw login --name &lt;name&gt; --fingerprint &lt;device-fp&gt;   # Hub 已运行时；登录态绑设备指纹
+shepaw password status | set
+shepaw account list
+shepaw account resolve --name &lt;name&gt;
 
 shepaw pair [--local ws://&lt;lan-ip&gt;:&lt;port&gt;/peer/ws] [--channel &lt;url&gt;]
 shepaw instance add --engine claude-code --cwd ~/work [--label NAME]
@@ -52,6 +59,7 @@ shepaw peer serve              # 前台监听 /peer/ws（一般由 start 代管�
         <pre>git clone https://github.com/shepaw/shepaw-cli.git
 cd shepaw-cli
 cargo build --release -p shepaw-cli
+./target/release/shepaw init --name &lt;name&gt;   # 口令从 stdin 读一行
 ./target/release/shepaw start
 ./target/release/shepaw pair</pre>
       </div>

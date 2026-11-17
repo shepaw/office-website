@@ -37,7 +37,7 @@
           </tr>
           <tr>
             <td><span class="lang-zh">传输层（辅）</span><span class="lang-en" hidden>Transport (secondary)</span></td>
-            <td>HTTP / WebSocket tunnel · <code>/tunnel/connect</code> · <code>/proxy/:channel_id/*</code></td>
+            <td>HTTP / WebSocket tunnel · <code>/tunnel/connect</code> · <code>/proxy/&lt;channel-id&gt;/...</code></td>
           </tr>
           <tr>
             <td><span class="lang-zh">发现 / 接入</span><span class="lang-en" hidden>Discovery</span></td>
@@ -59,6 +59,7 @@
   --server https://channel.shepaw.com \
   --id ch_xxx \
   --secret ch_sec_...
+shepaw restart         # 让 Hub 加载新的 Channel 配置
 shepaw pair            # 二维码同时含 local= 与 channel=</pre>
       </div>
 

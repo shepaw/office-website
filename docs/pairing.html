@@ -16,22 +16,21 @@
     <article class="prose">
       <div class="lang-zh">
         <h1>扫码配对</h1>
-        <p>ACP v2.1 没有共享 token。每台设备有长期 X25519 身份，Hub 用白名单放行。二维码只是把「连谁、一次性登记码、指纹」一次交给 App。扫一次，这台机器上的全部实例都能用。</p>
+        <p>ACP v2.1 没有共享 token。每台设备有长期 X25519 身份，Hub 用白名单放行。二维码只是把「连谁、一次性登记码、指纹」一次交给 App。扫一次，这台主机就对该设备授权。</p>
       </div>
       <div class="lang-en" hidden>
         <h1>Pairing</h1>
-        <p>ACP v2.1 has no shared token. Each device has a long-term X25519 identity; Hub allowlists it. The QR hands the app the endpoint, a one-time enrollment code, and a fingerprint. One scan authorizes every instance on that host.</p>
+        <p>ACP v2.1 has no shared token. Each device has a long-term X25519 identity; Hub allowlists it. The QR hands the app the endpoint, a one-time enrollment code, and a fingerprint. One scan authorizes that host for the device.</p>
       </div>
 
       <h2 class="lang-zh">怎么扫</h2>
       <h2 class="lang-en" hidden>How to pair</h2>
       <div class="cli">
         <div class="cli-bar"><span>pair</span></div>
-        <pre>shepaw pair
-# 或仪表盘「扫码配对」</pre>
+        <pre>shepaw pair</pre>
       </div>
-      <p class="lang-zh">打开 Shepaw，扫描终端或仪表盘里的二维码。手机和电脑要在同一 Wi-Fi。URI 是 <code>shepaw://peer</code>。</p>
-      <p class="lang-en" hidden>Open Shepaw and scan the QR from the terminal or dashboard. Phone and computer must share Wi-Fi. The URI is <code>shepaw://peer</code>.</p>
+      <p class="lang-zh">打开 Shepaw，扫描终端里的二维码。手机和电脑要在同一 Wi-Fi。URI 是 <code>shepaw://peer</code>。</p>
+      <p class="lang-en" hidden>Open Shepaw and scan the QR in the terminal. Phone and computer must share Wi-Fi. The URI is <code>shepaw://peer</code>.</p>
 
       <h2 class="lang-zh">二维码里有什么</h2>
       <h2 class="lang-en" hidden>What’s in the QR</h2>
@@ -50,14 +49,15 @@
 
       <h2 class="lang-zh">离开局域网</h2>
       <h2 class="lang-en" hidden>Off LAN</h2>
-      <p class="lang-zh">同一 Wi-Fi 不必开 Channel。出门时在 Hub 仪表盘「扫码配对」里展开「共享 Channel」，填 URL / Channel ID / Secret。保存后重新扫码，二维码会带上 <code>channel=</code>。也可以用 CLI：</p>
-      <p class="lang-en" hidden>Skip Channel on the same Wi-Fi. Away from home, expand <strong>Shared Channel</strong> under Pair device in the Hub dashboard, save URL / Channel ID / Secret, then scan again so the QR includes <code>channel=</code>. Or use the CLI:</p>
+      <p class="lang-zh">同一 Wi-Fi 不必开 Channel。出门前用 CLI 填 URL / Channel ID / Secret，然后重启 Hub 让隧道加载配置，再重新 <code>shepaw pair</code>，二维码就会带上 <code>channel=</code>：</p>
+      <p class="lang-en" hidden>Skip Channel on the same Wi-Fi. Before leaving, set the URL / Channel ID / Secret from the CLI, restart the Hub so the tunnel picks up the config, then run <code>shepaw pair</code> again so the QR includes <code>channel=</code>:</p>
       <div class="cli">
         <div class="cli-bar"><span>channel</span></div>
         <pre>shepaw channel set \
   --server https://channel.shepaw.com \
   --id ch_xxx \
   --secret &lt;hmac-secret&gt;
+shepaw restart
 shepaw pair</pre>
       </div>
 
@@ -67,7 +67,7 @@ shepaw pair</pre>
       <p class="lang-en" hidden>If you cannot scan, paste the device public key from the app into Hub:</p>
       <div class="cli">
         <div class="cli-bar"><span>peers</span></div>
-        <pre>shepaw peers add &lt;instance-id&gt; &lt;device-pubkey-base64&gt; --label "My iPhone"</pre>
+        <pre>shepaw peers add &lt;device-pubkey-base64&gt; --label "My iPhone"</pre>
       </div>
 
       <h2 class="lang-zh">吊销一台丢失的手机</h2>
@@ -76,7 +76,8 @@ shepaw pair</pre>
       <p class="lang-en" hidden>In v2.1 each device is one allowlist row. Remove that row; other devices stay paired.</p>
       <div class="cli">
         <div class="cli-bar"><span>revoke</span></div>
-        <pre>shepaw peer-devices-remove &lt;fingerprint&gt;</pre>
+        <pre>shepaw peers remove &lt;fingerprint&gt;
+# 也可以按设备 id：shepaw device revoke &lt;device-id&gt;</pre>
       </div>
     </article>
   </div>

@@ -45,18 +45,22 @@
 irm https://shepaw.com/install.ps1 | iex</pre>
       </div>
 
-      <h2 class="lang-zh">2. 启动并配对</h2>
-      <h2 class="lang-en" hidden>2. Start and pair</h2>
+      <h2 class="lang-zh">2. 初始化、启动并配对</h2>
+      <h2 class="lang-en" hidden>2. Initialize, start, and pair</h2>
       <div class="cli">
         <div class="cli-bar"><span>shepaw</span></div>
-        <pre>shepaw start
+        <pre># 第一次：建储物袋并设主机口令。口令从 stdin 读一行，下面的 read 不回显。
+read -rs SHEPAW_PASS && printf '%s\n' "$SHEPAW_PASS" | shepaw init --name &lt;name&gt;
+shepaw start
 shepaw pair</pre>
       </div>
+      <p class="lang-zh"><code>init</code> 建好储物袋和主机口令（App 解锁用同一个口令）；之后 <code>start</code> 起 Hub，<code>pair</code> 出码。已经初始化过的电脑不要重复 <code>init</code>。</p>
+      <p class="lang-en" hidden><code>init</code> creates the pouch and host password (the app unlocks with the same password); then <code>start</code> brings up the Hub and <code>pair</code> prints the code. Do not run <code>init</code> again on a machine that is already initialized.</p>
 
       <h2 class="lang-zh">3. 扫码，开始对话</h2>
       <h2 class="lang-en" hidden>3. Scan, then chat</h2>
-      <p class="lang-zh">打开 Shepaw，扫描 Hub 打印的二维码。手机和电脑要在同一 Wi-Fi。一次配对授权这台机器上的全部实例；文件操作和权限弹窗在电脑上执行，再回显到手机。</p>
-      <p class="lang-en" hidden>Open Shepaw and scan the QR Hub printed. Phone and computer must share Wi-Fi. One scan authorizes every instance on that host. File ops and permission prompts run on the computer and surface in the app.</p>
+      <p class="lang-zh">打开 Shepaw，扫描 Hub 打印的二维码。手机和电脑要在同一 Wi-Fi。一次配对把该设备授权给这台主机，主机上的各实例随即可用；文件操作和权限弹窗在电脑上执行，再回显到手机。</p>
+      <p class="lang-en" hidden>Open Shepaw and scan the QR Hub printed. Phone and computer must share Wi-Fi. One scan authorizes that device for this host, which makes its instances reachable. File ops and permission prompts run on the computer and surface in the app.</p>
       <p class="lang-zh">之后也可以随时再出一张码：<code>shepaw pair</code>。</p>
       <p class="lang-en" hidden>Mint another code anytime with <code>shepaw pair</code>.</p>
 

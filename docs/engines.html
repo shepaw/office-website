@@ -16,11 +16,11 @@
     <article class="prose">
       <div class="lang-zh">
         <h1>引擎</h1>
-        <p>Hub 通过行业标准 ACP（stdio JSON-RPC）拉起上游 CLI。Shepaw 不改它们的行为，只把会话、模型、权限和终端代理到 App。目前内置 <strong>15</strong> 个引擎，也可用 <code>engine add</code> 注册自定义 CLI。</p>
+        <p>Hub 通过行业标准 ACP（stdio JSON-RPC）拉起上游 CLI。Shepaw 不改它们的行为，只把会话、模型、权限和终端代理到 App。目前内置 <strong>17</strong> 个公开引擎，目录由 Rust 主机维护。</p>
       </div>
       <div class="lang-en" hidden>
         <h1>Engines</h1>
-        <p>Hub launches upstream CLIs over standard ACP (stdio JSON-RPC). Shepaw does not wrap their behavior — it proxies sessions, models, permissions, and the terminal into the app. <strong>15</strong> built-in engines; register more with <code>engine add</code>.</p>
+        <p>Hub launches upstream CLIs over standard ACP (stdio JSON-RPC). Shepaw does not wrap their behavior — it proxies sessions, models, permissions, and the terminal into the app. There are <strong>17</strong> public built-in engines, and the catalog ships with the Rust host.</p>
       </div>
 
       <table>
@@ -47,6 +47,8 @@
           <tr><td><code>opencode</code></td><td>OpenCode</td><td><code>npx -y opencode-ai@latest acp</code></td></tr>
           <tr><td><code>openclaw</code></td><td>OpenClaw</td><td><code>npx -y openclaw acp</code></td></tr>
           <tr><td><code>hermes</code></td><td>Hermes</td><td><code>hermes acp</code></td></tr>
+          <tr><td><code>knot</code></td><td>Knot</td><td><code>knot-cli acp</code></td></tr>
+          <tr><td><code>qoder</code></td><td>Qoder</td><td><code>qoder --acp</code></td></tr>
         </tbody>
       </table>
 
@@ -75,8 +77,8 @@
 
       <h2 class="lang-zh">凭据</h2>
       <h2 class="lang-en" hidden>Credentials</h2>
-      <p class="lang-zh">在仪表盘「设置 → 引擎管理」，或给实例设置环境变量（<code>ANTHROPIC_API_KEY</code>、<code>CURSOR_API_KEY</code> …）。引擎没就绪时创建/启动实例会失败。</p>
-      <p class="lang-en" hidden>Use Settings → Engines in the dashboard, or instance env vars (<code>ANTHROPIC_API_KEY</code>, <code>CURSOR_API_KEY</code>, …). Creating or starting an instance fails if the engine is not ready.</p>
+      <p class="lang-zh">在 App 的「设置 → 引擎管理」里配置，或给实例设置环境变量（<code>ANTHROPIC_API_KEY</code>、<code>CURSOR_API_KEY</code> …）。引擎没就绪时创建/启动实例会失败。</p>
+      <p class="lang-en" hidden>Configure them under Settings → Engines in the app, or use instance env vars (<code>ANTHROPIC_API_KEY</code>, <code>CURSOR_API_KEY</code>, …). Creating or starting an instance fails if the engine is not ready.</p>
     </article>
   </div>
   <script src="/assets/js/site.js"></script>

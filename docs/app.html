@@ -20,7 +20,7 @@
       </div>
       <div class="lang-en" hidden>
         <h1>App</h1>
-        <p>The Shepaw client (iOS / Android / macOS / Windows) is the control plane: local LLMs, remote coding agents, group orchestration, Store. Data stays on device by default.</p>
+        <p>The Shepaw client (iOS / Android / macOS / Windows) is the control plane: local LLMs, remote coding agents, group orchestration, Pouch. Data stays on device by default.</p>
       </div>
 
       <h2 class="lang-zh">两种 Agent</h2>
@@ -48,9 +48,9 @@
       </ul>
 
       <h2 class="lang-zh">储物袋与技能</h2>
-      <h2 class="lang-en" hidden>Store and skills</h2>
-      <p class="lang-zh">工作区文件、备份快照在储物袋。配对后的不同端 Agent 可以跨设备读写同一份产物（<code>store://</code> URI，经 Peer 通道同步，不需要云服务）。技能包可从 ZIP 或 URL 导入。备份入口在「储物袋 → 备份与恢复」，加密快照，恢复是全量替换。</p>
-      <p class="lang-en" hidden>Workspace files and backup snapshots live in Store. Paired agents can read and write the same artifacts across devices (store:// URIs synced over the Peer channel, no cloud needed). Skills import from a ZIP or URL. Backups are under Store → Backup; snapshots are encrypted and restore replaces everything.</p>
+      <h2 class="lang-en" hidden>Pouch and skills</h2>
+      <p class="lang-zh">工作区文件、备份快照在主机储物袋。手机和其他客户端连上主机后读写同一份产物（<code>pouch://</code> URI，经 Peer 通道访问，不需要云服务）。技能包可从 ZIP 或 URL 导入。备份入口在「储物袋 → 备份与恢复」，加密快照，恢复是全量替换。</p>
+      <p class="lang-en" hidden>Workspace files and backup snapshots live in the host pouch. The phone and other clients read and write the same artifacts once connected to the host (<code>pouch://</code> URIs over the Peer channel, no cloud needed). Skills import from a ZIP or URL. Backups are under Pouch → Backup; snapshots are encrypted and restore replaces everything.</p>
 
       <h2 class="lang-zh">权限</h2>
       <h2 class="lang-en" hidden>Permissions</h2>

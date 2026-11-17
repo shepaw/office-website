@@ -28,14 +28,14 @@
       <ul class="lang-zh">
         <li>App 首次启动生成长期 X25519 静态密钥，放进系统安全存储</li>
         <li>指纹：<code>SHA-256(publicKey)</code> 前 8 字节的 hex（16 个字符）</li>
-        <li>Agent 把设备公钥写入 <code>authorized_peers.json</code>；不在名单里则握手后以 4405 关闭，不交换数据帧</li>
-        <li>App 用 URL 里的 <code>#fp=</code> 钉死 Agent 公钥，中继替换身份会 4403</li>
+        <li>Hub 把已配对设备记在 <code>peer-devices.json</code>；不在名单里或主机公钥对不上，握手后以 4403 关闭，不交换数据帧</li>
+        <li>App 用 URL 里的 <code>#fp=</code> 钉死主机公钥，中继替换身份会 4403</li>
       </ul>
       <ul class="lang-en" hidden>
         <li>The app generates a long-term X25519 static key on first launch and stores it in platform secure storage</li>
         <li>Fingerprint: first 8 bytes of <code>SHA-256(publicKey)</code> as 16 hex chars</li>
-        <li>The agent allowlists the device in <code>authorized_peers.json</code>; unknown peers close with 4405 after handshake, no data frames</li>
-        <li>The app pins the agent key via <code>#fp=</code>; a swapped identity at the relay closes with 4403</li>
+        <li>The Hub records paired devices in <code>peer-devices.json</code>; an unknown device or a host key mismatch closes with 4403 after the handshake, before any data frame</li>
+        <li>The app pins the host key via <code>#fp=</code>; a swapped identity at the relay closes with 4403</li>
       </ul>
 
       <h2 class="lang-zh">能防什么</h2>

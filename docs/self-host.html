@@ -24,18 +24,22 @@
       </div>
 
       <h2>Agent Hub</h2>
-      <p class="lang-zh">编码引擎依赖本机登录态，容器里复刻全家桶成本高。生产默认：裸机 + systemd。</p>
-      <p class="lang-en" hidden>Engine CLIs need host login state. Recreating that inside a container is painful. Production default: bare metal + systemd.</p>
+      <p class="lang-zh">编码引擎依赖本机登录态，容器里复刻全家桶成本高。生产默认：裸机 + systemd。先用要跑服务的那个用户初始化储物袋和口令，再装用户级 systemd 服务；服务会以该用户的 Hub 目录和引擎登录态运行。</p>
+      <p class="lang-en" hidden>Engine CLIs need host login state. Recreating that inside a container is painful. Production default: bare metal + systemd. Initialize the pouch and password as the user that will run the service, then install a user-level systemd unit; the service uses that user's Hub directory and engine logins.</p>
       <div class="cli">
         <div class="cli-bar"><span>systemd</span></div>
         <pre>cargo build --release -p shepaw-cli
 sudo install -m 755 target/release/shepaw /usr/local/bin/shepaw
+read -rs SHEPAW_PASS && printf '%s\n' "$SHEPAW_PASS" | shepaw init --name &lt;name&gt;
 shepaw install-service      # 写出 shepaw-hub.service 到 ~/.config/shepaw-hub/
-sudo cp ~/.config/shepaw-hub/shepaw-hub.service /etc/systemd/system/
-sudo systemctl enable --now shepaw-hub</pre>
+mkdir -p ~/.config/systemd/user
+cp ~/.config/shepaw-hub/shepaw-hub.service ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user enable --now shepaw-hub
+loginctl enable-linger "$USER"   # 退出登录后服务继续运行</pre>
       </div>
-      <p class="lang-zh">备份 <code>~/.config/shepaw-hub/</code>（identity、peers、sessions）。Dashboard 不要裸奔公网。</p>
-      <p class="lang-en" hidden>Back up <code>~/.config/shepaw-hub/</code> (identity, peers, sessions). Do not put the dashboard on the public internet bare.</p>
+      <p class="lang-zh">备份整个 <code>~/.config/shepaw-hub/</code>（identity、peer-devices、pouches、channel）。主机只监听 Peer 端口（默认 18793）；不要把它直接暴露到公网，外网访问走 Channel。</p>
+      <p class="lang-en" hidden>Back up the whole <code>~/.config/shepaw-hub/</code> (identity, peer-devices, pouches, channel). The host only listens for Peer (default 18793); do not expose that port directly to the internet — use Channel for off-LAN access.</p>
 
       <h2>Channel</h2>
       <div class="cli">
