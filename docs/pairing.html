@@ -27,7 +27,7 @@
       <h2 class="lang-en" hidden>How to pair</h2>
       <div class="cli">
         <div class="cli-bar"><span>pair</span></div>
-        <pre>shepaw-hub pair
+        <pre>shepaw pair
 # 或仪表盘「扫码配对」</pre>
       </div>
       <p class="lang-zh">打开 Shepaw，扫描终端或仪表盘里的二维码。手机和电脑要在同一 Wi-Fi。URI 是 <code>shepaw://peer</code>。</p>
@@ -54,12 +54,11 @@
       <p class="lang-en" hidden>Skip Channel on the same Wi-Fi. Away from home, expand <strong>Shared Channel</strong> under Pair device in the Hub dashboard, save URL / Channel ID / Secret, then scan again so the QR includes <code>channel=</code>. Or use the CLI:</p>
       <div class="cli">
         <div class="cli-bar"><span>channel</span></div>
-        <pre>shepaw-hub gateway-set-channel \
+        <pre>shepaw channel set \
   --server https://channel.shepaw.com \
-  --channel-id ch_xxx \
+  --id ch_xxx \
   --secret &lt;hmac-secret&gt;
-shepaw-hub web --gateway
-shepaw-hub pair</pre>
+shepaw pair</pre>
       </div>
 
       <h2 class="lang-zh">手动配对</h2>
@@ -68,7 +67,7 @@ shepaw-hub pair</pre>
       <p class="lang-en" hidden>If you cannot scan, paste the device public key from the app into Hub:</p>
       <div class="cli">
         <div class="cli-bar"><span>peers</span></div>
-        <pre>shepaw-hub peers add &lt;instance-id&gt; &lt;device-pubkey-base64&gt; --label "My iPhone"</pre>
+        <pre>shepaw peers add &lt;instance-id&gt; &lt;device-pubkey-base64&gt; --label "My iPhone"</pre>
       </div>
 
       <h2 class="lang-zh">吊销一台丢失的手机</h2>
@@ -77,7 +76,7 @@ shepaw-hub pair</pre>
       <p class="lang-en" hidden>In v2.1 each device is one allowlist row. Remove that row; other devices stay paired.</p>
       <div class="cli">
         <div class="cli-bar"><span>revoke</span></div>
-        <pre>shepaw-hub peer-devices-remove &lt;fingerprint&gt;</pre>
+        <pre>shepaw peer-devices-remove &lt;fingerprint&gt;</pre>
       </div>
     </article>
   </div>

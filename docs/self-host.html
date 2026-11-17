@@ -28,9 +28,11 @@
       <p class="lang-en" hidden>Engine CLIs need host login state. Recreating that inside a container is painful. Production default: bare metal + systemd.</p>
       <div class="cli">
         <div class="cli-bar"><span>systemd</span></div>
-        <pre>npm install -g shepaw-agent-hub
-sudo cp deploy/systemd/*.service /etc/systemd/system/
-sudo systemctl enable --now shepaw-hub-web</pre>
+        <pre>cargo build --release -p shepaw-cli
+sudo install -m 755 target/release/shepaw /usr/local/bin/shepaw
+shepaw install-service      # 写出 shepaw-hub.service 到 ~/.config/shepaw-hub/
+sudo cp ~/.config/shepaw-hub/shepaw-hub.service /etc/systemd/system/
+sudo systemctl enable --now shepaw-hub</pre>
       </div>
       <p class="lang-zh">备份 <code>~/.config/shepaw-hub/</code>（identity、peers、sessions）。Dashboard 不要裸奔公网。</p>
       <p class="lang-en" hidden>Back up <code>~/.config/shepaw-hub/</code> (identity, peers, sessions). Do not put the dashboard on the public internet bare.</p>

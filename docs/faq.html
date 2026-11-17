@@ -38,13 +38,13 @@
         </details>
         <details>
           <summary><span class="lang-zh">扫码失败、4405 unauthorized peer？</span><span class="lang-en" hidden>Pairing fails with 4405 unauthorized peer?</span></summary>
-          <p class="lang-zh">设备公钥没进白名单。重启 Peer：<code>shepaw-hub peer-stop && shepaw-hub peer-start</code>。Hub 启动 Peer 时会把 Peer 公钥写入各实例的 <code>authorized_peers.json</code>。</p>
-          <p class="lang-en" hidden>The device key is not on the allowlist. Restart Peer: <code>shepaw-hub peer-stop && shepaw-hub peer-start</code>. Starting Peer writes its public key into each instance’s <code>authorized_peers.json</code>.</p>
+          <p class="lang-zh">设备公钥没进白名单。重启 Peer：<code>shepaw restart</code>。Hub 启动 Peer 时会把 Peer 公钥写入各实例的 <code>authorized_peers.json</code>。</p>
+          <p class="lang-en" hidden>The device key is not on the allowlist. Restart Peer: <code>shepaw restart</code>. Starting Peer writes its public key into each instance’s <code>authorized_peers.json</code>.</p>
         </details>
         <details>
           <summary><span class="lang-zh">外网连不上？</span><span class="lang-en" hidden>Off-site connection fails?</span></summary>
-          <p class="lang-zh">确认 Channel 已保存且隧道路由器在跑（<code>shepaw-hub gateway-status</code>），然后重新 <code>shepaw-hub pair</code> 让二维码带上 <code>channel=</code>。</p>
-          <p class="lang-en" hidden>Confirm Channel is saved and the tunnel router is up (<code>shepaw-hub gateway-status</code>), then run <code>shepaw-hub pair</code> again so the QR includes <code>channel=</code>.</p>
+          <p class="lang-zh">确认 Channel 已保存且 Hub 在跑（<code>shepaw channel</code> / <code>shepaw status</code>），然后重新 <code>shepaw pair</code> 让二维码带上 <code>channel=</code>。</p>
+          <p class="lang-en" hidden>Confirm Channel is saved and the Hub is running (<code>shepaw channel</code> / <code>shepaw status</code>), then run <code>shepaw pair</code> again so the QR includes <code>channel=</code>.</p>
         </details>
         <details>
           <summary><span class="lang-zh">必须用 GitHub 吗？</span><span class="lang-en" hidden>Do I need git or GitHub?</span></summary>

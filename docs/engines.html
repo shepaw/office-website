@@ -50,17 +50,13 @@
         </tbody>
       </table>
 
-      <p class="lang-zh">其中 CodeBuddy Code、Hermes、ZCode、Kiro 需你先自行安装对应的上游 CLI，Hub 不提供安装命令；其余引擎可用 <code>shepaw-hub engine install &lt;engine-id&gt;</code> 安装。上游命令由 Hub 在实例启动时按 ACP（stdio）拉起。</p>
-      <p class="lang-en" hidden>CodeBuddy Code, Hermes, ZCode, and Kiro require you to install the upstream CLI yourself — Hub ships no install command for them. The others can be installed with <code>shepaw-hub engine install &lt;engine-id&gt;</code>. Hub launches the upstream command over ACP (stdio) when the instance starts.</p>
+      <p class="lang-zh">引擎目录是 Rust 主机内置的；上游 CLI（Claude Code、Codex、CodeBuddy Code 等）需你自行安装，Hub 不代装。用 <code>shepaw instance engines --refresh</code> 查看本机可用的引擎，<code>shepaw instance add --engine &lt;id&gt; --cwd ~/work</code> 注册实例。实例启动时主机按 ACP（stdio）拉起上游命令。</p>
+      <p class="lang-en" hidden>The engine catalog is built into the Rust host; install the upstream CLIs (Claude Code, Codex, CodeBuddy Code, …) yourself — the Hub does not install them. Run <code>shepaw instance engines --refresh</code> to see what is available on this machine, then <code>shepaw instance add --engine &lt;id&gt; --cwd ~/work</code> to register an instance. The host launches the upstream command over ACP (stdio) when the instance starts.</p>
 
       <h2 class="lang-zh">自定义引擎</h2>
       <h2 class="lang-en" hidden>Custom engines</h2>
-      <div class="cli">
-        <div class="cli-bar"><span>custom</span></div>
-        <pre>shepaw-hub engine add my-agent --display "My Local Agent" --command "my-cli acp"</pre>
-      </div>
-      <p class="lang-zh">自定义引擎写在 <code>hub.json</code> 的 <code>customEngines</code>，仪表盘引擎选择器里能看到。</p>
-      <p class="lang-en" hidden>Custom engines live in <code>hub.json</code> under <code>customEngines</code> and show up in the dashboard picker.</p>
+      <p class="lang-zh">当前 Rust 主机只提供内置引擎目录，暂不支持 <code>hub.json</code> 里的自定义引擎；请先用 <code>shepaw instance engines --refresh</code> 确认上游 CLI 是否被识别。</p>
+      <p class="lang-en" hidden>The Rust host currently ships a built-in engine catalog only; custom engines in <code>hub.json</code> are not supported. Check <code>shepaw instance engines --refresh</code> first to see whether your upstream CLI was detected.</p>
 
       <h2 class="lang-zh">模型、模式、权限</h2>
       <h2 class="lang-en" hidden>Models, modes, permissions</h2>

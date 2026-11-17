@@ -16,11 +16,11 @@
     <article class="prose">
       <div class="lang-zh">
         <h1>Agent Hub</h1>
-        <p>Hub 是本机（或 VM）上的多项目监督器：为每个仓库拉起编码 Agent，并提供 Web 仪表盘、Peer 扫码、可选 Channel 隧道路由。</p>
+        <p>Hub 是本机（或 VM）上的多项目监督器：Rust 写的 <code>shepaw-cli</code> 为每个仓库拉起编码 Agent，通过 <code>/peer/ws</code> 与手机 App 通信，可选 Channel 做外网隧道。控制面是 App，主机没有独立的 Web 仪表盘。</p>
       </div>
       <div class="lang-en" hidden>
         <h1>Agent Hub</h1>
-        <p>Hub is a multi-project supervisor on your machine or VM. It starts a coding agent per repo, plus a web dashboard, Peer pairing, and an optional Channel tunnel router.</p>
+        <p>Hub is a multi-project supervisor on your machine or VM. The Rust workspace <code>shepaw-cli</code> starts a coding agent per repo, talks to the phone app over <code>/peer/ws</code>, and can use Channel as an off-LAN tunnel. The app is the control plane; the host has no separate web dashboard.</p>
       </div>
 
       <h2 class="lang-zh">默认端口</h2>
@@ -35,24 +35,24 @@
         </thead>
         <tbody>
           <tr>
-            <td><span class="lang-zh">Web 仪表盘</span><span class="lang-en" hidden>Web dashboard</span></td>
-            <td><span class="lang-zh">实例、引擎、配对、Channel</span><span class="lang-en" hidden>Instances, engines, pairing, Channel</span></td>
-            <td><code>4000</code></td>
-          </tr>
-          <tr>
             <td>Peer</td>
-            <td><code>shepaw://peer</code></td>
-            <td><code>18793</code></td>
+            <td><span class="lang-zh">App 连的唯一 WebSocket 端点 <code>/peer/ws</code></span><span class="lang-en" hidden>The single WebSocket endpoint for the app: <code>/peer/ws</code></span></td>
+            <td><code>18793</code> <span class="lang-zh">（缺省，取自 hub.json）</span><span class="lang-en" hidden>(default, from hub.json)</span></td>
           </tr>
           <tr>
-            <td><span class="lang-zh">隧道路由器</span><span class="lang-en" hidden>Tunnel router</span></td>
-            <td><span class="lang-zh">Channel 入站分发到本机 Agent / Peer</span><span class="lang-en" hidden>Fan-in Channel traffic to local agents / Peer</span></td>
-            <td><code>18789</code> <span class="lang-zh">（本机）</span><span class="lang-en" hidden>(loopback)</span></td>
+            <td><span class="lang-zh">桌面 App</span><span class="lang-en" hidden>Desktop app</span></td>
+            <td><span class="lang-zh">桌面端本地端口，Hub 不占用</span><span class="lang-en" hidden>App-local port; the Hub does not bind it</span></td>
+            <td><code>18792</code></td>
+          </tr>
+          <tr>
+            <td>Channel</td>
+            <td><span class="lang-zh">可选的外网密文信箱 / NAT 隧道，服务端独立部署</span><span class="lang-en" hidden>Optional off-LAN sealed inbox / NAT tunnel; deployed separately</span></td>
+            <td><span class="lang-zh">远端 HTTPS / WSS</span><span class="lang-en" hidden>remote HTTPS / WSS</span></td>
           </tr>
           <tr>
             <td><span class="lang-zh">编码 Agent 实例</span><span class="lang-en" hidden>Agent instances</span></td>
-            <td><span class="lang-zh">每个项目一个上游 CLI</span><span class="lang-en" hidden>One upstream CLI per project</span></td>
-            <td><code>8090+</code></td>
+            <td><span class="lang-zh">每个项目一个上游 CLI，按 ACP（stdio）拉起</span><span class="lang-en" hidden>One upstream CLI per project, launched over ACP (stdio)</span></td>
+            <td><span class="lang-zh">不监听固定端口</span><span class="lang-en" hidden>no fixed listening port</span></td>
           </tr>
         </tbody>
       </table>
@@ -61,37 +61,32 @@
       <h2 class="lang-zh">日常命令</h2>
       <h2 class="lang-en" hidden>Everyday commands</h2>
       <div class="cli">
-        <div class="cli-bar"><span>shepaw-hub</span></div>
-        <pre>shepaw-hub init
-shepaw-hub doctor
-shepaw-hub web                          # 仪表盘 + Peer（Channel 已配且加 --gateway 则拉起路由器）
-shepaw-hub instance add --engine claude-code --cwd ~/code/work-api --host 0.0.0.0
-shepaw-hub start &lt;id&gt;
-shepaw-hub pair
-shepaw-hub logs &lt;id&gt; -f
-shepaw-hub update                       # npm 全局安装才支持自动升级</pre>
+        <div class="cli-bar"><span>shepaw</span></div>
+        <pre>shepaw start                   # 后台起 Hub（含 /peer/ws）
+shepaw status [--json]
+shepaw doctor
+shepaw logs [--tail 50]
+shepaw instance add --engine claude-code --cwd ~/code/work-api
+shepaw instance list
+shepaw pair
+shepaw update [--check] [--yes]   # 对照签名清单自升级</pre>
       </div>
 
-      <h2 class="lang-zh">仪表盘鉴权</h2>
-      <h2 class="lang-en" hidden>Dashboard auth</h2>
-      <div class="cli">
-        <div class="cli-bar"><span>token</span></div>
-        <pre>export SHEPAW_HUB_TOKEN="$(openssl rand -hex 24)"
-shepaw-hub web --host 0.0.0.0 --port 4000 --no-open</pre>
-      </div>
-      <p class="lang-zh">未设置 token 时，非 loopback 绑定会被拒绝。Token 存在浏览器 localStorage，不会出现在 URL 里。</p>
-      <p class="lang-en" hidden>Without a token, non-loopback binds are rejected. The token is stored in localStorage, never in the URL.</p>
+      <h2 class="lang-zh">设备授权</h2>
+      <h2 class="lang-en" hidden>Device authorization</h2>
+      <p class="lang-zh"><code>shepaw pair</code> 生成有效期 5 分钟的一次性配对码与二维码；手机扫码后按公钥加入白名单，握手用 <code>Noise_IK_25519_ChaChaPoly_BLAKE2b</code>。也可用 <code>shepaw device invite</code> / <code>shepaw device revoke</code> 管理设备。没有浏览器仪表盘，也没有仪表盘 token。</p>
+      <p class="lang-en" hidden><code>shepaw pair</code> prints a one-time code and QR valid for five minutes; after scanning, the device is allowlisted by public key with a <code>Noise_IK_25519_ChaChaPoly_BLAKE2b</code> handshake. Use <code>shepaw device invite</code> / <code>shepaw device revoke</code> to manage devices. There is no browser dashboard and no dashboard token.</p>
 
       <h2 class="lang-zh">外网</h2>
       <h2 class="lang-en" hidden>Off-site</h2>
       <div class="cli">
         <div class="cli-bar"><span>channel</span></div>
-        <pre>shepaw-hub gateway-set-channel \
+        <pre>shepaw channel set \
   --server https://channel.shepaw.com \
-  --channel-id ch_xxx \
+  --id ch_xxx \
   --secret &lt;hmac-secret&gt;
-# shepaw-hub web --gateway  会在已配置 Channel 时拉起隧道路由器
-shepaw-hub pair        # 二维码同时带 local= 与 channel=</pre>
+# channel set 会连上正在运行的 Hub；改完配置用 shepaw restart
+shepaw pair        # 二维码同时带 local= 与 channel=</pre>
       </div>
       <p class="lang-zh">高级 tunnel 三项必须同时填写或全部留空。详见 <a href="/docs/channel.html">Channel</a>。</p>
       <p class="lang-en" hidden>The three advanced tunnel fields must all be set or all empty. See <a href="/docs/channel.html">Channel</a>.</p>

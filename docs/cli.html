@@ -16,48 +16,47 @@
     <article class="prose">
       <div class="lang-zh">
         <h1>CLI 参考</h1>
-        <p>日常只用 <code>shepaw-hub</code>。装好后 <code>quickstart</code> 或 <code>web</code>，扫码即可。</p>
+        <p>主机是 Rust 写的 <code>shepaw-cli</code>，装好后的命令叫 <code>shepaw</code>。<code>start</code> 起后台 Hub，<code>pair</code> 打印配对二维码。</p>
       </div>
       <div class="lang-en" hidden>
         <h1>CLI reference</h1>
-        <p>Day to day you only need <code>shepaw-hub</code>. After install, run <code>quickstart</code> or <code>web</code>, then scan.</p>
+        <p>The host is the Rust workspace <code>shepaw-cli</code>; the installed command is <code>shepaw</code>. Run <code>start</code> for the background Hub, then <code>pair</code> to print the pairing QR.</p>
       </div>
 
-      <h2>shepaw-hub</h2>
+      <h2>shepaw</h2>
       <div class="cli">
-        <div class="cli-bar"><span>hub</span></div>
-        <pre>shepaw-hub init
-shepaw-hub doctor
-shepaw-hub quickstart
-shepaw-hub web [--host 127.0.0.1] [--port 4000] [--no-peer] [--no-open]
-shepaw-hub update [--check] [--yes]
+        <div class="cli-bar"><span>host</span></div>
+        <pre>shepaw start
+shepaw status [--json]
+shepaw logs [--tail 50]
+shepaw doctor
+shepaw restart | stop
+shepaw update [--check] [--yes]
 
-shepaw-hub engine list
-shepaw-hub engine install &lt;engine-id&gt;
-shepaw-hub engine add &lt;id&gt; --display NAME --command "cli acp"
+shepaw pair [--local ws://&lt;lan-ip&gt;:&lt;port&gt;/peer/ws] [--channel &lt;url&gt;]
+shepaw instance add --engine claude-code --cwd ~/work [--label NAME]
+shepaw instance list
+shepaw instance engines [--refresh]
 
-shepaw-hub instance add [--engine claude-code] [--cwd PATH] [--host 0.0.0.0]
-shepaw-hub instance-list
-shepaw-hub start &lt;id&gt;
-shepaw-hub logs &lt;id&gt; [-f]
-
-shepaw-hub pair
-shepaw-hub peer-start | peer-stop | peer-status
-shepaw-hub gateway-set-channel --server URL --channel-id ID --secret SECRET
-shepaw-hub test &lt;id&gt; [--rpc]</pre>
+shepaw channel set --server https://channel.example.com --id &lt;channel-id&gt;
+shepaw channel                 # 查看当前 Channel 配置
+shepaw peer serve              # 前台监听 /peer/ws（一般由 start 代管）</pre>
       </div>
-      <p class="lang-zh"><code>shepaw-hub pair</code> 打印 Peer 二维码，一次授权本机全部实例。外网 Channel 见 <a href="/docs/channel.html">Channel</a>。</p>
-      <p class="lang-en" hidden><code>shepaw-hub pair</code> prints a Peer QR and authorizes every instance on this host. Off-site Channel is covered in <a href="/docs/channel.html">Channel</a>.</p>
+      <p class="lang-zh"><code>shepaw pair</code> 生成一次性配对码，手机扫码后按公钥加入白名单。外网 Channel 见 <a href="/docs/channel.html">Channel</a>。工作节点用 <code>shepaw join '&lt;票据&gt;'</code> 与 <code>shepaw node instance add</code>。</p>
+      <p class="lang-en" hidden><code>shepaw pair</code> prints a one-time pairing code; after scanning, the device is allowlisted by public key. Off-site Channel is covered in <a href="/docs/channel.html">Channel</a>. Worker nodes use <code>shepaw join '&lt;ticket&gt;'</code> and <code>shepaw node instance add</code>.</p>
 
       <h2 class="lang-zh">从源码跑</h2>
       <h2 class="lang-en" hidden>From a source checkout</h2>
       <div class="cli">
-        <div class="cli-bar"><span>agent-bridge</span></div>
-        <pre>git clone https://github.com/shepaw/agent-bridge.git
-cd agent-bridge
-npm install && npm run build
-node agent-hub/cli/dist/cli.js web</pre>
+        <div class="cli-bar"><span>shepaw-cli</span></div>
+        <pre>git clone https://github.com/shepaw/shepaw-cli.git
+cd shepaw-cli
+cargo build --release -p shepaw-cli
+./target/release/shepaw start
+./target/release/shepaw pair</pre>
       </div>
+      <p class="lang-zh">旧的 TypeScript 主机 <code>agent-bridge</code> 已废弃，不要再克隆或参照它。</p>
+      <p class="lang-en" hidden>The old TypeScript host <code>agent-bridge</code> is deprecated — do not clone or use it as a reference.</p>
     </article>
   </div>
   <script src="/assets/js/site.js"></script>
