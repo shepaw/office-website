@@ -46,7 +46,7 @@ loginctl enable-linger "$USER"   # 退出登录后服务继续运行</pre>
         <div class="cli-bar"><span>compose</span></div>
         <pre>cp .env.example .env
 # PORT, BASE_URL, DATABASE_URL=postgres://..., REDIS_ADDR
-# 不要设置 DEV_SKIP_AUTH=1
+# 不要设 AUTH_MODE=open（或旧的 DEV_SKIP_AUTH=1）
 docker compose up -d
 curl -fsS https://channel.example.com/health</pre>
       </div>

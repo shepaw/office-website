@@ -16,11 +16,11 @@
     <article class="prose">
       <div class="lang-zh">
         <h1>安全模型</h1>
-        <p>ACP v2.1：WebSocket 上的 Noise <code>IK</code>，套件 <code>Noise_IK_25519_ChaChaPoly_BLAKE2b</code>。没有共享 token。Channel 只能看见握手字节和 AEAD 密文。</p>
+        <p>ACP v2.1：WebSocket 上的 Noise <code>IK</code>，套件 <code>Noise_IK_25519_ChaChaPoly_BLAKE2b</code>。没有共享 token。Channel 能看见握手字节、AEAD 密文和路由元数据，看不到聊天正文、方法名或密钥。</p>
       </div>
       <div class="lang-en" hidden>
         <h1>Security</h1>
-        <p>ACP v2.1: Noise <code>IK</code> over WebSocket, suite <code>Noise_IK_25519_ChaChaPoly_BLAKE2b</code>. No shared token. Channel sees handshake bytes and AEAD ciphertext only.</p>
+        <p>ACP v2.1: Noise <code>IK</code> over WebSocket, suite <code>Noise_IK_25519_ChaChaPoly_BLAKE2b</code>. No shared token. Channel sees handshake bytes, AEAD ciphertext, and routing metadata — not chat text, method names, or keys.</p>
       </div>
 
       <h2 class="lang-zh">身份</h2>

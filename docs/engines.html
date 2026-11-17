@@ -64,13 +64,13 @@
       <h2 class="lang-en" hidden>Models, modes, permissions</h2>
       <ul class="lang-zh">
         <li>ACP <code>configOptions</code>（category <code>model</code>）映射到 App 的模型列表 / 切换</li>
-        <li><code>PAW_ACP_SESSION_MODE</code> 在 session 创建或恢复后写入上游（Claude <code>acceptEdits</code>、Codex <code>on-request</code> 等）</li>
+        <li>实例的 <code>session_mode</code>（在 App 里选择）在 session 创建或恢复时写入上游（Claude <code>acceptEdits</code>、Codex <code>on-request</code> 等）</li>
         <li>剩余 <code>session/request_permission</code> 默认问 App（<code>PAW_ACP_APPROVAL_MODE=ask</code>）</li>
         <li>上游 <code>terminal/*</code> 在 Hub 所在机器执行</li>
       </ul>
       <ul class="lang-en" hidden>
         <li>ACP <code>configOptions</code> (category <code>model</code>) map to the app model picker</li>
-        <li><code>PAW_ACP_SESSION_MODE</code> is applied after session new/resume (Claude <code>acceptEdits</code>, Codex <code>on-request</code>, …)</li>
+        <li>The instance <code>session_mode</code> (chosen in the app) is written to the upstream after session new/resume (Claude <code>acceptEdits</code>, Codex <code>on-request</code>, …)</li>
         <li>Remaining <code>session/request_permission</code> calls default to the app (<code>PAW_ACP_APPROVAL_MODE=ask</code>)</li>
         <li>Upstream <code>terminal/*</code> runs on the Hub host</li>
       </ul>
