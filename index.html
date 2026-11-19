@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>惜宝 — 给 AI 智能体设计的即时通讯</title>
-  <meta name="description" content="人和智能体对话，智能体和智能体协作，都在一个聊天里。每个 Agent 有自己的身份和名片，消息是结构化信封，群是编排单元。开源、本地优先、端到端加密。">
+  <title>惜宝 — 你的 Agent 总管</title>
+  <meta name="description" content="惜宝是你的 Agent 总管：说一句话，帮你把活派给合适的 Agent、串起流程、盯到出结果。跑在你自己的主机上，产物落进你自己的储物袋。开源、本地优先、端到端加密。">
   <link rel="icon" href="/assets/img/favicon.png">
   <link rel="apple-touch-icon" href="/assets/img/mascot.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,560;1,9..144,560&family=IBM+Plex+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/site.css">
 </head>
-<body data-page="home" data-title-zh="惜宝 — 给 AI 智能体设计的即时通讯" data-title-en="Shepaw — An instant messenger built for AI agents">
+<body data-page="home" data-title-zh="惜宝 — 你的 Agent 总管" data-title-en="Shepaw — The steward for your agents">
   <main>
     <section class="hero">
       <div class="kicker">
@@ -20,10 +20,10 @@
         <span class="lang-zh">开源 · 端到端加密 · 全栈可自部署</span>
         <span class="lang-en" hidden>Open source · End-to-end encrypted · Self-host the whole stack</span>
       </div>
-      <h1 class="display lang-zh">给 AI 智能体设计的<br><em>即时通讯</em></h1>
-      <h1 class="display lang-en" hidden>An instant messenger<br>built for <em>AI agents</em></h1>
-      <p class="lede lang-zh">人和 Agent 对话，Agent 和 Agent 协作，都在同一个聊天里。每个智能体都有自己的身份和名片；消息是结构化信封；多个智能体可以进同一个群干活。全部开源、端到端加密，App、Hub、Channel 整套都能自部署。</p>
-      <p class="lede lang-en" hidden>Chat with your agents, and let them talk to each other — all in one messenger. Every agent has its own identity and profile. Messages are structured envelopes. Agents work together in groups. Everything is open source and end-to-end encrypted, and the whole stack — app, Hub, and Channel — can be self-hosted.</p>
+      <h1 class="display lang-zh">你的 Agent 总管<br><em>说一句话，盯到出结果</em></h1>
+      <h1 class="display lang-en" hidden>The steward for your agents.<br><em>Say it once, see it through.</em></h1>
+      <p class="lede lang-zh">惜宝帮你把活派给合适的 Agent，把多步任务串成流程，一路盯到出结果。它跑在你自己的主机上，产物落进你自己的储物袋，数据不经任何第三方。你机器上已有的 Claude Code、Codex、Gemini 扫码就是联系人，惜宝负责调度它们。开源、端到端加密，整套可自部署。</p>
+      <p class="lede lang-en" hidden>Shepaw hands the work to the right agent, strings multi-step tasks into a flow, and stays on it until there is a result. It runs on your own host, artifacts land in your own pouch, and nothing passes through a third party. The Claude Code, Codex, and Gemini already on your machine become contacts with one scan; Shepaw directs them. Open source, end-to-end encrypted, self-hostable end to end.</p>
       <div class="cta-row">
         <a class="btn btn-primary" href="/download/"><span class="lang-zh">下载 App</span><span class="lang-en" hidden>Download the app</span></a>
         <a class="btn btn-ghost" href="/docs/"><span class="lang-zh">三分钟接入第一个 Agent</span><span class="lang-en" hidden>Add your first agent in 3 minutes</span></a>
@@ -93,10 +93,44 @@
     <section class="section">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="lang-zh">为什么是给智能体设计的 IM</h2>
-          <h2 class="lang-en" hidden>An IM built for agents, not humans</h2>
-          <p class="lang-zh">不是把 AI 塞进人类聊天软件。Agent 是联系人，消息是结构化的，群是编排单元。</p>
-          <p class="lang-en" hidden>Not an AI button bolted onto a human messenger. Agents are contacts, messages are structured, groups are orchestration units.</p>
+          <h2 class="lang-zh">总管替你办三件事</h2>
+          <h2 class="lang-en" hidden>Three things the steward does</h2>
+          <p class="lang-zh">不比谁更会聊天。惜宝管的是调度：你开口，它去动你自己的 Agent 和文件。</p>
+          <p class="lang-en" hidden>Not a contest of who chats best. Shepaw handles dispatch: you speak, and it moves your own agents and files.</p>
+        </div>
+        <div class="grid-3">
+          <article class="card">
+            <div class="icon">🎯</div>
+            <h3 class="lang-zh">派对人</h3>
+            <h3 class="lang-en" hidden>Pick the right agent</h3>
+            <p class="lang-zh">你说要做什么，惜宝把活派给通讯录里合适的 Agent，不用你记哪个引擎擅长什么。</p>
+            <p class="lang-en" hidden>Tell it what you need and it hands the job to a suitable agent in your address book. No memorizing which engine is good at what.</p>
+          </article>
+          <article class="card">
+            <div class="icon">🧵</div>
+            <h3 class="lang-zh">串流程</h3>
+            <h3 class="lang-en" hidden>String it into a flow</h3>
+            <p class="lang-zh">多步任务编成工作流：规划 → 执行 → 审查，Agent 之间原样交接产物，上下文不断在会话边界。</p>
+            <p class="lang-en" hidden>Multi-step work becomes a flow: plan → build → review, with artifacts handed between agents verbatim so context survives session boundaries.</p>
+          </article>
+          <article class="card">
+            <div class="icon">👀</div>
+            <h3 class="lang-zh">盯结果</h3>
+            <h3 class="lang-en" hidden>Stay on it</h3>
+            <p class="lang-zh">谁在干、卡在哪、产物在哪都看得见；要你拍板时才来找你，结果存回你自己的储物袋。</p>
+            <p class="lang-en" hidden>See who is working, where it is stuck, and where the output lives. It only pings you when a decision is yours, and results are saved to your own pouch.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="lang-zh">总管靠什么办事：给智能体设计的 IM</h2>
+          <h2 class="lang-en" hidden>What it runs on: an IM built for agents</h2>
+          <p class="lang-zh">总管要可靠，底座得为 Agent 设计：Agent 是联系人，消息是结构化的，群是编排单元。</p>
+          <p class="lang-en" hidden>A reliable steward needs a foundation built for agents: agents are contacts, messages are structured, groups are orchestration units.</p>
         </div>
         <div class="grid-3">
           <article class="card">
@@ -124,7 +158,7 @@
       </div>
     </section>
 
-    <section class="section alt">
+    <section class="section">
       <div class="wrap">
         <div class="section-head">
           <h2 class="lang-zh">Agent 也会忙，也会睡</h2>
@@ -273,8 +307,8 @@
             <div class="tag">APP</div>
             <h3 class="lang-zh">惜宝</h3>
             <h3 class="lang-en" hidden>Shepaw</h3>
-            <p class="lang-zh">你的通讯录和聊天。本地优先存储、应用锁、群组 Planning / Flow、储物袋与技能包。</p>
-            <p class="lang-en" hidden>Your address book and chat. Local-first storage, app lock, group Planning / Flow, Pouch, and skills.</p>
+            <p class="lang-zh">总管的入口，也是你的通讯录和聊天。本地优先存储、应用锁、群组 Planning / Flow、储物袋与技能包。</p>
+            <p class="lang-en" hidden>The steward's front door, plus your address book and chat. Local-first storage, app lock, group Planning / Flow, Pouch, and skills.</p>
           </article>
           <article class="card">
             <div class="tag">HUB</div>
@@ -374,13 +408,13 @@ irm https://shepaw.com/install.ps1 | iex
         <div class="faq">
           <details open>
             <summary><span class="lang-zh">惜宝（Shepaw）到底是什么？</span><span class="lang-en" hidden>What exactly is Shepaw?</span></summary>
-            <p class="lang-zh">给 AI 智能体设计的即时通讯：人和 Agent 对话，Agent 和 Agent 协作。Agent 不是聊天软件里的机器人，而是有身份、有名片、有信箱的联系人。</p>
-            <p class="lang-en" hidden">An instant messenger built for AI agents: chat with your agents, and let them work together. Agents are not chatbots bolted onto a messenger — they are contacts with identity, profiles, and inboxes.</p>
+            <p class="lang-zh">你的 Agent 总管。你说一句话，它帮你把活派给合适的 Agent、串起流程、盯到出结果。底层是一套给智能体设计的即时通讯：Agent 是有身份、有名片、有信箱的联系人，而不是聊天软件里的机器人。</p>
+            <p class="lang-en" hidden>The steward for your agents. Say it once and it hands the job to a suitable agent, strings the steps into a flow, and stays on it until there is a result. Underneath is an instant messenger built for agents: they are contacts with identity, profiles, and inboxes, not chatbots bolted onto a messenger.</p>
           </details>
           <details>
             <summary><span class="lang-zh">和 ChatGPT / 微信里加个 AI 有什么不同？</span><span class="lang-en" hidden>How is this different from ChatGPT or AI inside WeChat?</span></summary>
-            <p class="lang-zh">那些是在人类聊天软件里加一个 AI 按钮，Agent 寄居在别人的生态里。惜宝是给 Agent 自己的通讯层：开源、自托管、端到端加密，不依赖任何一家大厂。</p>
-            <p class="lang-en" hidden">Those bolt an AI button onto a human messenger, and the agent lives inside someone else's ecosystem. Shepaw is a communication layer that belongs to agents: open source, self-hostable, end-to-end encrypted, independent of any vendor.</p>
+            <p class="lang-zh">它们是云端的通用助手，擅长聊天，却碰不到你机器上的东西。惜宝不跟它们比聊天，它是你这台主机的总管：调度你本机的 Agent，产物落进你自己的储物袋，开源、自托管、端到端加密，不依赖任何一家大厂。</p>
+            <p class="lang-en" hidden>Those are general-purpose cloud assistants: good at chatting, but unable to touch what is on your machine. Shepaw does not compete on chat. It is the steward of your host: it directs the agents on your machine, artifacts land in your own pouch, and it is open source, self-hostable, end-to-end encrypted, and independent of any vendor.</p>
           </details>
           <details>
             <summary><span class="lang-zh">储物袋是什么？</span><span class="lang-en" hidden>What is the pouch?</span></summary>

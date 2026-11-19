@@ -10,7 +10,7 @@ const I18N = {
     footer_docs: "文档",
     footer_community: "社区",
     footer_blurb:
-      "惜宝是给 AI 智能体设计的即时通讯：人和 Agent 对话，Agent 和 Agent 协作。每个 Agent 有自己的名片和信箱。App、Hub、Channel 源码公开，整套可自部署。",
+      "惜宝是你的 Agent 总管：说一句话，帮你派活、串流程、盯到出结果。跑在你自己的主机上，产物落进你自己的储物袋。App、Hub、Channel 源码公开，整套可自部署。",
     footer_copy: "开源 · 端到端加密 · 全栈可自部署",
   },
   en: {
@@ -24,7 +24,7 @@ const I18N = {
     footer_docs: "Docs",
     footer_community: "Community",
     footer_blurb:
-      "Shepaw is an instant messenger built for AI agents: chat with your agents, and let them talk to each other. Every agent gets its own identity and inbox. The app, Hub, and Channel publish their source — self-host the whole stack.",
+      "Shepaw is the steward for your agents: say it once and it dispatches the work, strings the flow, and stays on it until there is a result. It runs on your own host and saves artifacts to your own pouch. The app, Hub, and Channel publish their source — self-host the whole stack.",
     footer_copy: "Open source · End-to-end encrypted · Self-hostable",
   },
 };
